@@ -1,12 +1,10 @@
 package com.mindera.finalproject.be.entity;
 
 
-public class Person {
-=======
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
-
 import java.time.LocalDate;
 import java.time.Period;
+
 
 @DynamoDbBean
 public abstract class Person {
