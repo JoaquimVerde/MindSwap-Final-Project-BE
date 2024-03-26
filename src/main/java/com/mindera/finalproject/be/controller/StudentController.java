@@ -26,9 +26,15 @@ public class StudentController {
         return Response.ok(studentService.get(id)).build();
     }
     @POST
-    public Response createStudent(@RequestBody StudentCreateDto studentCreateDto){
+    public Response createStudent(StudentCreateDto studentCreateDto){
         return Response.accepted(studentService.add(studentCreateDto)).build();
     }
+    @PUT
+    @Path("{studentId}")
+    public Response editStudent(Long id, StudentCreateDto studentCreateDto){
+        return Response.accepted(studentService.edit(id, studentCreateDto)).build();
+    }
+
 
 
 
