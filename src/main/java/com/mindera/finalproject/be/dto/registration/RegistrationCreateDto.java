@@ -2,21 +2,22 @@ package com.mindera.finalproject.be.dto.registration;
 
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 public record RegistrationCreateDto(
-        @NotNull
+        @NotEmpty(message = "Person id is required")
         Long personId,
 
-        @NotNull
+        @NotEmpty(message = "Course id is required")
         Long courseId,
 
-        @NotBlank
+        @NotEmpty(message = "Registration status is required")
         String status,
 
         String finalGrade,
 
-        @NotBlank
+        @NotEmpty(message = "Active status is required")
         Boolean active
 ) {
 }
