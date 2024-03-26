@@ -5,7 +5,7 @@ import com.mindera.finalproject.be.entity.Student;
 
 import java.util.List;
 
-public record publicProjectDto(
+public record ProjectPublicDto(
 
         Long id,
         List<Student> firstName, //change to studentPublicDto
