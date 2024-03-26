@@ -14,7 +14,7 @@ public class Course {
     public Long id;
     public String name;
     public Integer edition;
-    public Account teacher;
+    public Person teacher;
     public String syllabus;
     public String program;
     public Map<String, String> schedule; //Can be something like {monday=10-18, tuesday=14-18}
@@ -55,11 +55,11 @@ public class Course {
     }
 
     @DynamoDbSortKey
-    public Account getTeacher() {
+    public Person getTeacher() {
         return teacher;
     }
 
-    public void setTeacher(Account teacher) {
+    public void setTeacher(Person teacher) {
         this.teacher = teacher;
     }
 
