@@ -3,8 +3,10 @@ package com.mindera.finalproject.be.entity;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
 
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import java.time.LocalDate;
 import java.time.Period;
+
 
 @DynamoDbBean
 public abstract class Person {
@@ -44,6 +46,7 @@ public abstract class Person {
         LocalDate currentDate = LocalDate.now();
         return Period.between(dateOfBirth, currentDate).getYears();
     }
+
 
 
     @DynamoDbPartitionKey
@@ -110,4 +113,5 @@ public abstract class Person {
     public void setAddress(String address) {
         this.address = address;
     }
+
 }
