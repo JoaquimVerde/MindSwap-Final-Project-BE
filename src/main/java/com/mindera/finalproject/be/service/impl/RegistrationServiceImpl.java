@@ -17,12 +17,12 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     @Override
-    public List<RegistrationPublicDto> getRegistrations() {
+    public List<RegistrationPublicDto> findAll() {
         return null;
     }
 
     @Override
-    public RegistrationPublicDto getRegistrationByCompositeKey(String compositeKey) {
+    public RegistrationPublicDto findByCompositeKey(String compositeKey) {
         return null;
     }
 

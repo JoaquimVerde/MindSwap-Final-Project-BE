@@ -8,8 +8,8 @@ import java.util.List;
 
 public interface RegistrationService {
     Registration createRegistration(RegistrationCreateDto registrationCreateDto);
-    List<RegistrationPublicDto> getRegistrations();
-    RegistrationPublicDto getRegistrationByCompositeKey(String compositeKey);
+    List<RegistrationPublicDto> findAll();
+    RegistrationPublicDto findByCompositeKey(String compositeKey);
 
     RegistrationCreateDto updateRegistration(String CompositeKey, RegistrationCreateDto registrationCreateDto);
 

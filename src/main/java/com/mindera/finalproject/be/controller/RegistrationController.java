@@ -19,7 +19,7 @@ public class RegistrationController {
 
     @GET
     public Response getRegistrations() {
-        return Response.ok(registrationService.getRegistrations()).build();
+        return Response.ok(registrationService.findAll()).build();
     }
 
 
@@ -36,7 +36,7 @@ public class RegistrationController {
     @Consumes(MediaType.APPLICATION_JSON)
     @GET
     public Response getRegistration(@PathParam("id") String id) { //Este id é personId#courseId, deve ser concatenado antes de chegar aqui
-        return Response.ok(registrationService.getRegistrationByCompositeKey(id)).build();
+        return Response.ok(registrationService.findByCompositeKey(id)).build();
     }
 
     @Path("/api/v1/registration/{id}/edit")
