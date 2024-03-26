@@ -1,9 +1,12 @@
 package com.mindera.finalproject.be.entity;
 
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
+
 import java.time.LocalDate;
 import java.time.Period;
 
-public abstract class Account {
+@DynamoDbBean
+public abstract class Person {
 
     private Long id;
 
@@ -12,6 +15,8 @@ public abstract class Account {
     private String firstName;
 
     private String lastName;
+
+    private String role;
 
     private String username;
 
