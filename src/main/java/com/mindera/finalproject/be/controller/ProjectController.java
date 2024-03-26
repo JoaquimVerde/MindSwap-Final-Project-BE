@@ -35,8 +35,8 @@ public class ProjectController {
 
     @PUT
     @Path("/{id}")
-    public ProjectCreateDto editProject(@QueryParam("id") Long id, ProjectCreateDto ProjectCreateDto){
-        return ProjectCreateDto;
+    public Response editProject(@QueryParam("id") Long id, ProjectCreateDto ProjectCreateDto){
+        return Response.ok().build();
     }
 
 
