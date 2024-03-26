@@ -7,7 +7,7 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import java.math.BigDecimal;
 import java.util.Map;
 
-public record courseCreateDto (
+public record CourseCreateDto(
 
         @NotEmpty(message = "Name is mandatory")
         @Pattern(regexp = "^[\\p{L} ]+$", message = "Name can only contain letters")
