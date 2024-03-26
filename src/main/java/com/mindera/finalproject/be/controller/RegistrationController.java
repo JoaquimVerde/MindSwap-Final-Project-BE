@@ -7,7 +7,7 @@ import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 
-@Path("/registration")
+@Path("/api/v1/registration")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
 public class RegistrationController {
@@ -23,7 +23,7 @@ public class RegistrationController {
     }
 
 
-    @Path("/registration/create")
+    @Path("/api/v1/registration/create")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @POST
@@ -31,27 +31,27 @@ public class RegistrationController {
         return Response.ok(registrationService.createRegistration(registrationCreateDto)).build();
     }
 
-    @Path("/registration/{id}")
+    @Path("/api/v1/registration/{id}")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @GET
-    public Response getRegistration(@PathParam("id") Long id) { //Este id é personId#courseId, deve ser concatenado antes de chegar aqui
-        return Response.ok(registrationService.getRegistration(id)).build();
+    public Response getRegistration(@PathParam("id") String id) { //Este id é personId#courseId, deve ser concatenado antes de chegar aqui
+        return Response.ok(registrationService.getRegistrationByCompositeKey(id)).build();
     }
 
-    @Path("/registration/{id}/edit")
+    @Path("/api/v1/registration/{id}/edit")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @PUT
-    public Response editRegistration(@PathParam("id") Long id, RegistrationCreateDto registrationCreateDto) { //Este id é personId#courseId, deve ser concatenado antes de chegar aqui
-        return Response.ok(registrationService.editRegistration(id, registrationCreateDto)).build();
+    public Response editRegistration(@PathParam("id") String id, RegistrationCreateDto registrationCreateDto) { //Este id é personId#courseId, deve ser concatenado antes de chegar aqui
+        return Response.ok(registrationService.updateRegistration(id, registrationCreateDto)).build();
     }
 
-    @Path("/registration/{id}/delete")
+    @Path("/api/v1/registration/{id}/delete")
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @DELETE
-    public Response deleteRegistration(@PathParam("id") Long id) { //Este id é personId#courseId, deve ser concatenado antes de chegar aqui
+    public Response deleteRegistration(@PathParam("id") String id) { //Este id é personId#courseId, deve ser concatenado antes de chegar aqui
         return Response.ok(registrationService.deleteRegistration(id)).build();
     }
 
