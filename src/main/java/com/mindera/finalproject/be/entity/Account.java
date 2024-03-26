@@ -3,7 +3,7 @@ package com.mindera.finalproject.be.entity;
 import java.time.LocalDate;
 import java.time.Period;
 
-public abstract class User {
+public abstract class Account {
 
     private Long id;
 
