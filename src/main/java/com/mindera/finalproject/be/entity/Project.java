@@ -5,7 +5,7 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbParti
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortKey;
 
 @DynamoDbBean
-public class Projects {
+public class Project {
 
     private Long id;
 
@@ -19,7 +19,7 @@ public class Projects {
 
     private int grade;
 
-    public Projects(Long id, Long studentId, Long courseId, String name, String gitHubRepo, int grade) {
+    public Project(Long id, Long studentId, Long courseId, String name, String gitHubRepo, int grade) {
         this.id = id;
         this.studentId = studentId;
         this.courseId = courseId;
