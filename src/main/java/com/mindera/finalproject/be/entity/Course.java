@@ -6,6 +6,7 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortK
 
 import java.math.BigDecimal;
 import java.util.Map;
+import java.util.Objects;
 
 @DynamoDbBean
 public class Course {
@@ -16,12 +17,17 @@ public class Course {
     public Account teacher;
     public String syllabus;
     public String program;
-    public Map<String, String> schedule; //Can be somehting like {monday=10-18, tuesday=14-18}
+    public Map<String, String> schedule; //Can be something like {monday=10-18, tuesday=14-18}
     public BigDecimal price;
     public Integer duration; //I used Integer assuming days or months, but this can be changed
     public String location;
     public Integer numberOfApplications;
     public Integer maxNumberOfApplications;
+
+
+    public Course() {
+    }
+
 
     @DynamoDbPartitionKey
     public Long getId() {
@@ -119,5 +125,36 @@ public class Course {
 
     public void setMaxNumberOfApplications(Integer maxNumberOfApplications) {
         this.maxNumberOfApplications = maxNumberOfApplications;
+    }
+
+    @Override
+    public String toString() {
+        return "Course{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", edition=" + edition +
+                ", teacher=" + teacher +
+                ", syllabus='" + syllabus + '\'' +
+                ", program='" + program + '\'' +
+                ", schedule=" + schedule +
+                ", price=" + price +
+                ", duration=" + duration +
+                ", location='" + location + '\'' +
+                ", numberOfApplications=" + numberOfApplications +
+                ", maxNumberOfApplications=" + maxNumberOfApplications +
+                '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Course course = (Course) o;
+        return Objects.equals(id, course.id) && Objects.equals(name, course.name) && Objects.equals(edition, course.edition) && Objects.equals(teacher, course.teacher) && Objects.equals(syllabus, course.syllabus) && Objects.equals(program, course.program) && Objects.equals(schedule, course.schedule) && Objects.equals(price, course.price) && Objects.equals(duration, course.duration) && Objects.equals(location, course.location) && Objects.equals(numberOfApplications, course.numberOfApplications) && Objects.equals(maxNumberOfApplications, course.maxNumberOfApplications);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, edition, teacher, syllabus, program, schedule, price, duration, location, numberOfApplications, maxNumberOfApplications);
     }
 }
