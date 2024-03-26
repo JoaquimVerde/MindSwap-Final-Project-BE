@@ -19,10 +19,17 @@ public class StudentController {
     public Response getStudents(){
         return Response.ok(studentService.findAll()).build();
     }
+
+    @GET
+    @Path("{studentId}")
+    public Response getStudentById(Long id){
+        return Response.ok(studentService.get(id)).build();
+    }
     @POST
     public Response createStudent(@RequestBody StudentCreateDto studentCreateDto){
         return Response.accepted(studentService.add(studentCreateDto)).build();
     }
+
 
 
 

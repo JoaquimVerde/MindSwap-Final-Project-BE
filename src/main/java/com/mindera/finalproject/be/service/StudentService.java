@@ -11,4 +11,6 @@ public interface StudentService {
     List<Student> findAll();
 
     StudentPublicDto add(StudentCreateDto studentCreateDto);
+
+    StudentPublicDto get(Long id);
 }
