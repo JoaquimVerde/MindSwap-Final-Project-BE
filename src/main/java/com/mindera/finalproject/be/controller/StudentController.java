@@ -27,12 +27,17 @@ public class StudentController {
     }
     @POST
     public Response createStudent(StudentCreateDto studentCreateDto){
-        return Response.accepted(studentService.add(studentCreateDto)).build();
+        return Response.ok(studentService.add(studentCreateDto)).status(Response.Status.CREATED).build();
     }
     @PUT
     @Path("{studentId}")
     public Response editStudent(Long id, StudentCreateDto studentCreateDto){
-        return Response.accepted(studentService.edit(id, studentCreateDto)).build();
+        return Response.accepted(studentService.edit(id, studentCreateDto)).status(Response.Status.ACCEPTED).build();
+    }
+    @DELETE
+    @Path("{studentId}")
+    public Response deleteStudent(Long id){
+        return Response.ok(studentService.delete(id)).build();
     }
 
 

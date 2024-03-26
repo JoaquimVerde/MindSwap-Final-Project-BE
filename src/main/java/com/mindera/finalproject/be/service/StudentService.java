@@ -15,4 +15,6 @@ public interface StudentService {
     StudentPublicDto get(Long id);
 
     StudentPublicDto edit(Long id, StudentCreateDto studentCreateDto);
+
+    StudentPublicDto delete(Long id);
 }
