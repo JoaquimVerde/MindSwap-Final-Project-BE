@@ -1,7 +1,7 @@
 package com.mindera.finalproject.be.controller;
 
 import com.mindera.finalproject.be.dto.registration.RegistrationCreateDto;
-import com.mindera.finalproject.be.service.impl.RegistrationServiceImpl;
+import com.mindera.finalproject.be.service.RegistrationService;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
@@ -15,7 +15,7 @@ import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 public class RegistrationController {
 
     @Inject
-    private RegistrationServiceImpl registrationService;
+    private RegistrationService registrationService;
 
     @GET
     public Response getRegistrations() {
