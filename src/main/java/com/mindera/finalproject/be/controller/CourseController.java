@@ -43,7 +43,7 @@ public class CourseController {
     })
     @POST
     public Response create(@Valid @RequestBody courseCreateDto courseCreateDto) {
-        return Response.ok(courseService.create(courseCreateDto)).build();
+        return Response.ok(courseService.create(courseCreateDto)).status(Response.Status.CREATED).build();
     }
 
     @Operation(summary = "Update a course")
