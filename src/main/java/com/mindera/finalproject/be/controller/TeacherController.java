@@ -62,7 +62,7 @@ public class TeacherController {
             @APIResponse(responseCode = "404", description = "Teacher not found")
     })
     @DELETE
-    @Path("{teacherId}")
+    @Path("/{teacherId}")
     public Response deleteTeacher(@PathParam("id") Long id) {
         return Response.ok(teacherService.delete(id)).build();
     }
