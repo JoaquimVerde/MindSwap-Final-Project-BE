@@ -17,7 +17,7 @@ import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 public class CourseController {
 
     @Inject
-    CourseService courseService;
+    private CourseService courseService;
 
     @Operation(summary = "Find all courses")
     @APIResponse(responseCode = "200", description = "List of all courses")
@@ -33,7 +33,7 @@ public class CourseController {
     })
     @GET
     @Path("/{id}")
-    public Response findById(@PathParam("id") Long id) throws CourseNotFoundException{
+    public Response findById(@PathParam("id") Long id) throws CourseNotFoundException {
         return Response.ok(courseService.findById(id)).build();
     }
 
