@@ -24,6 +24,11 @@ public class TeacherController {
         return Response.ok(teacherService.get(id)).build();
     }
 
+    @POST
+    public Response createTeacher(PersonCreateDto personCreateDto) {
+        return Response.ok(teacherService.add(personCreateDto)).status(Response.Status.CREATED).build();
+    }
+
     @PUT
     @Path("{teacherId}")
     public Response editTeacher(Long id, PersonCreateDto personCreateDto) {
