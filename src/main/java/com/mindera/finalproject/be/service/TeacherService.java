@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface TeacherService {
 
-    List<Person> findAll();
+    List<PersonPublicDto> findAll();
 
     PersonPublicDto get(Long id);
 
