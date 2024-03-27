@@ -13,5 +13,5 @@ public interface CourseService {
     CoursePublicDto findById(Long id);
     CoursePublicDto create(CourseCreateDto coursePublicDto);
     CoursePublicDto edit(Long id, CourseCreateDto coursePublicDto);
-    String delete(Long id);
+    void delete(Long id);
 }

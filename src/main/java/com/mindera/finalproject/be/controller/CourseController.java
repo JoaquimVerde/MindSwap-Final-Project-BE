@@ -67,6 +67,7 @@ public class CourseController {
     @DELETE
     @Path("/{id}")
     public Response delete(@PathParam("id") Long id) throws CourseNotFoundException {
-        return Response.ok(courseService.delete(id)).build();
+        courseService.delete(id);
+        return Response.ok().build();
     }
 }

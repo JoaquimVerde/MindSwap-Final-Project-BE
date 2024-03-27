@@ -34,7 +34,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public String delete(Long id) {
-        return "Course with id " + id + " deleted.";
+    public void delete(Long id) {
+
     }
 }
