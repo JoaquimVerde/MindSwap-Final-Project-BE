@@ -1,7 +1,6 @@
 package com.mindera.finalproject.be.controller;
 
 import com.mindera.finalproject.be.dto.course.CourseCreateDto;
-import com.mindera.finalproject.be.dto.course.courseCreateDto;
 import com.mindera.finalproject.be.service.CourseService;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
