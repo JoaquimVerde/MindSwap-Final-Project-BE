@@ -7,10 +7,8 @@ public interface ProjectService {
 
     ProjectPublicDto findAll();
     ProjectPublicDto findById(Long id);
-    ProjectCreateDto createProject(ProjectCreateDto ProjectCreateDto);
-
-    //PUT
-
-    // DELETE
+    ProjectCreateDto create(ProjectCreateDto ProjectCreateDto);
+    ProjectPublicDto update(Long id, ProjectCreateDto ProjectCreateDto);
+    void delete(Long id);
 
 }

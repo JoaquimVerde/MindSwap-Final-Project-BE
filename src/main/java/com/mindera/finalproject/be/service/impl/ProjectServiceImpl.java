@@ -18,7 +18,17 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ProjectCreateDto createProject(ProjectCreateDto ProjectCreateDto) {
+    public ProjectCreateDto create(ProjectCreateDto ProjectCreateDto) {
         return null;
+    }
+
+    @Override
+    public ProjectPublicDto update(Long id, ProjectCreateDto ProjectCreateDto) {
+        return null;
+    }
+
+    @Override
+    public void delete(Long id) {
+
     }
 }
