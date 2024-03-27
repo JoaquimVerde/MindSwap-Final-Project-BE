@@ -7,7 +7,7 @@ import com.mindera.finalproject.be.service.CourseService;
 import jakarta.inject.Inject;
 
 import java.util.List;
-
+@ApplicationScoped
 public class CourseServiceImpl implements CourseService {
 
     @Inject
