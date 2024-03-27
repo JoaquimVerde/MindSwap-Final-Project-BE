@@ -1,5 +1,6 @@
 package com.mindera.finalproject.be.controller;
 
+import com.mindera.finalproject.be.dto.person.PersonCreateDto;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;

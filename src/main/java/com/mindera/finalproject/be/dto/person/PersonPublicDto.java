@@ -1,4 +1,14 @@
 package com.mindera.finalproject.be.dto.person;
 
-public class PersonPublicDto {
+import java.time.LocalDate;
+
+public record PersonPublicDto(
+        String email,
+        String firstName,
+        String lastName,
+        String role,
+        String username,
+        LocalDate dateOfBirth,
+        String address
+) {
 }
