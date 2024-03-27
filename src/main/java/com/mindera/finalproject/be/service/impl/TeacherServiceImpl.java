@@ -10,7 +10,7 @@ import java.util.List;
 public class TeacherServiceImpl implements TeacherService {
 
     @Override
-    public List<Person> findAll() {
+    public List<PersonPublicDto> findAll() {
         return null;
     }
 
