@@ -18,7 +18,6 @@ public class TeacherController {
     @Inject
     TeacherService teacherService;
 
-    @Path("/")
     @Operation(summary = "Get all teachers")
     @APIResponse(responseCode = "200", description = "List of all teachers")
     @GET
@@ -32,8 +31,8 @@ public class TeacherController {
             @APIResponse(responseCode = "404", description = "Teacher not found")
     })
     @GET
-    @Path("{teacherId}")
-    public Response getTeacherById(@QueryParam("id") Long id) {
+    @Path("/{teacherId}")
+    public Response getTeacherById(@PathParam("id") Long id) {
         return Response.ok(teacherService.get(id)).build();
     }
 
@@ -52,8 +51,8 @@ public class TeacherController {
             @APIResponse(responseCode = "404", description = "Teacher not found")
     })
     @PUT
-    @Path("{teacherId}")
-    public Response editTeacher(@QueryParam("id") Long id, PersonCreateDto personCreateDto) {
+    @Path("/{teacherId}")
+    public Response editTeacher(@PathParam("id") Long id, PersonCreateDto personCreateDto) {
         return Response.accepted(teacherService.edit(id, personCreateDto)).status(Response.Status.ACCEPTED).build();
     }
 
@@ -64,7 +63,7 @@ public class TeacherController {
     })
     @DELETE
     @Path("{teacherId}")
-    public Response deleteTeacher(@QueryParam("id") Long id) {
+    public Response deleteTeacher(@PathParam("id") Long id) {
         return Response.ok(teacherService.delete(id)).build();
     }
 }
