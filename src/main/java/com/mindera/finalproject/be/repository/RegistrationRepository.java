@@ -21,22 +21,13 @@ public class RegistrationRepository {
     public RegistrationRepository() {
         table.createTable();
     }
-    public Registration save(RegistrationCreateDto registrationCreateDto) {
-
-        Registration registration = new Registration(
-                registrationCreateDto.registrationId(),
-                registrationCreateDto.personId(),
-                registrationCreateDto.courseId(),
-                registrationCreateDto.status(),
-                registrationCreateDto.finalGrade(),
-                registrationCreateDto.active());
+    public Registration save(Registration registration) {
         table.putItem(registration);
         return registration;
     }
 
     public List<Registration> getAll(){
        return table.scan().items().stream().toList();
-
     }
 
     public Registration getById(String registrationId) {
@@ -54,6 +45,10 @@ public class RegistrationRepository {
 
     public Registration getByCompositeKey(String compositeKey) {
         return table.getItem(Key.builder().partitionValue(compositeKey).build());
+    }
+
+    public void delete(String compositeKey) {
+        table.deleteItem(Key.builder().partitionValue(compositeKey).build());
     }
 
 }
