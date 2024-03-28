@@ -5,7 +5,6 @@ import com.mindera.finalproject.be.entity.Registration;
 import jakarta.inject.Singleton;
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.StaticAttributeTags;
-import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 
 @Singleton
 public class TableSchemas {
@@ -16,10 +15,10 @@ public class TableSchemas {
     public static final TableSchema<Registration> registrationTableSchema =
             TableSchema.builder(Registration.class)
             .newItemSupplier(Registration::new)
-                .addAtrribute(String.class, a -> a.name("registrationId")
-                        .getter(Registration::getRegistrationId)
-                        .setter(Registration::setRegistrationId)
-                        .tags(StaticAttributeTags.primaryPartitionKey()))
+            .addAttribute(String.class, a -> a.name("registrationId")
+                    .getter(Registration::getRegistrationId)
+                    .setter(Registration::setRegistrationId)
+                    .tags(StaticAttributeTags.primaryPartitionKey()))
                 .addAttribute(String.class, a -> a.name("compositeKey")
                         .getter(Registration::getCompositeKey)
                         .setter(Registration::setCompositeKey)

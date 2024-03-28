@@ -2,12 +2,13 @@ package com.mindera.finalproject.be.controller;
 
 import com.mindera.finalproject.be.dto.registration.RegistrationCreateDto;
 import com.mindera.finalproject.be.service.RegistrationService;
+import com.mindera.finalproject.be.service.impl.RegistrationServiceImpl;
 import jakarta.inject.Inject;
-import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
+
+import java.util.UUID;
 
 @Path("/api/v1/registration")
 @Produces(MediaType.APPLICATION_JSON)
@@ -15,33 +16,52 @@ import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 public class RegistrationController {
 
     @Inject
-    private RegistrationService registrationService;
+    RegistrationServiceImpl registrationService;
+
+
 
     @GET
     public Response getRegistrations() {
         return Response.ok(registrationService.findAll()).build();
     }
 
+
+    @Path("/create")
+    @POST
+    public Response createRegistration(RegistrationCreateDto registrationCreateDto) {
+
+        String registrationId = UUID.randomUUID().toString();
+
+        RegistrationCreateDto newRegistrationCreateDto = new RegistrationCreateDto(
+                registrationId,
+                registrationCreateDto.personId(),
+                registrationCreateDto.courseId(),
+                registrationCreateDto.status(),
+                registrationCreateDto.finalGrade(),
+                registrationCreateDto.active()
+        );
+
+
+        return Response.ok(registrationService.createRegistration(newRegistrationCreateDto)).build();
+    }
+
     @Path("/{id}")
     @GET
     public Response getRegistration(@PathParam("id") String id) { //Este id é personId#courseId, deve ser concatenado antes de chegar aqui
+        System.out.println("ID: " + id);
         return Response.ok(registrationService.findByCompositeKey(id)).build();
     }
 
-    @POST
-    public Response createRegistration(@Valid @RequestBody RegistrationCreateDto registrationCreateDto) {
-        return Response.ok(registrationService.createRegistration(registrationCreateDto)).status(Response.Status.CREATED).build();
-    }
-
-    @Path("/{id}")
+    @Path("/{id}/edit")
     @PUT
-    public Response editRegistration(@PathParam("id") String id, @Valid @RequestBody RegistrationCreateDto registrationCreateDto) { //Este id é personId#courseId, deve ser concatenado antes de chegar aqui
+    public Response editRegistration(@PathParam("id") String id, RegistrationCreateDto registrationCreateDto) { //Este id é personId#courseId, deve ser concatenado antes de chegar aqui
         return Response.ok(registrationService.updateRegistration(id, registrationCreateDto)).build();
     }
 
-    @Path("/{id}")
+    @Path("/{id}/delete")
     @DELETE
     public Response deleteRegistration(@PathParam("id") String id) { //Este id é personId#courseId, deve ser concatenado antes de chegar aqui
         return Response.ok(registrationService.deleteRegistration(id)).build();
     }
+
 }
