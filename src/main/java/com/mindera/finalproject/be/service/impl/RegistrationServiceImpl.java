@@ -4,9 +4,11 @@ import com.mindera.finalproject.be.dto.registration.RegistrationCreateDto;
 import com.mindera.finalproject.be.dto.registration.RegistrationPublicDto;
 import com.mindera.finalproject.be.entity.Registration;
 import com.mindera.finalproject.be.service.RegistrationService;
+import jakarta.enterprise.context.ApplicationScoped;
 
 import java.util.List;
 
+@ApplicationScoped
 public class RegistrationServiceImpl implements RegistrationService {
 
     //TODO: Implement Methods
