@@ -2,7 +2,6 @@ package com.mindera.finalproject.be.controller;
 
 import com.mindera.finalproject.be.dto.registration.RegistrationCreateDto;
 import com.mindera.finalproject.be.service.RegistrationService;
-import com.mindera.finalproject.be.service.impl.RegistrationServiceImpl;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
@@ -16,8 +15,7 @@ import java.util.UUID;
 public class RegistrationController {
 
     @Inject
-    RegistrationServiceImpl registrationService;
-
+    RegistrationService registrationService;
 
 
     @GET
