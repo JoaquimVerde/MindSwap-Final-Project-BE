@@ -8,8 +8,6 @@ import com.mindera.finalproject.be.service.RegistrationService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.modelmapper.ModelMapper;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 

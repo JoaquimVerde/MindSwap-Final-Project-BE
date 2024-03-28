@@ -3,7 +3,9 @@ package com.mindera.finalproject.be.service.impl;
 import com.mindera.finalproject.be.dto.project.ProjectCreateDto;
 import com.mindera.finalproject.be.dto.project.ProjectPublicDto;
 import com.mindera.finalproject.be.service.ProjectService;
+import jakarta.enterprise.context.ApplicationScoped;
 
+@ApplicationScoped
 public class ProjectServiceImpl implements ProjectService {
 
 
