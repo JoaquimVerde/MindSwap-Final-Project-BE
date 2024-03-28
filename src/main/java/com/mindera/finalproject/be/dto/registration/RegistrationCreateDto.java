@@ -6,6 +6,9 @@ import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
 public record RegistrationCreateDto(
+
+        @NotEmpty(message = "Registration id is required")
+        String registrationId,
         @NotEmpty(message = "Person id is required")
         Long personId,
 

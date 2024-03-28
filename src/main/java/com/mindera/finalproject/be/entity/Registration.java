@@ -6,21 +6,36 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortK
 
 @DynamoDbBean
 public class Registration {
+
+    private String registrationId;
     private Long personId;
     private Long courseId;
     private String status;
     private String finalGrade;
     private Boolean active;
+    private String compositeKey;
 
     public Registration() {
     }
 
-    public Registration(Long personId, Long courseId, String status, String finalGrade, Boolean active) {
+    public Registration(String registrationId,
+                        Long personId,
+                        Long courseId,
+                        String status,
+                        String finalGrade,
+                        Boolean active) {
+        this.registrationId = registrationId;
         this.personId = personId;
         this.courseId = courseId;
         this.status = status;
         this.finalGrade = finalGrade;
         this.active = active;
+        this.compositeKey = personId + "#" + courseId;
+    }
+
+
+    public String getRegistrationId() {
+        return registrationId;
     }
 
     public Long getPersonId() {
@@ -43,6 +58,15 @@ public class Registration {
         return active;
     }
 
+
+    public String getCompositeKey() {
+        return compositeKey;
+    }
+
+    public void setRegistrationId(String registrationId) {
+        this.registrationId = registrationId;
+    }
+
     public void setPersonId(Long personId) {
         this.personId = personId;
     }
@@ -63,13 +87,7 @@ public class Registration {
         this.active = active;
     }
 
-    @DynamoDbPartitionKey
-    public String getCompositeKey() {
-        return personId + "#" + courseId;
-    }
-
-    @DynamoDbSortKey
-    public String getSortKey() {
-        return "Registration";
-    }
+    public void setCompositeKey(String compositeKey) {
+            this.compositeKey = compositeKey;
+        }
 }
