@@ -34,7 +34,7 @@ public class CourseController {
     })
     @GET
     @Path("/{id}")
-    public Response findById(@PathParam("id") Long id) throws CourseNotFoundException {
+    public Response findById(@PathParam("id") Long id) {
         return Response.ok(courseService.findById(id)).build();
     }
 
@@ -54,7 +54,7 @@ public class CourseController {
     })
     @PUT
     @Path("/{id}")
-    public Response update(@PathParam("id") Long id, @Valid @RequestBody CourseCreateDto courseCreateDto) throws CourseNotFoundException {
+    public Response update(@PathParam("id") Long id, @Valid @RequestBody CourseCreateDto courseCreateDto) {
         return Response.ok(courseService.edit(id, courseCreateDto)).build();
     }
 
@@ -65,7 +65,7 @@ public class CourseController {
     })
     @DELETE
     @Path("/{id}")
-    public Response delete(@PathParam("id") Long id) throws CourseNotFoundException {
+    public Response delete(@PathParam("id") Long id) {
         courseService.delete(id);
         return Response.ok().build();
     }
