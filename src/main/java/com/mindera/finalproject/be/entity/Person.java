@@ -3,7 +3,6 @@ package com.mindera.finalproject.be.entity;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
 
-import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import java.time.LocalDate;
 import java.time.Period;
 
@@ -45,11 +44,10 @@ public abstract class Person {
     public Person() {
     }
 
-    private int calcAge(){
+    private int calcAge() {
         LocalDate currentDate = LocalDate.now();
         return Period.between(dateOfBirth, currentDate).getYears();
     }
-
 
 
     @DynamoDbPartitionKey
@@ -61,24 +59,48 @@ public abstract class Person {
         return email;
     }
 
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     public String getFirstName() {
         return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
     }
 
     public String getLastName() {
         return lastName;
     }
 
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
     public String getRole() {
         return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public String getUsername() {
         return username;
     }
 
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
     public LocalDate getDateOfBirth() {
         return dateOfBirth;
+    }
+
+    public void setDateOfBirth(LocalDate dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
     }
 
     public int getAge() {
@@ -87,30 +109,6 @@ public abstract class Person {
 
     public String getAddress() {
         return address;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public void setDateOfBirth(LocalDate dateOfBirth) {
-        this.dateOfBirth = dateOfBirth;
     }
 
     public void setAddress(String address) {
