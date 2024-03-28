@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface CourseService {
 
-    List<Course> findAll();
+    List<CoursePublicDto> findAll();
     CoursePublicDto findById(Long id);
     CoursePublicDto create(CourseCreateDto coursePublicDto);
     CoursePublicDto edit(Long id, CourseCreateDto coursePublicDto);
