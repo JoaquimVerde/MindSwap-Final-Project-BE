@@ -1,13 +1,17 @@
 package com.mindera.finalproject.be.repository.schema;
 
 
+import com.mindera.finalproject.be.entity.Course;
+import com.mindera.finalproject.be.entity.Person;
 import com.mindera.finalproject.be.entity.Registration;
 import com.mindera.finalproject.be.entity.Student;
 import jakarta.inject.Singleton;
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.StaticAttributeTags;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Map;
 
 @Singleton
 public class TableSchemas {
@@ -80,5 +84,46 @@ public class TableSchemas {
                             .setter(Student::setCurriculum))
                     .build();
 
-
+    public static final TableSchema<Course> courseTableSchema =
+            TableSchema.builder(Course.class)
+                    .newItemSupplier(Course::new)
+                    .addAttribute(Long.class, a -> a.name("id")
+                            .getter(Course::getId)
+                            .setter(Course::setId)
+                            .tags(StaticAttributeTags.primaryPartitionKey()))
+                    .addAttribute(String.class, a -> a.name("name")
+                            .getter(Course::getName)
+                            .setter(Course::setName))
+                    .addAttribute(Integer.class, a -> a.name("edition")
+                            .getter(Course::getEdition)
+                            .setter(Course::setEdition))
+                    .addAttribute(Person.class, a -> a.name("teacher")
+                            .getter(Course::getTeacher)
+                            .setter(Course::setTeacher)
+                            .tags(StaticAttributeTags.primarySortKey()))
+                    .addAttribute(String.class, a -> a.name("syllabus")
+                            .getter(Course::getSyllabus)
+                            .setter(Course::setSyllabus))
+                    .addAttribute(String.class, a -> a.name("program")
+                            .getter(Course::getProgram)
+                            .setter(Course::setProgram))
+                    .addAttribute(Map.class, a -> a.name("schedule")
+                            .getter(Course::getSchedule)
+                            .setter(Course::setSchedule))
+                    .addAttribute(BigDecimal.class, a -> a.name("price")
+                            .getter(Course::getPrice)
+                            .setter(Course::setPrice))
+                    .addAttribute(Integer.class, a -> a.name("duration")
+                            .getter(Course::getDuration)
+                            .setter(Course::setDuration))
+                    .addAttribute(String.class, a -> a.name("location")
+                            .getter(Course::getLocation)
+                            .setter(Course::setLocation))
+                    .addAttribute(Integer.class, a -> a.name("numberOfApplications")
+                            .getter(Course::getNumberOfApplications)
+                            .setter(Course::setNumberOfApplications))
+                    .addAttribute(Integer.class, a -> a.name("maxNumberOfApplications")
+                            .getter(Course::getMaxNumberOfApplications)
+                            .setter(Course::setMaxNumberOfApplications))
+                    .build();
 }
