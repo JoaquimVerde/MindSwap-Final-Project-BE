@@ -4,22 +4,22 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortKey;
 
+import java.net.URL;
 import java.util.List;
 
 @DynamoDbBean
 public class Project {
 
     private Long id;
-
     private List<Long> studentIds;
-
     private Long courseId;
-
     private String name;
-
     private String gitHubRepo;
-
     private int grade;
+
+
+    public Project() {
+    }
 
     public Project(Long id, List<Long> studentIds, Long courseId, String name, String gitHubRepo, int grade) {
         this.id = id;
@@ -30,13 +30,12 @@ public class Project {
         this.grade = grade;
     }
 
-    @DynamoDbSortKey
+    @DynamoDbPartitionKey
     public Long getId() {
         return id;
     }
 
-
-    @DynamoDbPartitionKey
+    @DynamoDbSortKey
     public List<Long> getStudentIds(){
         return studentIds;
     }
@@ -70,5 +69,17 @@ public class Project {
 
     public void setGrade(int grade) {
         this.grade = grade;
+    }
+
+    public void setStudentIds(List<Long> studentIds) {
+        this.studentIds = studentIds;
+    }
+
+    public void setCourseId(Long courseId) {
+        this.courseId = courseId;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 }

@@ -5,10 +5,11 @@ import com.mindera.finalproject.be.entity.Course;
 import com.mindera.finalproject.be.entity.Person;
 import com.mindera.finalproject.be.entity.Registration;
 import com.mindera.finalproject.be.entity.Student;
+import com.mindera.finalproject.be.entity.Project;
 import jakarta.inject.Singleton;
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.StaticAttributeTags;
-
+import java.util.List;
 import java.time.LocalDate;
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -91,10 +92,10 @@ public class TableSchemas {
                             .getter(Student::getEmail)
                             .setter(Student::setEmail)
                             .tags(StaticAttributeTags.primarySortKey()))
-                    .addAttribute(String.class, a -> a.name("first name")
+                    .addAttribute(String.class, a -> a.name("firstName")
                             .getter(Student::getFirstName)
                             .setter(Student::setFirstName))
-                    .addAttribute(String.class, a -> a.name("last name")
+                    .addAttribute(String.class, a -> a.name("lastName")
                             .getter(Student::getLastName)
                             .setter(Student::setLastName))
                     .addAttribute(String.class, a -> a.name("role")
@@ -103,11 +104,12 @@ public class TableSchemas {
                     .addAttribute(String.class, a -> a.name("username")
                             .getter(Student::getUsername)
                             .setter(Student::setUsername))
-                    .addAttribute(LocalDate.class, a -> a.name("date of birth")
+                    .addAttribute(LocalDate.class, a -> a.name("dateOfBirth")
                             .getter(Student::getDateOfBirth)
                             .setter(Student::setDateOfBirth))
                     .addAttribute(Integer.class, a -> a.name("age")
-                            .getter(Student::getAge))
+                            .getter(Student::getAge)
+                            .setter(Student::setAge))
                     .addAttribute(String.class, a -> a.name("address")
                             .getter(Student::getAddress)
                             .setter(Student::setAddress))
@@ -115,6 +117,32 @@ public class TableSchemas {
                             .getter(Student::getCurriculum)
                             .setter(Student::setCurriculum))
                     .build();
+
+
+    public static final TableSchema<Project> ProjectTableSchema =
+            TableSchema.builder(Project.class)
+                    .newItemSupplier(Project::new)
+                    .addAttribute(Long.class, a -> a.name("id")
+                            .getter(Project::getId)
+                            .setter(Project::setId)
+                            .tags(StaticAttributeTags.primaryPartitionKey()))
+                    .addAttribute(List.class, a -> a.name("studentIds")
+                            .getter(Project::getStudentIds)
+                            .setter(Project::setStudentIds)
+                            .tags(StaticAttributeTags.primarySortKey()))
+                    .addAttribute(Long.class, a -> a.name("courseId")
+                            .getter(Project::getCourseId)
+                            .setter(Project::setCourseId)
+                            .tags(StaticAttributeTags.primarySortKey()))
+                    .addAttribute(String.class, a -> a.name("name")
+                            .getter(Project::getName)
+                            .setter(Project::setName))
+                    .addAttribute(String.class, a -> a.name("gitHubRepo")
+                            .getter(Project::getGitHubRepo)
+                            .setter(Project::setGitHubRepo))
+                    .addAttribute(int.class, a -> a.name("grade")
+                            .getter(Project::getGrade)
+                            .setter(Project::setGrade))
 
     public static final TableSchema<Course> courseTableSchema =
             TableSchema.builder(Course.class)
