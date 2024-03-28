@@ -9,7 +9,7 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.StaticAttributeTags;
 import java.time.LocalDate;
 
 @Singleton
-public class TablesSchema {
+public class TablesSchemas {
     public static final TableSchema<Student> studentTableSchema =
             TableSchema.builder(Student.class)
                     .newItemSupplier(Student::new)

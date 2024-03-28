@@ -4,14 +4,11 @@ import com.mindera.finalproject.be.entity.Student;
 import jakarta.enterprise.context.ApplicationScoped;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 import software.amazon.awssdk.enhanced.dynamodb.Key;
-import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
-import software.amazon.awssdk.enhanced.dynamodb.mapper.StaticAttributeTags;
 
 
-import java.time.LocalDate;
 import java.util.List;
 
-import static com.mindera.finalproject.be.repository.schema.TablesSchema.studentTableSchema;
+import static com.mindera.finalproject.be.repository.schema.TablesSchemas.studentTableSchema;
 import static com.mindera.finalproject.be.repository.student.DbConfig.enhancedClient;
 
 @ApplicationScoped
