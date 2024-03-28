@@ -10,21 +10,17 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 import java.util.List;
-import java.util.Optional;
 
 @ApplicationScoped
 public class ProjectServiceImpl implements ProjectService {
 
-
-
     @Inject
     ProjectRepository projectRepository;
+
+
     @Override
     public List<Project> findAll() {
-        if(projectRepository.findAll().isEmpty()) {
-            return null;
-        }
-        return projectRepository.findAll();
+       return null;
     }
 
     @Override

@@ -45,10 +45,6 @@ public abstract class Person {
     public Person() {
     }
 
-
-
-
-
     @DynamoDbPartitionKey
     public Long getId() {
         return id;
