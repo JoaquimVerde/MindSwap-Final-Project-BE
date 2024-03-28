@@ -7,12 +7,12 @@ import com.mindera.finalproject.be.entity.Registration;
 import java.util.List;
 
 public interface RegistrationService {
-    Registration createRegistration(RegistrationCreateDto registrationCreateDto);
-    List<RegistrationPublicDto> findAll();
-    RegistrationPublicDto findByCompositeKey(String compositeKey);
+    Registration create(RegistrationCreateDto registrationCreateDto);
+    List<RegistrationPublicDto> getAll();
+    RegistrationPublicDto getByCompositeKey(String compositeKey);
 
-    RegistrationCreateDto updateRegistration(String CompositeKey, RegistrationCreateDto registrationCreateDto);
+    RegistrationPublicDto update(String CompositeKey, RegistrationCreateDto registrationCreateDto);
 
-    RegistrationPublicDto deleteRegistration(String compositeKey);
+    RegistrationPublicDto delete(String compositeKey);
 
 }
