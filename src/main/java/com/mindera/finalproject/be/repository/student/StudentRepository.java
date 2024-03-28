@@ -8,6 +8,7 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.StaticAttributeTags;
 
 
 import java.time.LocalDate;
+import java.util.List;
 
 import static com.mindera.finalproject.be.repository.student.DbConfig.enhancedClient;
 
@@ -49,17 +50,17 @@ public class StudentRepository{
                             .getter(Student::getCurriculum)
                             .setter(Student::setCurriculum))
                     .build();
-    DynamoDbTable<Student> table = enhancedClient.table("TestTable2", studentTableSchema);
+    DynamoDbTable<Student> table = enhancedClient.table("StudentTable", studentTableSchema);
 
-    public TestRep() {
-//        table.createTable();
+    public StudentRepository() {
+        table.createTable();
     }
 
-    public void save(TestEntity testEntity) {
-        table.putItem(testEntity);
+    public void save(Student student) {
+        table.putItem(student);
     }
 
-    public List<TestEntity> getAll() {
+    public List<Student> getAll() {
         return table.scan().items().stream().toList();
     }
 }
