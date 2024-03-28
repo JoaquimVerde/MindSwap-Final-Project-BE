@@ -38,17 +38,14 @@ public abstract class Person {
         this.role = role;
         this.username = username;
         this.dateOfBirth = dateOfBirth;
-        this.age = calcAge();
+        this.age = age;
         this.address = address;
     }
 
     public Person() {
     }
 
-    private int calcAge(){
-        LocalDate currentDate = LocalDate.now();
-        return Period.between(dateOfBirth, currentDate).getYears();
-    }
+
 
 
 
@@ -117,4 +114,8 @@ public abstract class Person {
         this.address = address;
     }
 
+    public void setAge(int age) {
+        LocalDate currentDate = LocalDate.now();
+        this.age = Period.between(dateOfBirth, currentDate).getYears();
+    }
 }

@@ -21,6 +21,9 @@ public class ProjectServiceImpl implements ProjectService {
     ProjectRepository projectRepository;
     @Override
     public List<Project> findAll() {
+        if(projectRepository.findAll().isEmpty()) {
+            return null;
+        }
         return projectRepository.findAll();
     }
 

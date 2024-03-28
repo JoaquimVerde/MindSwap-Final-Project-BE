@@ -7,7 +7,6 @@ import com.mindera.finalproject.be.entity.Project;
 import jakarta.inject.Singleton;
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.StaticAttributeTags;
-import java.net.URL;
 import java.util.List;
 import java.time.LocalDate;
 
@@ -57,10 +56,10 @@ public class TableSchemas {
                             .getter(Student::getEmail)
                             .setter(Student::setEmail)
                             .tags(StaticAttributeTags.primarySortKey()))
-                    .addAttribute(String.class, a -> a.name("first name")
+                    .addAttribute(String.class, a -> a.name("first_name")
                             .getter(Student::getFirstName)
                             .setter(Student::setFirstName))
-                    .addAttribute(String.class, a -> a.name("last name")
+                    .addAttribute(String.class, a -> a.name("last_name")
                             .getter(Student::getLastName)
                             .setter(Student::setLastName))
                     .addAttribute(String.class, a -> a.name("role")
@@ -69,11 +68,12 @@ public class TableSchemas {
                     .addAttribute(String.class, a -> a.name("username")
                             .getter(Student::getUsername)
                             .setter(Student::setUsername))
-                    .addAttribute(LocalDate.class, a -> a.name("date of birth")
+                    .addAttribute(LocalDate.class, a -> a.name("date_of_birth")
                             .getter(Student::getDateOfBirth)
                             .setter(Student::setDateOfBirth))
                     .addAttribute(Integer.class, a -> a.name("age")
-                            .getter(Student::getAge))
+                            .getter(Student::getAge)
+                            .setter(Student::setAge))
                     .addAttribute(String.class, a -> a.name("address")
                             .getter(Student::getAddress)
                             .setter(Student::setAddress))
