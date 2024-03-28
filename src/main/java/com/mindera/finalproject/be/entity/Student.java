@@ -15,6 +15,10 @@ public class Student extends Person {
         this.curriculum = curriculum;
     }
 
+    public Student() {
+
+    }
+
     public String getCurriculum() {
         return curriculum;
     }
@@ -22,4 +26,8 @@ public class Student extends Person {
     public void setCurriculum(String curriculum) {
         this.curriculum = curriculum;
     }
+
+    public void setId(Long aLong) {
+    }
+
 }

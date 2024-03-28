@@ -23,7 +23,7 @@ public class StudentController {
     }
 
     @GET
-    @Path("{studentId}")
+    @Path("/{studentId}")
     public Response getStudentById(@PathParam("studentId") Long id) {
         return Response.ok(studentService.get(id)).build();
     }
@@ -34,13 +34,13 @@ public class StudentController {
     }
 
     @PUT
-    @Path("{studentId}")
+    @Path("/{studentId}")
     public Response editStudent(@PathParam("studentId") Long id, @Valid @RequestBody StudentCreateDto studentCreateDto) {
         return Response.ok(studentService.edit(id, studentCreateDto)).build();
     }
 
     @DELETE
-    @Path("{studentId}")
+    @Path("/{studentId}")
     public Response deleteStudent(@PathParam("studentId") Long id) {
         return Response.ok(studentService.delete(id)).build();
     }

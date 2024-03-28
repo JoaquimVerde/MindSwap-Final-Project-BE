@@ -42,6 +42,9 @@ public abstract class Person {
         this.address = address;
     }
 
+    public Person() {
+    }
+
     private int calcAge(){
         LocalDate currentDate = LocalDate.now();
         return Period.between(dateOfBirth, currentDate).getYears();
