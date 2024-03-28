@@ -1,6 +1,7 @@
 package com.mindera.finalproject.be.controller;
 
-import com.mindera.finalproject.be.dto.course.courseCreateDto;
+import com.mindera.finalproject.be.dto.course.CourseCreateDto;
+import com.mindera.finalproject.be.service.CourseService;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
@@ -42,7 +43,7 @@ public class CourseController {
             @APIResponse(responseCode = "201", description = "Course created")
     })
     @POST
-    public Response create(@Valid @RequestBody courseCreateDto courseCreateDto) {
+    public Response create(@Valid @RequestBody CourseCreateDto courseCreateDto) {
         return Response.ok(courseService.create(courseCreateDto)).status(Response.Status.CREATED).build();
     }
 
@@ -53,7 +54,7 @@ public class CourseController {
     })
     @PUT
     @Path("/{id}")
-    public Response update(@PathParam("id") Long id, @Valid @RequestBody courseCreateDto courseCreateDto) throws CourseNotFoundException {
+    public Response update(@PathParam("id") Long id, @Valid @RequestBody CourseCreateDto courseCreateDto) throws CourseNotFoundException {
         return Response.ok(courseService.edit(id, courseCreateDto)).build();
     }
 
@@ -65,6 +66,7 @@ public class CourseController {
     @DELETE
     @Path("/{id}")
     public Response delete(@PathParam("id") Long id) throws CourseNotFoundException {
-        return Response.ok(courseService.delete(id)).build();
+        courseService.delete(id);
+        return Response.ok().build();
     }
 }
