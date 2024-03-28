@@ -102,7 +102,7 @@ public class TableSchemas {
                     .addAttribute(String.class, a -> a.name("name")
                             .getter(Project::getName)
                             .setter(Project::setName))
-                    .addAttribute(URL.class, a -> a.name("gitHubRepo")
+                    .addAttribute(String.class, a -> a.name("gitHubRepo")
                             .getter(Project::getGitHubRepo)
                             .setter(Project::setGitHubRepo))
                     .addAttribute(int.class, a -> a.name("grade")

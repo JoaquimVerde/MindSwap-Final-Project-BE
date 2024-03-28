@@ -15,7 +15,7 @@ import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 public class StudentController {
 
     @Inject
-    private StudentService studentService;
+    StudentService studentService;
 
     @GET
     public Response getStudents() {

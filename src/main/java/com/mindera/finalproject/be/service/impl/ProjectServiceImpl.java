@@ -16,16 +16,12 @@ import java.util.Optional;
 public class ProjectServiceImpl implements ProjectService {
 
 
+
     @Inject
     ProjectRepository projectRepository;
     @Override
     public List<Project> findAll() {
-        Optional<List<Project>> projects = Optional.of(projectRepository.findAll());
-
-        if (projects.isEmpty()) {
-            return null;
-        }
-        return projects.get();
+        return projectRepository.findAll();
     }
 
     @Override

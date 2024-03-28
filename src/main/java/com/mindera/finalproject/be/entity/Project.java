@@ -14,14 +14,14 @@ public class Project {
     private List<Long> studentIds;
     private Long courseId;
     private String name;
-    private URL gitHubRepo;
+    private String gitHubRepo;
     private int grade;
 
 
     public Project() {
     }
 
-    public Project(Long id, List<Long> studentIds, Long courseId, String name, URL gitHubRepo, int grade) {
+    public Project(Long id, List<Long> studentIds, Long courseId, String name, String gitHubRepo, int grade) {
         this.id = id;
         this.studentIds = studentIds;
         this.courseId = courseId;
@@ -55,11 +55,11 @@ public class Project {
         this.name = name;
     }
 
-    public URL getGitHubRepo() {
+    public String getGitHubRepo() {
         return gitHubRepo;
     }
 
-    public void setGitHubRepo(URL gitHubRepo) {
+    public void setGitHubRepo(String gitHubRepo) {
         this.gitHubRepo = gitHubRepo;
     }
 

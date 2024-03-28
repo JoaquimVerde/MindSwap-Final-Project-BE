@@ -8,7 +8,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 
 import java.util.List;
 @ApplicationScoped
-public class StudentServiceImp implements StudentService {
+public class StudentServiceImpl implements StudentService {
     @Override
     public List<Student> findAll() {
         return null;
