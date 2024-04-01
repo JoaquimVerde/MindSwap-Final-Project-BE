@@ -9,8 +9,10 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
+import software.amazon.awssdk.enhanced.dynamodb.Key;
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @ApplicationScoped
@@ -32,26 +34,28 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public PersonPublicDto getById(String id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getById'");
+        Key key = Key.builder().partitionValue(id).build();
+        return PersonConverter.fromEntityToDto(personTable.getItem(key));
+
     }
 
     @Override
     public PersonPublicDto create(PersonCreateDto personCreateDto) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'create'");
+        Person person = PersonConverter.fromDtoToEntity(personCreateDto);
+        personTable.putItem(person);
+        return PersonConverter.fromEntityToDto(person);
     }
 
     @Override
     public PersonPublicDto update(String id, PersonCreateDto personCreateDto) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+        Key partitionKey = Key.builder().partitionValue(id).build();
+        return PersonConverter.fromEntityToDto(personTable.getItem(partitionKey));
     }
 
     @Override
     public PersonPublicDto delete(String id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'delete'");
+        Key key = Key.builder().partitionValue(id).build();
+      return PersonConverter.fromEntityToDto(personTable.deleteItem(key));
     }
 
 
