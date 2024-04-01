@@ -4,18 +4,17 @@ import com.mindera.finalproject.be.dto.registration.RegistrationCreateDto;
 import com.mindera.finalproject.be.dto.registration.RegistrationPublicDto;
 import com.mindera.finalproject.be.entity.Registration;
 import com.mindera.finalproject.be.repository.RegistrationRepository;
-import com.mindera.finalproject.be.service.RegistrationService;
 import com.mindera.finalproject.be.service.impl.RegistrationServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
-import org.modelmapper.ModelMapper;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+
 import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
@@ -28,13 +27,9 @@ public class RegistrationServiceTests {
     @Mock
     private RegistrationRepository registrationRepository;
 
-    @Mock
-    private ModelMapper modelMapper;
-
     @BeforeEach
     public void init() {
         MockitoAnnotations.openMocks(this);
-        Mockito.reset(registrationRepository, modelMapper);
     }
 
     @Test
@@ -57,7 +52,6 @@ public class RegistrationServiceTests {
                 true
         );
 
-        when(modelMapper.map(registrationCreateDto, Registration.class)).thenReturn(registration);
         when(registrationRepository.save(registration)).thenReturn(registration);
 
         Registration result = registrationService.create(registrationCreateDto);
@@ -85,7 +79,6 @@ public class RegistrationServiceTests {
                 true
         );
 
-        when(modelMapper.map(registrationCreateDto, Registration.class)).thenReturn(registration);
         when(registrationRepository.save(any(Registration.class))).thenReturn(registration);
 
         Registration savedRegistration = registrationRepository.save(registration);
@@ -96,7 +89,6 @@ public class RegistrationServiceTests {
                 true
         );
 
-        when(modelMapper.map(savedRegistration, RegistrationPublicDto.class)).thenReturn(registrationPublicDto);
         when(registrationRepository.getAll()).thenReturn(List.of(savedRegistration));
 
         List<RegistrationPublicDto> result = registrationService.getAll();
@@ -123,8 +115,6 @@ public class RegistrationServiceTests {
                 true
         );
 
-        when(modelMapper.map(registration, RegistrationPublicDto.class)).thenReturn(registrationPublicDto);
-
         RegistrationPublicDto result = registrationService.getByCompositeKey("registrationId");
 
         assertEquals(registrationPublicDto, result);
@@ -150,7 +140,6 @@ public class RegistrationServiceTests {
                 true
         );
 
-        when(modelMapper.map(registrationCreateDto, Registration.class)).thenReturn(registration);
         when(registrationRepository.getByCompositeKey(any())).thenReturn(registration);
         when(registrationRepository.save(any(Registration.class))).thenReturn(registration);
 
@@ -159,8 +148,6 @@ public class RegistrationServiceTests {
                 "finalGrade",
                 true
         );
-
-        when(modelMapper.map(registration, RegistrationPublicDto.class)).thenReturn(registrationPublicDto);
 
         RegistrationPublicDto result = registrationService.update("registrationId", registrationCreateDto);
 
@@ -188,7 +175,6 @@ public class RegistrationServiceTests {
                 true
         );
 
-        when(modelMapper.map(registrationCreateDto, Registration.class)).thenReturn(registration);
         when(registrationRepository.save(any(Registration.class))).thenReturn(registration);
 
         // Step 2: Stub the getByCompositeKey method to return the Registration object
