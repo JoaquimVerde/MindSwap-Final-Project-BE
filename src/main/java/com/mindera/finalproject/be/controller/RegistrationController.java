@@ -19,14 +19,12 @@ public class RegistrationController {
 
 
     @GET
-    public Response getRegistrations() {
+    public Response getAll() {
         return Response.ok(registrationService.getAll()).build();
     }
 
-
-    @Path("/create")
     @POST
-    public Response createRegistration(RegistrationCreateDto registrationCreateDto) {
+    public Response create(RegistrationCreateDto registrationCreateDto) {
 
         String registrationId = UUID.randomUUID().toString();
 
@@ -45,18 +43,17 @@ public class RegistrationController {
 
     @Path("/{id}")
     @GET
-    public Response getRegistration(@PathParam("id") String id) { //Este id é personId#courseId, deve ser concatenado antes de chegar aqui
-        System.out.println("ID: " + id);
-        return Response.ok(registrationService.getByCompositeKey(id)).build();
+    public Response getById(@PathParam("id") String id) { //Este id é personId#courseId, deve ser concatenado antes de chegar aqui
+        return Response.ok(registrationService.getById(id)).build();
     }
 
-    @Path("/{id}/edit")
+    @Path("/{id}")
     @PUT
-    public Response editRegistration(@PathParam("id") String id, RegistrationCreateDto registrationCreateDto) { //Este id é personId#courseId, deve ser concatenado antes de chegar aqui
+    public Response update(@PathParam("id") String id, RegistrationCreateDto registrationCreateDto) { //Este id é personId#courseId, deve ser concatenado antes de chegar aqui
         return Response.ok(registrationService.update(id, registrationCreateDto)).build();
     }
 
-    @Path("/{id}/delete")
+    @Path("/{id}")
     @DELETE
     public Response deleteRegistration(@PathParam("id") String id) { //Este id é personId#courseId, deve ser concatenado antes de chegar aqui
         return Response.ok(registrationService.delete(id)).build();

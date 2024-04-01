@@ -8,28 +8,21 @@ import java.time.Period;
 
 
 @DynamoDbBean
-public abstract class Person {
+public class Person {
 
-    private Long id;
-
+    private String id;
     private String email;
-
     private String firstName;
-
     private String lastName;
-
     private String role;
-
     private String username;
-
     private LocalDate dateOfBirth;
-
     private int age;
-
     private String address;
+    private String cv;
 
 
-    public Person(Long id, String email, String firstName, String lastName, String role, String username, LocalDate dateOfBirth, int age, String address) {
+    public Person(String id, String email, String firstName, String lastName, String role, String username, LocalDate dateOfBirth, int age, String address, String cv) {
         this.id = id;
         this.email = email;
         this.firstName = firstName;
@@ -39,14 +32,19 @@ public abstract class Person {
         this.dateOfBirth = dateOfBirth;
         this.age = age;
         this.address = address;
+        this.cv = cv;
     }
 
     public Person() {
     }
 
     @DynamoDbPartitionKey
-    public Long getId() {
+    public String getId() {
         return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getEmail() {
@@ -112,5 +110,13 @@ public abstract class Person {
     public void setAge(int age) {
         LocalDate currentDate = LocalDate.now();
         this.age = Period.between(dateOfBirth, currentDate).getYears();
+    }
+
+    public String getCurriculum() {
+        return cv;
+    }
+
+    public void setCurriculum(String cv) {
+        this.cv = cv;
     }
 }

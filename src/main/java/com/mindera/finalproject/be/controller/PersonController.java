@@ -1,7 +1,8 @@
 package com.mindera.finalproject.be.controller;
 
 import com.mindera.finalproject.be.dto.course.CourseCreateDto;
-import com.mindera.finalproject.be.service.CourseService;
+import com.mindera.finalproject.be.dto.person.PersonCreateDto;
+import com.mindera.finalproject.be.service.PersonService;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
 import jakarta.ws.rs.*;
@@ -12,39 +13,39 @@ import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 
-@Path("/api/v1/courses")
+@Path("/api/v1/persons")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
-public class CourseController {
+public class PersonController {
 
     @Inject
-    private CourseService courseService;
+    private PersonService personService;
 
-    @Operation(summary = "Find all courses")
-    @APIResponse(responseCode = "200", description = "List of all courses")
+    @Operation(summary = "Find all persons")
+    @APIResponse(responseCode = "200", description = "List of all persons")
     @GET
     public Response getAll() {
-        return Response.ok(courseService.getAll()).build();
+        return Response.ok(personService.getAll()).build();
     }
 
-    @Operation(summary = "Find course by id")
+    @Operation(summary = "Find Person by id")
     @APIResponses(value = {
-            @APIResponse(responseCode = "200", description = "Course found"),
-            @APIResponse(responseCode = "404", description = "Course not found")
+            @APIResponse(responseCode = "200", description = "Person found"),
+            @APIResponse(responseCode = "404", description = "Person not found")
     })
     @GET
     @Path("/{id}")
     public Response getById(@PathParam("id") String id) {
-        return Response.ok(courseService.getById(id)).build();
+        return Response.ok(personService.getById(id)).build();
     }
 
     @Operation(summary = "Create a course")
     @APIResponses(value = {
-            @APIResponse(responseCode = "201", description = "Course created")
+            @APIResponse(responseCode = "201", description = "Person created")
     })
     @POST
-    public Response create(@Valid @RequestBody CourseCreateDto courseCreateDto) {
-        return Response.ok(courseService.create(courseCreateDto)).status(Response.Status.CREATED).build();
+    public Response create(@Valid @RequestBody PersonCreateDto courseCreateDto) {
+        return Response.ok(personService.create(courseCreateDto)).status(Response.Status.CREATED).build();
     }
 
     @Operation(summary = "Update a course")
@@ -54,8 +55,8 @@ public class CourseController {
     })
     @PUT
     @Path("/{id}")
-    public Response update(@PathParam("id") String id, @Valid @RequestBody CourseCreateDto courseCreateDto) {
-        return Response.ok(courseService.update(id, courseCreateDto)).build();
+    public Response update(@PathParam("id") String id, @Valid @RequestBody PersonCreateDto personCreateDto) {
+        return Response.ok(personService.update(id, personCreateDto)).build();
     }
 
     @Operation(summary = "Delete a course")
@@ -66,7 +67,7 @@ public class CourseController {
     @DELETE
     @Path("/{id}")
     public Response delete(@PathParam("id") String id) {
-        courseService.delete(id);
+        personService.delete(id);
         return Response.ok().build();
     }
 }

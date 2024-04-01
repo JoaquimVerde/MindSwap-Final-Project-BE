@@ -1,7 +1,6 @@
 package com.mindera.finalproject.be.service;
 
 import com.mindera.finalproject.be.dto.project.ProjectCreateDto;
-import com.mindera.finalproject.be.dto.project.ProjectPublicDto;
 import com.mindera.finalproject.be.entity.Project;
 
 import java.util.List;
@@ -9,10 +8,10 @@ import java.util.List;
 
 public interface ProjectService {
 
-    List<Project> findAll();
-    ProjectPublicDto findById(Long id);
-    ProjectCreateDto create(ProjectCreateDto ProjectCreateDto);
-    ProjectPublicDto update(Long id, ProjectCreateDto ProjectCreateDto);
-    void delete(Long id);
+    List<Project> getAll();
+    Project getById(String id);
+    Project create(ProjectCreateDto projectCreateDto);
+    Project update(String id, ProjectCreateDto projectCreateDto);
+    void delete(String id);
 
 }

@@ -2,7 +2,6 @@ package com.mindera.finalproject.be.entity;
 
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
-import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortKey;
 
 @DynamoDbBean
 public class Registration {
@@ -34,6 +33,7 @@ public class Registration {
     }
 
 
+    @DynamoDbPartitionKey
     public String getRegistrationId() {
         return registrationId;
     }

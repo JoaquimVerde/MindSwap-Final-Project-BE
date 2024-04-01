@@ -9,7 +9,7 @@ import java.util.Map;
 public record CoursePublicDto(
 
         @Schema(description = "The course id", example = "1")
-        Long id,
+        String id,
         @Schema(description = "The course name", example = "Frontend")
         String name,
         @Schema(description = "The course edition", example = "1")
