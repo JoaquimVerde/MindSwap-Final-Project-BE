@@ -4,8 +4,10 @@ import com.mindera.finalproject.be.dto.project.ProjectCreateDto;
 import com.mindera.finalproject.be.entity.Project;
 import com.mindera.finalproject.be.service.ProjectService;
 import com.mindera.finalproject.be.service.impl.ProjectServiceImpl;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
+import org.mockito.MockitoAnnotations;
 
 import java.util.List;
 
@@ -16,6 +18,11 @@ public class ProjectServiceTests {
 
     @InjectMocks
     ProjectServiceImpl projectService;
+
+    @BeforeEach
+    void initMocks() {
+        MockitoAnnotations.openMocks(this);
+    }
 
     @Test
      void testFindAll() {
@@ -49,6 +56,4 @@ public class ProjectServiceTests {
      void testDeleteProject() {
         projectService.delete(1L);
     }
-
-
 }

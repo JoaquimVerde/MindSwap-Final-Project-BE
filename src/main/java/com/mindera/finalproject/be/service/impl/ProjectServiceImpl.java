@@ -1,9 +1,7 @@
 package com.mindera.finalproject.be.service.impl;
 
 import com.mindera.finalproject.be.dto.project.ProjectCreateDto;
-import com.mindera.finalproject.be.dto.project.ProjectPublicDto;
 import com.mindera.finalproject.be.entity.Project;
-import com.mindera.finalproject.be.repository.ProjectRepository;
 import com.mindera.finalproject.be.service.ProjectService;
 import jakarta.enterprise.context.ApplicationScoped;
 
@@ -39,8 +37,8 @@ public class ProjectServiceImpl implements ProjectService {
     @Override
     public Project create(ProjectCreateDto projectCreateDto) {
         Project project = new Project();
-        project.setName(projectCreateDto.name());
-        project.setGitHubRepo(projectCreateDto.gitHubRepo());
+        project.setName("teste1");
+        project.setGitHubRepo("http://github.com/teste1");
         projectTable.putItem(project);
         return project;
     }
