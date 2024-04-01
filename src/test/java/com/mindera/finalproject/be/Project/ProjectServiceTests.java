@@ -2,7 +2,6 @@ package com.mindera.finalproject.be.Project;
 
 import com.mindera.finalproject.be.dto.project.ProjectCreateDto;
 import com.mindera.finalproject.be.entity.Project;
-import com.mindera.finalproject.be.service.ProjectService;
 import com.mindera.finalproject.be.service.impl.ProjectServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,6 +17,8 @@ public class ProjectServiceTests {
 
     @InjectMocks
     ProjectServiceImpl projectService;
+
+
 
     @BeforeEach
     void initMocks() {

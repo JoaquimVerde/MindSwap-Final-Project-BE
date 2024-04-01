@@ -35,17 +35,13 @@ public class Project {
         return id;
     }
 
-    @DynamoDbSortKey
     public List<Long> getStudentIds(){
         return studentIds;
     }
 
-    @DynamoDbSortKey
     public Long getCourseId(){
         return courseId;
     }
-
-
 
     public String getName() {
         return name;
