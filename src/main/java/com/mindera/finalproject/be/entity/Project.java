@@ -2,16 +2,14 @@ package com.mindera.finalproject.be.entity;
 
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
-import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortKey;
 
-import java.net.URL;
 import java.util.List;
 
 @DynamoDbBean
 public class Project {
 
-    private Long id;
-    private List<Long> studentIds;
+    private String id;
+    private List<Person> students;
     private Long courseId;
     private String name;
     private String gitHubRepo;
@@ -21,9 +19,9 @@ public class Project {
     public Project() {
     }
 
-    public Project(Long id, List<Long> studentIds, Long courseId, String name, String gitHubRepo, int grade) {
+    public Project(String id, List<Person> students, Long courseId, String name, String gitHubRepo, int grade) {
         this.id = id;
-        this.studentIds = studentIds;
+        this.students = students;
         this.courseId = courseId;
         this.name = name;
         this.gitHubRepo = gitHubRepo;
@@ -31,12 +29,12 @@ public class Project {
     }
 
     @DynamoDbPartitionKey
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public List<Long> getStudentIds(){
-        return studentIds;
+    public List<Person> getStudentIds(){
+        return students;
     }
 
     public Long getCourseId(){
@@ -67,15 +65,15 @@ public class Project {
         this.grade = grade;
     }
 
-    public void setStudentIds(List<Long> studentIds) {
-        this.studentIds = studentIds;
+    public void setStudents(List<Person> students) {
+        this.students = students;
     }
 
     public void setCourseId(Long courseId) {
         this.courseId = courseId;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 }

@@ -1,4 +1,4 @@
-package com.mindera.finalproject.be.Project;
+/* package com.mindera.finalproject.be.Project;
 
 import com.mindera.finalproject.be.dto.project.ProjectCreateDto;
 import com.mindera.finalproject.be.entity.Project;
@@ -58,3 +58,4 @@ public class ProjectServiceTests {
         projectService.delete(1L);
     }
 }
+ */

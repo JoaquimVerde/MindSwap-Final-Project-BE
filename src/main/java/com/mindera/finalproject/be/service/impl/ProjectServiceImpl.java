@@ -1,6 +1,7 @@
 package com.mindera.finalproject.be.service.impl;
 
 import com.mindera.finalproject.be.dto.project.ProjectCreateDto;
+import com.mindera.finalproject.be.entity.Person;
 import com.mindera.finalproject.be.entity.Project;
 import com.mindera.finalproject.be.service.ProjectService;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -25,35 +26,26 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<Project> findAll() {
+    public List<Project> getAll() {
         return projectTable.scan().items().stream().collect(Collectors.toList());
     }
 
     @Override
-    public Project findById(Long id) {
+    public Project getById(String id) {
         return projectTable.getItem(Key.builder().partitionValue(id).build());
     }
 
     @Override
-    public Project create(ProjectCreateDto projectCreateDto) {
-        Project project = new Project();
-        project.setName("teste1");
-        project.setGitHubRepo("http://github.com/teste1");
-        projectTable.putItem(project);
-        return project;
+    public Project create(ProjectCreateDto  dto) {
+        return null;
+    }
+    @Override
+    public Project update(String id, ProjectCreateDto projectCreateDto) {
+        return null;
     }
 
     @Override
-    public Project update(Long id, ProjectCreateDto projectCreateDto) {
-        Project project = projectTable.getItem(Key.builder().partitionValue(id).build());
-        project.setName(projectCreateDto.name());
-        project.setGitHubRepo(projectCreateDto.gitHubRepo());
-        projectTable.putItem(project);
-        return project;
-    }
-
-    @Override
-    public void delete(Long id) {
+    public void delete(String id) {
         projectTable.deleteItem(Key.builder().partitionValue(id).build());
     }
 }

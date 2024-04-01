@@ -27,6 +27,8 @@ public record PersonCreateDto(
         @DateFormat
         LocalDate dateOfBirth,
         @NotBlank(message = "Invalid address")
-        String address
+        String address,
+        @NotBlank(message = "Invalid curriculum")
+        String cv
 ) {
 }

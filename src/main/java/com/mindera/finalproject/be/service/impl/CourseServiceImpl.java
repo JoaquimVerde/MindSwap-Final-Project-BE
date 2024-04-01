@@ -2,41 +2,42 @@ package com.mindera.finalproject.be.service.impl;
 
 import com.mindera.finalproject.be.dto.course.CourseCreateDto;
 import com.mindera.finalproject.be.dto.course.CoursePublicDto;
-import com.mindera.finalproject.be.repository.CourseRepository;
 import com.mindera.finalproject.be.service.CourseService;
 import jakarta.enterprise.context.ApplicationScoped;
-import jakarta.inject.Inject;
 
 import java.util.List;
 
 @ApplicationScoped
 public class CourseServiceImpl implements CourseService {
 
-    @Inject
-    CourseRepository courseRepository;
-
     @Override
-    public List<CoursePublicDto> findAll() {
-        return null;
+    public List<CoursePublicDto> getAll() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getAll'");
     }
 
     @Override
-    public CoursePublicDto findById(Long id) {
-        return null;
+    public CoursePublicDto getById(String id) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getById'");
     }
 
     @Override
-    public CoursePublicDto create(CourseCreateDto courseCreateDtoDto) {
-        return null;
+    public CoursePublicDto create(CourseCreateDto coursePublicDto) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'create'");
     }
 
     @Override
-    public CoursePublicDto edit(Long id, CourseCreateDto courseCreateDto) {
-        return null;
+    public CoursePublicDto update(String id, CourseCreateDto coursePublicDto) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'update'");
     }
 
     @Override
-    public void delete(Long id) {
-
+    public void delete(String id) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'delete'");
     }
+
 }

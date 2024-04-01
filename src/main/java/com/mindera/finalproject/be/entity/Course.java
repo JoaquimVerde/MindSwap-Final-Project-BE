@@ -2,7 +2,6 @@ package com.mindera.finalproject.be.entity;
 
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
-import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortKey;
 
 import java.math.BigDecimal;
 import java.util.Map;
@@ -11,18 +10,18 @@ import java.util.Objects;
 @DynamoDbBean
 public class Course {
 
-    public Long id;
-    public String name;
-    public Integer edition;
-    public Person teacher;
-    public String syllabus;
-    public String program;
-    public Map<String, String> schedule; //Can be something like {monday=10-18, tuesday=14-18}
-    public BigDecimal price;
-    public Integer duration; //I used Integer assuming days or months, but this can be changed
-    public String location;
-    public Integer numberOfApplications;
-    public Integer maxNumberOfApplications;
+    private String id;
+    private String name;
+    private Integer edition;
+    private Person teacher;
+    private String syllabus;
+    private String program;
+    private Map<String, String> schedule; //Can be something like {monday=10-18, tuesday=14-18}
+    private BigDecimal price;
+    private Integer duration; //I used Integer assuming days or months, but this can be changed
+    private String location;
+    private Integer numberOfApplications;
+    private Integer maxNumberOfApplications;
 
 
     public Course() {
@@ -30,11 +29,11 @@ public class Course {
 
 
     @DynamoDbPartitionKey
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -54,7 +53,6 @@ public class Course {
         this.edition = edition;
     }
 
-    @DynamoDbSortKey
     public Person getTeacher() {
         return teacher;
     }

@@ -1,9 +1,7 @@
 package com.mindera.finalproject.be.dto.registration;
 
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
 
 public record RegistrationCreateDto(
 

@@ -10,7 +10,7 @@ public record ProjectCreateDto(
         @Pattern(regexp = "^[a-zA-Z_0-9~`'^ ]+$", message = "Invalid name")
         String name,
 
-        @URL(message = "invalid url")
+        /* @URL(message = "invalid url") */
         String gitHubRepo
 
 ) {

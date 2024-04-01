@@ -25,8 +25,8 @@ public class ProjectController {
     @Operation(summary = "Find all projects")
     @APIResponse(responseCode = "200", description = "List of all projects")
     @GET
-    public Response findAll(){
-        return Response.ok(projectService.findAll()).build();
+    public Response getAll(){
+        return Response.ok(projectService.getAll()).build();
     }
 
 
@@ -37,8 +37,8 @@ public class ProjectController {
     })
     @Path("/{id}")
     @GET
-        public Response findById(@PathParam("id") Long id){
-            return Response.ok(projectService.findById(id)).build();
+        public Response getById(@PathParam("id") String id){
+            return Response.ok(projectService.getById(id)).build();
     }
 
 
@@ -59,7 +59,7 @@ public class ProjectController {
     })
     @PUT
     @Path("/{id}")
-    public Response update(@PathParam("id") Long id, @Valid @RequestBody ProjectCreateDto ProjectCreateDto){
+    public Response update(@PathParam("id") String id, @Valid @RequestBody ProjectCreateDto ProjectCreateDto){
         return Response.ok(projectService.update(id, ProjectCreateDto)).build();
     }
 
@@ -71,7 +71,7 @@ public class ProjectController {
     })
     @DELETE
     @Path("/{id}")
-    public Response delete(@PathParam("id") Long id){
+    public Response delete(@PathParam("id") String id){
         projectService.delete(id);
         return Response.ok().build();
     }
