@@ -12,5 +12,5 @@ public interface RegistrationService {
     RegistrationPublicDto getById(String id);
     Registration create(RegistrationCreateDto registrationCreateDto);
     RegistrationPublicDto update(String id, RegistrationCreateDto registrationCreateDto);
-    RegistrationPublicDto delete(String id);
+    void delete(String id);
 }
