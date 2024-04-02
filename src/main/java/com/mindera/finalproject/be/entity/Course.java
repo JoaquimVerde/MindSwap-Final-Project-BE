@@ -27,6 +27,22 @@ public class Course {
     public Course() {
     }
 
+    public Course(String PK, String SK, String name, Integer edition, Person teacher, String syllabus, String program, String schedule, BigDecimal price, Integer duration, String location, Integer numberOfApplications, Integer maxNumberOfApplications) {
+        this.PK = PK;
+        this.SK = SK;
+        this.name = name;
+        this.edition = edition;
+        this.teacher = teacher;
+        this.syllabus = syllabus;
+        this.program = program;
+        this.schedule = schedule;
+        this.price = price;
+        this.duration = duration;
+        this.location = location;
+        this.numberOfApplications = numberOfApplications;
+        this.maxNumberOfApplications = maxNumberOfApplications;
+    }
+
     @DynamoDbPartitionKey
     @DynamoDbAttribute("PK")
     @DynamoDbSecondarySortKey(indexNames = {"GSIPK"})
