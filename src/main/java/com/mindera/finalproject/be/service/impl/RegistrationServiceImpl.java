@@ -74,8 +74,9 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public void delete(String id) {
-        Registration registration = registrationTable.getItem(Key.builder().partitionValue(id).build());
+        Registration registration = registrationTable.getItem(Key.builder().partitionValue(id).sortValue(id).build());
         registration.setActive(false);
+        registrationTable.putItem(registration);
     }
 
 }
