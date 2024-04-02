@@ -59,35 +59,13 @@ public class RegistrationServiceImpl implements RegistrationService {
     public RegistrationPublicDto update(String id, RegistrationCreateDto registrationCreateDto) {
         Registration oldRegistration = registrationTable.getItem(Key.builder().partitionValue(id).sortValue(id).build());
 
-        // status
-        if(!registrationCreateDto.status().equals(oldRegistration.getStatus())){
-            oldRegistration.setStatus(registrationCreateDto.status());
-        }
-
-        //finalGrade
-        if(!registrationCreateDto.finalGrade().equals(oldRegistration.getFinalGrade())){
-            oldRegistration.setFinalGrade(registrationCreateDto.finalGrade());
-        }
-
-        //active
-        if(!registrationCreateDto.active().equals(oldRegistration.getActive())){
-            oldRegistration.setActive(registrationCreateDto.active());
-        }
-
-        //aboutYou
-        if(!registrationCreateDto.aboutYou().equals(oldRegistration.getAboutYou())){
-            oldRegistration.setAboutYou(registrationCreateDto.aboutYou());
-        }
-
-        //prevKnowledge
-        if(!registrationCreateDto.prevKnowledge().equals(oldRegistration.getPrevKnowledge())){
-            oldRegistration.setPrevKnowledge(registrationCreateDto.prevKnowledge());
-        }
-
-        //prevExperience
-        if(!registrationCreateDto.prevExperience().equals(oldRegistration.getPrevExperience())){
-            oldRegistration.setPrevExperience(registrationCreateDto.prevExperience());
-        }
+        oldRegistration.setPK(oldRegistration.getPK());
+        oldRegistration.setSK(oldRegistration.getSK());
+        oldRegistration.setStatus(registrationCreateDto.status());
+        oldRegistration.setFinalGrade(registrationCreateDto.finalGrade());
+        oldRegistration.setAboutYou(registrationCreateDto.aboutYou());
+        oldRegistration.setPrevKnowledge(registrationCreateDto.prevKnowledge());
+        oldRegistration.setPrevExperience(registrationCreateDto.prevExperience());
 
         registrationTable.putItem(oldRegistration);
 
