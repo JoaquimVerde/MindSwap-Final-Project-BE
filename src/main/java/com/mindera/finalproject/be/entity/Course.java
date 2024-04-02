@@ -27,6 +27,17 @@ public class Course {
     public Course() {
     }
 
+    public Course(String name, Integer edition, Person teacher, String syllabus, String program, Map<String, String> schedule, BigDecimal price, Integer duration, String location) {
+        this.name = name;
+        this.edition = edition;
+        this.teacher = teacher;
+        this.syllabus = syllabus;
+        this.program = program;
+        this.schedule = schedule;
+        this.price = price;
+        this.duration = duration;
+        this.location = location;
+    }
 
     @DynamoDbPartitionKey
     public String getId() {

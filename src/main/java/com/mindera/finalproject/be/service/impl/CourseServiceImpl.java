@@ -1,6 +1,7 @@
 package com.mindera.finalproject.be.service.impl;
 
 import com.mindera.finalproject.be.dto.course.CourseCreateDto;
+import com.mindera.finalproject.be.dto.course.CoursePublicDto;
 import com.mindera.finalproject.be.entity.Course;
 import com.mindera.finalproject.be.service.CourseService;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -29,19 +30,19 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Course getById(String id) {
+    public CoursePublicDto getById(String id) {
         return courseTable.getItem(Key.builder().partitionValue(id).build());
     }
 
     @Override
-    public Course create(CourseCreateDto coursePublicDto) {
+    public CoursePublicDto create(CourseCreateDto coursePublicDto) {
         Course course = new Course();
         courseTable.putItem(course);
         return course;
     }
 
     @Override
-    public Course update(String id, CourseCreateDto coursePublicDto) {
+    public CoursePublicDto update(String id, CourseCreateDto coursePublicDto) {
         Course course = new Course();
         courseTable.putItem(course);
         return course;

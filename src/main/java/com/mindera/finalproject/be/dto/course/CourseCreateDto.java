@@ -1,5 +1,6 @@
 package com.mindera.finalproject.be.dto.course;
 
+import com.mindera.finalproject.be.entity.Person;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -22,7 +23,7 @@ public record CourseCreateDto(
         @NotEmpty(message = "Teacher id is mandatory")
         @Pattern(regexp = "^[0-9]+$", message = "Teacher id can only contain numbers")
         @Schema(description = "The course teacher id", example = "1")
-        Long teacherId,
+        Person teacher,
 
         @NotEmpty(message = "Syllabus is mandatory")
         @Schema(description = "The course syllabus", example = "HTML, CSS, JavaScript")
