@@ -17,9 +17,9 @@ public class Course {
     private String teacherId;
     private String syllabus;
     private String program;
-    private String schedule; //Can be something like {monday=10-18, tuesday=14-18}
+    private String schedule;
     private BigDecimal price;
-    private Integer duration; //I used Integer assuming days or months, but this can be changed
+    private Integer duration;
     private String location;
     private Integer numberOfApplications;
     private Integer maxNumberOfApplications;
@@ -27,20 +27,16 @@ public class Course {
     public Course() {
     }
 
-    public Course(String PK, String SK, String name, Integer edition, Person teacher, String syllabus, String program, String schedule, BigDecimal price, Integer duration, String location, Integer numberOfApplications, Integer maxNumberOfApplications) {
-        this.PK = PK;
-        this.SK = SK;
+    public Course(String name, Integer edition, String teacherId, String syllabus, String program, String schedule, BigDecimal price, Integer duration, String location) {
         this.name = name;
         this.edition = edition;
-        this.teacher = teacher;
+        this.teacherId = teacherId;
         this.syllabus = syllabus;
         this.program = program;
         this.schedule = schedule;
         this.price = price;
         this.duration = duration;
         this.location = location;
-        this.numberOfApplications = numberOfApplications;
-        this.maxNumberOfApplications = maxNumberOfApplications;
     }
 
     @DynamoDbPartitionKey
@@ -81,9 +77,9 @@ public class Course {
         this.edition = edition;
     }
 
-    @DynamoDbAttribute("Teacher")
-    public Person getTeacher() {
-        return teacher;
+    @DynamoDbAttribute("TeacherId")
+    public String getTeacherId() {
+        return teacherId;
     }
 
     public void setTeacherId(String teacher) {
@@ -187,11 +183,11 @@ public class Course {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Course course = (Course) o;
-        return Objects.equals(PK, course.PK) && Objects.equals(SK, course.SK) && Objects.equals(name, course.name) && Objects.equals(edition, course.edition) && Objects.equals(teacher, course.teacher) && Objects.equals(syllabus, course.syllabus) && Objects.equals(program, course.program) && Objects.equals(schedule, course.schedule) && Objects.equals(price, course.price) && Objects.equals(duration, course.duration) && Objects.equals(location, course.location) && Objects.equals(numberOfApplications, course.numberOfApplications) && Objects.equals(maxNumberOfApplications, course.maxNumberOfApplications);
+        return Objects.equals(PK, course.PK) && Objects.equals(SK, course.SK) && Objects.equals(name, course.name) && Objects.equals(edition, course.edition) && Objects.equals(teacherId, course.teacherId) && Objects.equals(syllabus, course.syllabus) && Objects.equals(program, course.program) && Objects.equals(schedule, course.schedule) && Objects.equals(price, course.price) && Objects.equals(duration, course.duration) && Objects.equals(location, course.location) && Objects.equals(numberOfApplications, course.numberOfApplications) && Objects.equals(maxNumberOfApplications, course.maxNumberOfApplications);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(PK, SK, name, edition, teacher, syllabus, program, schedule, price, duration, location, numberOfApplications, maxNumberOfApplications);
+        return Objects.hash(PK, SK, name, edition, teacherId, syllabus, program, schedule, price, duration, location, numberOfApplications, maxNumberOfApplications);
     }
 }

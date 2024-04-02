@@ -8,8 +8,6 @@ import java.util.Map;
 
 public record CoursePublicDto(
 
-        @Schema(description = "The course id", example = "1")
-        String id,
         @Schema(description = "The course name", example = "Frontend")
         String name,
         @Schema(description = "The course edition", example = "1")
@@ -21,7 +19,7 @@ public record CoursePublicDto(
         @Schema(description = "The course program", example = "Frontend")
         String program,
         @Schema(description = "The course schedule", example = "{monday=10-18, tuesday=14-18}")
-        Map<String, String> schedule,
+        String schedule,
         @Schema(description = "The course price", example = "900.00")
         BigDecimal price,
         @Schema(description = "The course duration", example = "30")

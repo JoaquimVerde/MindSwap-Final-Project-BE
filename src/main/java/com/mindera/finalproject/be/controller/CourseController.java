@@ -44,8 +44,8 @@ public class CourseController {
             @APIResponse(responseCode = "201", description = "Course created")
     })
     @POST
-    public Response create(@Valid @RequestBody Course course) {
-        return Response.ok(courseService.create(course)).status(Response.Status.CREATED).build();
+    public Response create(@Valid @RequestBody CourseCreateDto courseCreateDto) {
+        return Response.ok(courseService.create(courseCreateDto)).status(Response.Status.CREATED).build();
     }
 
     @GET
