@@ -14,7 +14,7 @@ public class Course {
     private String SK;
     private String name;
     private Integer edition;
-    private Person teacher;
+    private String teacherId;
     private String syllabus;
     private String program;
     private String schedule; //Can be something like {monday=10-18, tuesday=14-18}
@@ -86,8 +86,8 @@ public class Course {
         return teacher;
     }
 
-    public void setTeacher(Person teacher) {
-        this.teacher = teacher;
+    public void setTeacherId(String teacher) {
+        this.teacherId = teacher;
     }
 
     @DynamoDbAttribute("Syllabus")
@@ -170,7 +170,7 @@ public class Course {
                 ", SK='" + SK + '\'' +
                 ", name='" + name + '\'' +
                 ", edition=" + edition +
-                ", teacher=" + teacher +
+                ", teacher=" + teacherId +
                 ", syllabus='" + syllabus + '\'' +
                 ", program='" + program + '\'' +
                 ", schedule=" + schedule +

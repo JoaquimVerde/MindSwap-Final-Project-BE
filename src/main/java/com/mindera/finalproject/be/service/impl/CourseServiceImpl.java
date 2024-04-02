@@ -1,7 +1,12 @@
 package com.mindera.finalproject.be.service.impl;
 
+
 import com.mindera.finalproject.be.TableCreation.TableCreation;
+
+import com.mindera.finalproject.be.converter.CourseConverter;
+
 import com.mindera.finalproject.be.dto.course.CourseCreateDto;
+import com.mindera.finalproject.be.dto.course.CoursePublicDto;
 import com.mindera.finalproject.be.entity.Course;
 import com.mindera.finalproject.be.service.CourseService;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -35,11 +40,11 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public List<Course> getAll() {
         return courseTable.scan().items().stream().toList();
-    }
+
 
     @Override
-    public Course getById(String id) {
-        return courseTable.getItem(Key.builder().partitionValue(id).build());
+    public CoursePublicDto getById(String id) {
+        return CourseConverter.fromEntityToPublicDto(courseTable.getItem(Key.builder().partitionValue(id).build()));
     }
 
     @Override
@@ -48,7 +53,7 @@ public class CourseServiceImpl implements CourseService {
         course.setPK(id);
         course.setSK(id);
         courseTable.putItem(course);
-        return course;
+        return CourseConverter.fromEntityToPublicDto(course);
     }
 
     @Override
@@ -65,7 +70,7 @@ public class CourseServiceImpl implements CourseService {
     public Course update(String id, CourseCreateDto coursePublicDto) {
         Course course = new Course();
         courseTable.putItem(course);
-        return course;
+        return CourseConverter.fromEntityToPublicDto(course);
     }
 
     @Override

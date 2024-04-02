@@ -15,7 +15,7 @@ public record CoursePublicDto(
         @Schema(description = "The course edition", example = "1")
         Integer edition,
         @Schema(description = "The course teacher", example = "John Doe")
-        Person teacher,
+        String teacherId,
         @Schema(description = "The course syllabus", example = "HTML, CSS, JavaScript")
         String syllabus,
         @Schema(description = "The course program", example = "Frontend")
