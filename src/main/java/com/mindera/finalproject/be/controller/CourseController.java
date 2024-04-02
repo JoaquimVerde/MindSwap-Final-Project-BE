@@ -55,7 +55,6 @@ public class CourseController {
 
     }
 
-
     @Operation(summary = "Update a course")
     @APIResponses(value = {
             @APIResponse(responseCode = "200", description = "Course updated"),

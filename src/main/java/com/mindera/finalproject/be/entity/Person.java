@@ -2,28 +2,34 @@ package com.mindera.finalproject.be.entity;
 
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortKey;
 
 import java.time.LocalDate;
 import java.time.Period;
+import java.util.Objects;
 
 
 @DynamoDbBean
 public class Person {
 
-    private String id;
+    private String PK;
+    private String SK;
     private String email;
     private String firstName;
     private String lastName;
     private String role;
     private String username;
     private LocalDate dateOfBirth;
-    private int age;
+    private Integer age;
     private String address;
     private String cv;
 
+    public Person() {
+    }
 
-    public Person(String id, String email, String firstName, String lastName, String role, String username, LocalDate dateOfBirth, int age, String address, String cv) {
-        this.id = id;
+    public Person(String PK, String SK, String email, String firstName, String lastName, String role, String username, LocalDate dateOfBirth, Integer age, String address, String cv) {
+        this.PK = PK;
+        this.SK = SK;
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -35,16 +41,22 @@ public class Person {
         this.cv = cv;
     }
 
-    public Person() {
-    }
-
     @DynamoDbPartitionKey
-    public String getId() {
-        return id;
+    public String getPK() {
+        return PK;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setPK(String PK) {
+        this.PK = PK;
+    }
+
+    @DynamoDbSortKey
+    public String getSK() {
+        return SK;
+    }
+
+    public void setSK(String SK) {
+        this.SK = SK;
     }
 
     public String getEmail() {
@@ -95,7 +107,7 @@ public class Person {
         this.dateOfBirth = dateOfBirth;
     }
 
-    public int getAge() {
+    public Integer getAge() {
         return age;
     }
 
@@ -107,9 +119,8 @@ public class Person {
         this.address = address;
     }
 
-    public void setAge(int age) {
-        LocalDate currentDate = LocalDate.now();
-        this.age = Period.between(dateOfBirth, currentDate).getYears();
+    public void setAge(Integer age) {
+        this.age = age;
     }
 
     public String getCurriculum() {
@@ -118,5 +129,35 @@ public class Person {
 
     public void setCurriculum(String cv) {
         this.cv = cv;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Person person = (Person) o;
+        return Objects.equals(PK, person.PK) && Objects.equals(SK, person.SK) && Objects.equals(email, person.email) && Objects.equals(firstName, person.firstName) && Objects.equals(lastName, person.lastName) && Objects.equals(role, person.role) && Objects.equals(username, person.username) && Objects.equals(dateOfBirth, person.dateOfBirth) && Objects.equals(age, person.age) && Objects.equals(address, person.address) && Objects.equals(cv, person.cv);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(PK, SK, email, firstName, lastName, role, username, dateOfBirth, age, address, cv);
+    }
+
+    @Override
+    public String toString() {
+        return "Person{" +
+                "PK='" + PK + '\'' +
+                ", SK='" + SK + '\'' +
+                ", email='" + email + '\'' +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", role='" + role + '\'' +
+                ", username='" + username + '\'' +
+                ", dateOfBirth=" + dateOfBirth +
+                ", age=" + age +
+                ", address='" + address + '\'' +
+                ", cv='" + cv + '\'' +
+                '}';
     }
 }

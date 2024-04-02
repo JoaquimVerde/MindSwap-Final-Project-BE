@@ -5,6 +5,7 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.*;
 import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 @DynamoDbBean
 public class Course {
@@ -23,12 +24,8 @@ public class Course {
     private Integer numberOfApplications;
     private Integer maxNumberOfApplications;
 
-
     public Course() {
     }
-
-
-
 
     @DynamoDbPartitionKey
     @DynamoDbAttribute("PK")
@@ -50,7 +47,6 @@ public class Course {
         this.SK = sk;
     }
 
-
     @DynamoDbAttribute("Name")
     public String getName() {
         return name;
@@ -60,12 +56,10 @@ public class Course {
         this.name = name;
     }
 
-
     @DynamoDbAttribute("Edition")
     public Integer getEdition() {
         return edition;
     }
-
 
     public void setEdition(Integer edition) {
         this.edition = edition;

@@ -6,19 +6,22 @@ import com.mindera.finalproject.be.entity.Course;
 import com.mindera.finalproject.be.service.CourseService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
-import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
-import software.amazon.awssdk.enhanced.dynamodb.Key;
-import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
+import software.amazon.awssdk.core.pagination.sync.SdkIterable;
+import software.amazon.awssdk.enhanced.dynamodb.*;
+import software.amazon.awssdk.enhanced.dynamodb.model.Page;
 import software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional;
 import software.amazon.awssdk.enhanced.dynamodb.model.QueryEnhancedRequest;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class CourseServiceImpl implements CourseService {
 
+    private final String TABLE_NAME = "Course";
+    private final String GSIPK = "GSIPK";
     private DynamoDbTable<Course> courseTable;
 
     @Inject
@@ -26,12 +29,12 @@ public class CourseServiceImpl implements CourseService {
 
     @Inject
     void projectEnhancedService(DynamoDbEnhancedClient dynamoEnhancedClient) {
-        courseTable = dynamoEnhancedClient.table("Course", TableSchema.fromBean(Course.class));
+        courseTable = dynamoEnhancedClient.table(TABLE_NAME, TableSchema.fromBean(Course.class));
     }
 
     @Override
     public List<Course> getAll() {
-        return courseTable.scan().items().stream().collect(Collectors.toList());
+        return courseTable.scan().items().stream().toList();
     }
 
     @Override
@@ -41,8 +44,9 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public Course create(Course course) {
-        course.setSK("000003");
-        course.setPK("000000003");
+        String id = "COURSE#" + UUID.randomUUID();
+        course.setPK(id);
+        course.setSK(id);
         courseTable.putItem(course);
         return course;
     }
@@ -50,8 +54,11 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public List<Course> getByLocation(String location) {
         QueryConditional queryConditional = QueryConditional.keyEqualTo(k -> k.partitionValue(location));
-        QueryEnhancedRequest queryEnhancedRequest = QueryEnhancedRequest.builder().queryConditional(queryConditional).build();
-        return courseTable.query(queryEnhancedRequest).items().stream().toList();
+        DynamoDbIndex<Course> courseIndex = courseTable.index(GSIPK);
+        SdkIterable<Page<Course>> courses = courseIndex.query(queryConditional);
+        List<Course> coursesList = new ArrayList<>();
+        courses.forEach(page -> coursesList.addAll(page.items()));
+        return coursesList;
     }
 
     @Override
