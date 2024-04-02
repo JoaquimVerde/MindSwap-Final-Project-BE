@@ -40,7 +40,7 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public List<Course> getAll() {
         return courseTable.scan().items().stream().toList();
-
+    }
 
     @Override
     public CoursePublicDto getById(String id) {
