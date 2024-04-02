@@ -10,6 +10,8 @@ import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 import software.amazon.awssdk.enhanced.dynamodb.Key;
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
+import software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional;
+import software.amazon.awssdk.enhanced.dynamodb.model.QueryEnhancedRequest;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -38,10 +40,18 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Course create(CourseCreateDto coursePublicDto) {
-        Course course = new Course();
+    public Course create(Course course) {
+        course.setSK("000003");
+        course.setPK("000000003");
         courseTable.putItem(course);
         return course;
+    }
+
+    @Override
+    public List<Course> getByLocation(String location) {
+        QueryConditional queryConditional = QueryConditional.keyEqualTo(k -> k.partitionValue(location));
+        QueryEnhancedRequest queryEnhancedRequest = QueryEnhancedRequest.builder().queryConditional(queryConditional).build();
+        return courseTable.query(queryEnhancedRequest).items().stream().toList();
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.mindera.finalproject.be.controller;
 
 import com.mindera.finalproject.be.dto.course.CourseCreateDto;
+import com.mindera.finalproject.be.entity.Course;
 import com.mindera.finalproject.be.service.CourseService;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
@@ -43,9 +44,17 @@ public class CourseController {
             @APIResponse(responseCode = "201", description = "Course created")
     })
     @POST
-    public Response create(@Valid @RequestBody CourseCreateDto courseCreateDto) {
-        return Response.ok(courseService.create(courseCreateDto)).status(Response.Status.CREATED).build();
+    public Response create(@Valid @RequestBody Course course) {
+        return Response.ok(courseService.create(course)).status(Response.Status.CREATED).build();
     }
+
+    @GET
+    @Path("/location/{location}")
+    public Response getByLocation(@PathParam("location") String location) {
+        return Response.ok(courseService.getByLocation(location)).build();
+
+    }
+
 
     @Operation(summary = "Update a course")
     @APIResponses(value = {

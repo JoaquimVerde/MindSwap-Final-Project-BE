@@ -28,9 +28,11 @@ public class Course {
     }
 
 
+
+
     @DynamoDbPartitionKey
     @DynamoDbAttribute("PK")
-    @DynamoDbSecondarySortKey(indexNames = {"GSIPK", "GSISK"})
+    @DynamoDbSecondarySortKey(indexNames = {"GSIPK"})
     public String getPK() {
         return PK;
     }
