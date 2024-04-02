@@ -56,7 +56,7 @@ public class RegistrationController {
     @Path("/{id}")
     @DELETE
     public Response deleteRegistration(@PathParam("id") String id) { //Este id é personId#courseId, deve ser concatenado antes de chegar aqui
-        return Response.ok(registrationService.delete(id)).build();
+        return Response.ok().build();
     }
 
 }
