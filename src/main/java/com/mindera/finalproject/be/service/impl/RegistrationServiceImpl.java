@@ -27,28 +27,31 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public List<RegistrationPublicDto> getAll() {
         //TODO convert List<Registration> to List<RegistrationPublicDto>
-        registrationTable.scan().items().stream().collect(Collectors.toList());
-        return null;
+        //and replace null with the converted list
+        return null; //registrationTable.scan().items().stream().collect(Collectors.toList());
     }
 
     @Override
     public RegistrationPublicDto getById(String id) {
         registrationTable.getItem(Key.builder().partitionValue(id).build());
         //TODO convert Registration to RegistrationPublicDto
+        //return the converted RegistrationPublicDto
         return null;
     }
 
     @Override
-    public Registration create(RegistrationCreateDto registrationCreateDto) {
+    public RegistrationPublicDto create(RegistrationCreateDto registrationCreateDto) {
         //TODO convert registrationCreateDto to Registration
+        //and replace the null return with the converted RegistrationPublicDto
         Registration registration = new Registration();
         registrationTable.putItem(registration);
-        return registration;
+        return null;
     }
 
     @Override
     public RegistrationPublicDto update(String id, RegistrationCreateDto registrationCreateDto) {
         //TODO convert registrationCreateDto to Registration
+        //and replace the null return with the converted RegistrationPublicDto
         Registration registration = new Registration();
         registrationTable.putItem(registration);
         return null;
