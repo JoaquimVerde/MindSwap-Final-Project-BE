@@ -56,13 +56,13 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public List<Course> getByLocation(String location) {
+    public List<CoursePublicDto> getByLocation(String location) {
         QueryConditional queryConditional = QueryConditional.keyEqualTo(k -> k.partitionValue(location));
         DynamoDbIndex<Course> courseIndex = courseTable.index(GSIPK);
         SdkIterable<Page<Course>> courses = courseIndex.query(queryConditional);
         List<Course> coursesList = new ArrayList<>();
         courses.forEach(page -> coursesList.addAll(page.items()));
-        return coursesList;
+        return CourseConverter.fromEntityListToPublicDtoList(coursesList);
     }
 
     @Override

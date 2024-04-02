@@ -11,7 +11,7 @@ public interface CourseService {
 
     List<CoursePublicDto> getAll();
     CoursePublicDto getById(String id);
-    List<Course> getByLocation(String location);
+    List<CoursePublicDto> getByLocation(String location);
     CoursePublicDto create(CourseCreateDto courseCreateDto);
     CoursePublicDto update(String id, CourseCreateDto coursePublicDto);
     void delete(String id);
