@@ -34,7 +34,7 @@ public record CourseCreateDto(
 
         @NotEmpty(message = "Schedule is mandatory")
         @Schema(description = "The course schedule", example = "{monday=10-18, tuesday=14-18}")
-        Map<String, String> schedule,
+        String schedule,
 
         @Positive(message = "Price is mandatory")
         @Schema(description = "The course price", example = "900.00")

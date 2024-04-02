@@ -15,12 +15,10 @@ import software.amazon.awssdk.core.pagination.sync.SdkIterable;
 import software.amazon.awssdk.enhanced.dynamodb.*;
 import software.amazon.awssdk.enhanced.dynamodb.model.Page;
 import software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional;
-import software.amazon.awssdk.enhanced.dynamodb.model.QueryEnhancedRequest;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @ApplicationScoped
 public class CourseServiceImpl implements CourseService {
@@ -38,8 +36,8 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public List<Course> getAll() {
-        return courseTable.scan().items().stream().toList();
+    public List<CoursePublicDto> getAll() {
+        return CourseConverter.fromEntityListToPublicDtoList(courseTable.scan().items().stream().toList());
     }
 
     @Override
@@ -48,7 +46,8 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Course create(Course course) {
+    public CoursePublicDto create(CourseCreateDto courseCreateDto) {
+        Course course = CourseConverter.fromCreateDtoToEntity(courseCreateDto);
         String id = "COURSE#" + UUID.randomUUID();
         course.setPK(id);
         course.setSK(id);
@@ -67,7 +66,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public Course update(String id, CourseCreateDto coursePublicDto) {
+    public CoursePublicDto update(String id, CourseCreateDto coursePublicDto) {
         Course course = new Course();
         courseTable.putItem(course);
         return CourseConverter.fromEntityToPublicDto(course);

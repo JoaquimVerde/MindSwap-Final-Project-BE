@@ -10,7 +10,6 @@ public class CourseConverter {
 
     public static CoursePublicDto fromEntityToPublicDto(Course course) {
         return new CoursePublicDto(
-                course.getId(),
                 course.getName(),
                 course.getEdition(),
                 course.getTeacherId(),
