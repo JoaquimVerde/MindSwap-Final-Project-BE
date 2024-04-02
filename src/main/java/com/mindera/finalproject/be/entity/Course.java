@@ -13,7 +13,7 @@ public class Course {
     private String id;
     private String name;
     private Integer edition;
-    private Person teacher;
+    private String teacherId;
     private String syllabus;
     private String program;
     private Map<String, String> schedule; //Can be something like {monday=10-18, tuesday=14-18}
@@ -27,6 +27,17 @@ public class Course {
     public Course() {
     }
 
+    public Course(String name, Integer edition, String teacherId, String syllabus, String program, Map<String, String> schedule, BigDecimal price, Integer duration, String location) {
+        this.name = name;
+        this.edition = edition;
+        this.teacherId = teacherId;
+        this.syllabus = syllabus;
+        this.program = program;
+        this.schedule = schedule;
+        this.price = price;
+        this.duration = duration;
+        this.location = location;
+    }
 
     @DynamoDbPartitionKey
     public String getId() {
@@ -53,12 +64,12 @@ public class Course {
         this.edition = edition;
     }
 
-    public Person getTeacher() {
-        return teacher;
+    public String getTeacherId() {
+        return teacherId;
     }
 
-    public void setTeacher(Person teacher) {
-        this.teacher = teacher;
+    public void setTeacherId(String teacher) {
+        this.teacherId = teacher;
     }
 
     public String getSyllabus() {
@@ -131,7 +142,7 @@ public class Course {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", edition=" + edition +
-                ", teacher=" + teacher +
+                ", teacher=" + teacherId +
                 ", syllabus='" + syllabus + '\'' +
                 ", program='" + program + '\'' +
                 ", schedule=" + schedule +
@@ -148,11 +159,11 @@ public class Course {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Course course = (Course) o;
-        return Objects.equals(id, course.id) && Objects.equals(name, course.name) && Objects.equals(edition, course.edition) && Objects.equals(teacher, course.teacher) && Objects.equals(syllabus, course.syllabus) && Objects.equals(program, course.program) && Objects.equals(schedule, course.schedule) && Objects.equals(price, course.price) && Objects.equals(duration, course.duration) && Objects.equals(location, course.location) && Objects.equals(numberOfApplications, course.numberOfApplications) && Objects.equals(maxNumberOfApplications, course.maxNumberOfApplications);
+        return Objects.equals(id, course.id) && Objects.equals(name, course.name) && Objects.equals(edition, course.edition) && Objects.equals(teacherId, course.teacherId) && Objects.equals(syllabus, course.syllabus) && Objects.equals(program, course.program) && Objects.equals(schedule, course.schedule) && Objects.equals(price, course.price) && Objects.equals(duration, course.duration) && Objects.equals(location, course.location) && Objects.equals(numberOfApplications, course.numberOfApplications) && Objects.equals(maxNumberOfApplications, course.maxNumberOfApplications);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, edition, teacher, syllabus, program, schedule, price, duration, location, numberOfApplications, maxNumberOfApplications);
+        return Objects.hash(id, name, edition, teacherId, syllabus, program, schedule, price, duration, location, numberOfApplications, maxNumberOfApplications);
     }
 }
