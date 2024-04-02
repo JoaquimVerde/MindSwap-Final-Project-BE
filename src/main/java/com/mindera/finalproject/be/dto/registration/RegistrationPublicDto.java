@@ -2,9 +2,12 @@ package com.mindera.finalproject.be.dto.registration;
 
 public record RegistrationPublicDto(
         
-        String id,
+        String PK,
         String status,
         String finalGrade,
-        Boolean active
+        Boolean active,
+        String aboutYou,
+        Boolean prevKnowledge,
+        Boolean prevExperience
 ) {
 }
