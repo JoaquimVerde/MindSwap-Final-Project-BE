@@ -13,7 +13,7 @@ public class CourseConverter {
                 course.getId(),
                 course.getName(),
                 course.getEdition(),
-                course.getTeacher(),
+                course.getTeacherId(),
                 course.getSyllabus(),
                 course.getProgram(),
                 course.getSchedule(),
@@ -32,7 +32,7 @@ public class CourseConverter {
         return new Course(
                 courseCreateDto.name(),
                 courseCreateDto.edition(),
-                courseCreateDto.teacher(),
+                courseCreateDto.teacherId(),
                 courseCreateDto.syllabus(),
                 courseCreateDto.program(),
                 courseCreateDto.schedule(),

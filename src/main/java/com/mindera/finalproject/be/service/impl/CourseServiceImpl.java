@@ -1,5 +1,6 @@
 package com.mindera.finalproject.be.service.impl;
 
+import com.mindera.finalproject.be.converter.CourseConverter;
 import com.mindera.finalproject.be.dto.course.CourseCreateDto;
 import com.mindera.finalproject.be.dto.course.CoursePublicDto;
 import com.mindera.finalproject.be.entity.Course;
@@ -25,27 +26,27 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public List<Course> getAll() {
-        return courseTable.scan().items().stream().collect(Collectors.toList());
+    public List<CoursePublicDto> getAll() {
+        return CourseConverter.fromEntityListToPublicDtoList(courseTable.scan().items().stream().collect(Collectors.toList()));
     }
 
     @Override
     public CoursePublicDto getById(String id) {
-        return courseTable.getItem(Key.builder().partitionValue(id).build());
+        return CourseConverter.fromEntityToPublicDto(courseTable.getItem(Key.builder().partitionValue(id).build()));
     }
 
     @Override
     public CoursePublicDto create(CourseCreateDto coursePublicDto) {
-        Course course = new Course();
+        Course course = CourseConverter.fromCreateDtoToEntity(coursePublicDto);
         courseTable.putItem(course);
-        return course;
+        return CourseConverter.fromEntityToPublicDto(course);
     }
 
     @Override
     public CoursePublicDto update(String id, CourseCreateDto coursePublicDto) {
-        Course course = new Course();
+        Course course = CourseConverter.fromCreateDtoToEntity(coursePublicDto);
         courseTable.putItem(course);
-        return course;
+        return CourseConverter.fromEntityToPublicDto(course);
     }
 
     @Override
