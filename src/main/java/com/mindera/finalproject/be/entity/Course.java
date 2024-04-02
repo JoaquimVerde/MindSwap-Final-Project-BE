@@ -1,53 +1,69 @@
 package com.mindera.finalproject.be.entity;
 
-import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
-import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.*;
 
 import java.math.BigDecimal;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 @DynamoDbBean
 public class Course {
 
-    private String id;
+    private String PK;
+    private String SK;
     private String name;
     private Integer edition;
     private String teacherId;
     private String syllabus;
     private String program;
-    private Map<String, String> schedule; //Can be something like {monday=10-18, tuesday=14-18}
+    private String schedule; //Can be something like {monday=10-18, tuesday=14-18}
     private BigDecimal price;
     private Integer duration; //I used Integer assuming days or months, but this can be changed
     private String location;
     private Integer numberOfApplications;
     private Integer maxNumberOfApplications;
 
-
     public Course() {
     }
 
-    public Course(String name, Integer edition, String teacherId, String syllabus, String program, Map<String, String> schedule, BigDecimal price, Integer duration, String location) {
+    public Course(String PK, String SK, String name, Integer edition, Person teacher, String syllabus, String program, String schedule, BigDecimal price, Integer duration, String location, Integer numberOfApplications, Integer maxNumberOfApplications) {
+        this.PK = PK;
+        this.SK = SK;
         this.name = name;
         this.edition = edition;
-        this.teacherId = teacherId;
+        this.teacher = teacher;
         this.syllabus = syllabus;
         this.program = program;
         this.schedule = schedule;
         this.price = price;
         this.duration = duration;
         this.location = location;
+        this.numberOfApplications = numberOfApplications;
+        this.maxNumberOfApplications = maxNumberOfApplications;
     }
 
     @DynamoDbPartitionKey
-    public String getId() {
-        return id;
+    @DynamoDbAttribute("PK")
+    @DynamoDbSecondarySortKey(indexNames = {"GSIPK"})
+    public String getPK() {
+        return PK;
+    }
+    @DynamoDbSortKey
+    @DynamoDbAttribute("SK")
+    public String getSK() {
+        return SK;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setPK(String pk) {
+        this.PK = pk;
     }
 
+    public void setSK(String sk) {
+        this.SK = sk;
+    }
+
+    @DynamoDbAttribute("Name")
     public String getName() {
         return name;
     }
@@ -56,6 +72,7 @@ public class Course {
         this.name = name;
     }
 
+    @DynamoDbAttribute("Edition")
     public Integer getEdition() {
         return edition;
     }
@@ -64,14 +81,16 @@ public class Course {
         this.edition = edition;
     }
 
-    public String getTeacherId() {
-        return teacherId;
+    @DynamoDbAttribute("Teacher")
+    public Person getTeacher() {
+        return teacher;
     }
 
     public void setTeacherId(String teacher) {
         this.teacherId = teacher;
     }
 
+    @DynamoDbAttribute("Syllabus")
     public String getSyllabus() {
         return syllabus;
     }
@@ -80,6 +99,7 @@ public class Course {
         this.syllabus = syllabus;
     }
 
+    @DynamoDbAttribute("Program")
     public String getProgram() {
         return program;
     }
@@ -88,14 +108,16 @@ public class Course {
         this.program = program;
     }
 
-    public Map<String, String> getSchedule() {
+    @DynamoDbAttribute("Schedule")
+    public String getSchedule() {
         return schedule;
     }
 
-    public void setSchedule(Map<String, String> schedule) {
+    public void setSchedule(String schedule) {
         this.schedule = schedule;
     }
 
+    @DynamoDbAttribute("Price")
     public BigDecimal getPrice() {
         return price;
     }
@@ -104,6 +126,7 @@ public class Course {
         this.price = price;
     }
 
+    @DynamoDbAttribute("Duration")
     public Integer getDuration() {
         return duration;
     }
@@ -112,6 +135,8 @@ public class Course {
         this.duration = duration;
     }
 
+    @DynamoDbAttribute("Location")
+    @DynamoDbSecondaryPartitionKey(indexNames = {"GSIPK"})
     public String getLocation() {
         return location;
     }
@@ -120,6 +145,7 @@ public class Course {
         this.location = location;
     }
 
+    @DynamoDbAttribute("NumberOfApplications")
     public Integer getNumberOfApplications() {
         return numberOfApplications;
     }
@@ -128,6 +154,7 @@ public class Course {
         this.numberOfApplications = numberOfApplications;
     }
 
+    @DynamoDbAttribute("MaxNumberOfApplications")
     public Integer getMaxNumberOfApplications() {
         return maxNumberOfApplications;
     }
@@ -139,7 +166,8 @@ public class Course {
     @Override
     public String toString() {
         return "Course{" +
-                "id=" + id +
+                "PK='" + PK + '\'' +
+                ", SK='" + SK + '\'' +
                 ", name='" + name + '\'' +
                 ", edition=" + edition +
                 ", teacher=" + teacherId +
@@ -159,11 +187,11 @@ public class Course {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Course course = (Course) o;
-        return Objects.equals(id, course.id) && Objects.equals(name, course.name) && Objects.equals(edition, course.edition) && Objects.equals(teacherId, course.teacherId) && Objects.equals(syllabus, course.syllabus) && Objects.equals(program, course.program) && Objects.equals(schedule, course.schedule) && Objects.equals(price, course.price) && Objects.equals(duration, course.duration) && Objects.equals(location, course.location) && Objects.equals(numberOfApplications, course.numberOfApplications) && Objects.equals(maxNumberOfApplications, course.maxNumberOfApplications);
+        return Objects.equals(PK, course.PK) && Objects.equals(SK, course.SK) && Objects.equals(name, course.name) && Objects.equals(edition, course.edition) && Objects.equals(teacher, course.teacher) && Objects.equals(syllabus, course.syllabus) && Objects.equals(program, course.program) && Objects.equals(schedule, course.schedule) && Objects.equals(price, course.price) && Objects.equals(duration, course.duration) && Objects.equals(location, course.location) && Objects.equals(numberOfApplications, course.numberOfApplications) && Objects.equals(maxNumberOfApplications, course.maxNumberOfApplications);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, edition, teacherId, syllabus, program, schedule, price, duration, location, numberOfApplications, maxNumberOfApplications);
+        return Objects.hash(PK, SK, name, edition, teacher, syllabus, program, schedule, price, duration, location, numberOfApplications, maxNumberOfApplications);
     }
 }
