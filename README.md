@@ -17,12 +17,26 @@ json
 
 aws dynamodb create-table \
     --endpoint-url http://localhost:8000 \
-    --table-name {NOME DA TABELA} \
+    --table-name course \
     --attribute-definitions \
-        AttributeName={NOME DA PK},AttributeType=S \
+        AttributeName=PK,AttributeType=S \
     --key-schema \
-        AttributeName={NOME DA PK},KeyType=HASH \
+        AttributeName=PK,KeyType=HASH \
     --provisioned-throughput \
         ReadCapacityUnits=5,WriteCapacityUnits=5 \
     --table-class STANDARD
 
+
+aws dynamodb create-table \
+--endpoint-url http://localhost:8000 \
+--table-name course \
+--attribute-definitions \
+AttributeName=PK,AttributeType=S \
+AttributeName=SK,AttributeType=S \
+--key-schema \
+AttributeName=PK,KeyType=HASH \
+AttributeName=SK,KeyType=RANGE \
+--billing-mode PAY_PER_REQUEST \
+--tags Key=Name,Value=YourTableName \
+--global-secondary-indexes \
+"IndexName=GSIPK,KeySchema=[{AttributeName=Location,KeyType=HASH}],Projection={ProjectionType=ALL},ProvisionedThroughput={ReadCapacityUnits=1,WriteCapacityUnits=1}"

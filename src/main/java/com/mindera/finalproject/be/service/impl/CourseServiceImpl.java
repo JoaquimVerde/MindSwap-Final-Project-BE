@@ -1,5 +1,6 @@
 package com.mindera.finalproject.be.service.impl;
 
+import com.mindera.finalproject.be.TableCreation.TableCreation;
 import com.mindera.finalproject.be.dto.course.CourseCreateDto;
 import com.mindera.finalproject.be.entity.Course;
 import com.mindera.finalproject.be.service.CourseService;
@@ -17,6 +18,9 @@ import java.util.stream.Collectors;
 public class CourseServiceImpl implements CourseService {
 
     private DynamoDbTable<Course> courseTable;
+
+    @Inject
+    TableCreation tableCreation;
 
     @Inject
     void projectEnhancedService(DynamoDbEnhancedClient dynamoEnhancedClient) {
