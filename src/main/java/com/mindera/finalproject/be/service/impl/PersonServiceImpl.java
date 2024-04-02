@@ -48,8 +48,8 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public PersonPublicDto update(String id, PersonCreateDto personCreateDto) {
-        Key partitionKey = Key.builder().partitionValue(id).build();
-        return PersonConverter.fromEntityToDto(personTable.getItem(partitionKey));
+        Person person = PersonConverter.fromDtoToEntity(personCreateDto);
+        return PersonConverter.fromEntityToDto(personTable.updateItem(person));
     }
 
     @Override
