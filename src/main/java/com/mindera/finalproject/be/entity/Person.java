@@ -27,9 +27,7 @@ public class Person {
     public Person() {
     }
 
-    public Person(String PK, String SK, String email, String firstName, String lastName, String role, String username, LocalDate dateOfBirth, Integer age, String address, String cv) {
-        this.PK = PK;
-        this.SK = SK;
+    public Person(String email, String firstName, String lastName, String role, String username, LocalDate dateOfBirth, Integer age, String address, String cv) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;

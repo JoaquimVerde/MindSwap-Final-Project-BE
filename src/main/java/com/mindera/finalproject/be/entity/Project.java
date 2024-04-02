@@ -21,14 +21,11 @@ public class Project {
     public Project() {
     }
 
-    public Project(String PK, String SK, List<String> students, String courseId, String name, String gitHubRepo, Integer grade) {
-        this.PK = PK;
-        this.SK = SK;
+    public Project(List<String> students, String courseId, String name, String gitHubRepo) {
         this.students = students;
         this.courseId = courseId;
         this.name = name;
         this.gitHubRepo = gitHubRepo;
-        this.grade = grade;
     }
 
     @DynamoDbPartitionKey
