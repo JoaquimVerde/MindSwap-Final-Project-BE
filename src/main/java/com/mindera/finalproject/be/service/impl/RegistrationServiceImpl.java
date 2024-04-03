@@ -2,8 +2,11 @@ package com.mindera.finalproject.be.service.impl;
 
 import com.mindera.finalproject.be.TableCreation.TableCreation;
 import com.mindera.finalproject.be.converter.RegistrationConverter;
+import com.mindera.finalproject.be.dto.person.PersonPublicDto;
 import com.mindera.finalproject.be.dto.registration.RegistrationCreateDto;
 import com.mindera.finalproject.be.dto.registration.RegistrationPublicDto;
+import com.mindera.finalproject.be.entity.Course;
+import com.mindera.finalproject.be.entity.Person;
 import com.mindera.finalproject.be.entity.Registration;
 import com.mindera.finalproject.be.service.RegistrationService;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -26,6 +29,8 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final String TABLE_NAME = "Registration";
     private final String GSIPK = "GSIPK";
     private DynamoDbTable<Registration> registrationTable;
+    private DynamoDbTable<Person> personTable;
+    private DynamoDbTable<Course> courseTable;
 
     @Inject
     TableCreation tableCreation;
@@ -33,16 +38,33 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Inject
     void projectEnhancedService(DynamoDbEnhancedClient dynamoEnhancedClient) {
         registrationTable = dynamoEnhancedClient.table(TABLE_NAME, TableSchema.fromBean(Registration.class));
+        personTable = dynamoEnhancedClient.table("Person", TableSchema.fromBean(Person.class));
+        courseTable = dynamoEnhancedClient.table("Course", TableSchema.fromBean(Course.class));
     }
 
     @Override
     public List<RegistrationPublicDto> getAll() {
-        return RegistrationConverter.fromEntityListToPublicDtoList(registrationTable.scan().items().stream().toList());
+        List<Registration> registrations = registrationTable.scan().items().stream().filter(Registration::getActive).toList();
+
+        return registrations.stream().map(registration -> {
+            String personId = registration.getPersonId();
+            String courseId = registration.getCourseId();
+            Person student = personTable.getItem(Key.builder().partitionValue(personId).sortValue(personId).build()) != null ? personTable.getItem(Key.builder().partitionValue(personId).build()) : null;
+            Course course = courseTable.getItem(Key.builder().partitionValue(courseId).sortValue(courseId).build()) != null ? courseTable.getItem(Key.builder().partitionValue(courseId).build()) : null;
+            return RegistrationConverter.fromEntityToPublicDto(registration, student, course);
+        }).toList();
     }
 
     @Override
     public RegistrationPublicDto getById(String id) {
-        return RegistrationConverter.fromEntityToPublicDto(registrationTable.getItem(Key.builder().partitionValue(id).sortValue(id).build()));
+        Registration registration = registrationTable.getItem(Key.builder().partitionValue(id).sortValue(id).build());
+        String personId = registration.getPersonId();
+        String courseId = registration.getCourseId();
+        //Person student = personTable.getItem(Key.builder().partitionValue(personId).sortValue(personId).build()) != null ? personTable.getItem(Key.builder().partitionValue(personId).build()) : null;
+        //Course course = courseTable.getItem(Key.builder().partitionValue(courseId).sortValue(personId).build()) != null ? courseTable.getItem(Key.builder().partitionValue(courseId).build()) : null;
+        Person student = new Person();
+        Course course = new Course();
+        return RegistrationConverter.fromEntityToPublicDto(registration, student, course);
     }
 
     @Override
@@ -51,8 +73,10 @@ public class RegistrationServiceImpl implements RegistrationService {
         String id = "REGISTRATION#" + UUID.randomUUID();
         registration.setPK(id);
         registration.setSK(id);
+        Person student = personTable.getItem(Key.builder().partitionValue(registration.getPersonId()).build());
+        Course course = courseTable.getItem(Key.builder().partitionValue(registration.getCourseId()).build());
         registrationTable.putItem(registration);
-        return RegistrationConverter.fromEntityToPublicDto(registration);
+        return RegistrationConverter.fromEntityToPublicDto(registration, student, course);
     }
 
     @Override
@@ -67,17 +91,19 @@ public class RegistrationServiceImpl implements RegistrationService {
         oldRegistration.setPrevKnowledge(registrationCreateDto.prevKnowledge());
         oldRegistration.setPrevExperience(registrationCreateDto.prevExperience());
 
+        Person student = personTable.getItem(Key.builder().partitionValue(oldRegistration.getPersonId()).build());
+        Course course = courseTable.getItem(Key.builder().partitionValue(oldRegistration.getCourseId()).build());
+
         registrationTable.putItem(oldRegistration);
 
-        return RegistrationConverter.fromEntityToPublicDto(oldRegistration);
+        return RegistrationConverter.fromEntityToPublicDto(oldRegistration, student, course);
     }
 
     @Override
     public void delete(String id) {
         Registration registration = registrationTable.getItem(Key.builder().partitionValue(id).sortValue(id).build());
-        System.out.println(("RegistrationServiceImpl.delete: registration: " + registration));
         registration.setActive(false);
-        registrationTable.putItem(registration);
+        registrationTable.updateItem(registration);
     }
 
 }
