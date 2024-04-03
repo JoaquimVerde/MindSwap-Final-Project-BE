@@ -6,7 +6,7 @@ import java.util.List;
 
 public record ProjectPublicDto(
 
-        String id,
+        String PK,
         String name,
         List<String> studentIds, //change to studentPublicDto
         String courseId, // change to coursePublicDto

@@ -17,6 +17,7 @@ public class Project {
     private String name;
     private String gitHubRepo;
     private Integer grade;
+    private Boolean active;
 
     public Project() {
     }
@@ -86,6 +87,14 @@ public class Project {
         this.grade = grade;
     }
 
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -111,4 +120,5 @@ public class Project {
                 ", grade=" + grade +
                 '}';
     }
+
 }

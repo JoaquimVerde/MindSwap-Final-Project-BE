@@ -2,6 +2,7 @@ package com.mindera.finalproject.be.converter;
 
 import com.mindera.finalproject.be.dto.project.ProjectCreateDto;
 import com.mindera.finalproject.be.dto.project.ProjectPublicDto;
+import com.mindera.finalproject.be.entity.Course;
 import com.mindera.finalproject.be.entity.Person;
 import com.mindera.finalproject.be.entity.Project;
 
