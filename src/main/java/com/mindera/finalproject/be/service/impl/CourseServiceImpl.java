@@ -1,7 +1,6 @@
 package com.mindera.finalproject.be.service.impl;
 
 
-import com.mindera.finalproject.be.TableCreation.TableCreation;
 import com.mindera.finalproject.be.converter.CourseConverter;
 import com.mindera.finalproject.be.dto.course.CourseCreateDto;
 import com.mindera.finalproject.be.dto.course.CoursePublicDto;
@@ -26,8 +25,8 @@ public class CourseServiceImpl implements CourseService {
     private final String TABLE_NAME = "Course";
     private final String COURSE = "COURSE#";
     private final String GSIPK = "GSIPK";
-    @Inject
-    TableCreation tableCreation;
+    //    @Inject
+//    TableCreation tableCreation;
     @Inject
     PersonService personService;
     private DynamoDbTable<Course> courseTable;

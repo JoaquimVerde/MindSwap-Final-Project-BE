@@ -1,6 +1,5 @@
 package com.mindera.finalproject.be.service.impl;
 
-import com.mindera.finalproject.be.TableCreation.TableCreation;
 import com.mindera.finalproject.be.converter.RegistrationConverter;
 import com.mindera.finalproject.be.dto.course.CoursePublicDto;
 import com.mindera.finalproject.be.dto.person.PersonPublicDto;
@@ -28,8 +27,8 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private final String TABLE_NAME = "Registration";
     private final String REGISTRATION = "REGISTRATION#";
-    @Inject
-    TableCreation tableCreation;
+    //    @Inject
+//    TableCreation tableCreation;
     @Inject
     PersonServiceImpl personService;
     @Inject

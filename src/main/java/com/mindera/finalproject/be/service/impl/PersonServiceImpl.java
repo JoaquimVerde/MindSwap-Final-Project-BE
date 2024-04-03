@@ -1,6 +1,5 @@
 package com.mindera.finalproject.be.service.impl;
 
-import com.mindera.finalproject.be.TableCreation.TableCreation;
 import com.mindera.finalproject.be.converter.PersonConverter;
 import com.mindera.finalproject.be.dto.person.PersonCreateDto;
 import com.mindera.finalproject.be.dto.person.PersonPublicDto;
@@ -27,8 +26,8 @@ public class PersonServiceImpl implements PersonService {
     private final String TABLE_NAME = "Person";
     private final String PERSON = "PERSON#";
 
-    @Inject
-    TableCreation tableCreation;
+    //    @Inject
+//    TableCreation tableCreation;
     private DynamoDbTable<Person> personTable;
 
     @Inject
