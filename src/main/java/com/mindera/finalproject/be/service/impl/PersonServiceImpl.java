@@ -74,7 +74,7 @@ public class PersonServiceImpl implements PersonService {
         person.setFirstName(personCreateDto.firstName());
         person.setLastName(personCreateDto.lastName());
         person.setUsername(personCreateDto.username());
-        person.setRole(personCreateDto.role();
+        person.setRole(personCreateDto.role());
         person.setDateOfBirth(personCreateDto.dateOfBirth());
         person.setAddress(personCreateDto.address());
         person.setCurriculum(personCreateDto.cv());
