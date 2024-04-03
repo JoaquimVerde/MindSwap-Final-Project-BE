@@ -40,4 +40,4 @@ jobs:
           port: 8000
           cors: '*'
       - name: Build with Maven
-        run: quarkus:test -f pom.xml
+        run: mvn -B package --file pom.xml
