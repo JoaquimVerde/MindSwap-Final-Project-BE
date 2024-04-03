@@ -20,6 +20,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
@@ -57,14 +58,24 @@ class CourseControllerTest {
                 .then()
                 .statusCode(201)
                 .extract().jsonPath().getString("id");
-
-        System.out.println("Teacher ID: " + teacherId);
     }
 
     @AfterEach
     void tearDown() {
         courseTable.deleteTable();
         personTable.deleteTable();
+    }
+
+    public String createCourse() {
+        CourseCreateDto exampleCourse = new CourseCreateDto("Frontend", 1, teacherId, "HTML, CSS, JavaScript", "Frontend", "Monday 10-18", new BigDecimal("900.13"), 30, "Porto");
+
+        return given()
+                .body(exampleCourse)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .when().post(API_PATH)
+                .then()
+                .statusCode(201)
+                .extract().jsonPath().getString("id");
     }
 
     @Test
@@ -91,4 +102,58 @@ class CourseControllerTest {
         assertEquals(teacherId, response.teacher().id());
     }
 
+    @Test
+    void testGetAllCoursesWithNoCourses() {
+        given()
+                .when().get(API_PATH)
+                .then()
+                .statusCode(200)
+                .and()
+                .body("size()", equalTo(0));
+    }
+
+    @Test
+    void testGetAllCoursesWith5Courses() {
+        int amount = 5;
+        for (int i = 0; i < amount; i++) {
+            createCourse();
+        }
+
+        given()
+                .when().get(API_PATH)
+                .then()
+                .statusCode(200)
+                .and()
+                .body("size()", equalTo(amount));
+    }
+
+    @Test
+    void testGetCourseById() {
+        String courseId = createCourse();
+
+        CoursePublicDto response = given()
+                .when().get(API_PATH + "/" + courseId)
+                .then()
+                .statusCode(200)
+                .extract().as(CoursePublicDto.class);
+
+        assertEquals(courseId, response.id());
+        assertEquals("Frontend", response.name());
+        assertEquals(1, response.edition());
+        assertEquals("HTML, CSS, JavaScript", response.syllabus());
+        assertEquals("Frontend", response.program());
+        assertEquals("Monday 10-18", response.schedule());
+        assertEquals(new BigDecimal("900.13"), response.price());
+        assertEquals(30, response.duration());
+        assertEquals("Porto", response.location());
+        assertEquals(teacherId, response.teacher().id());
+    }
+
+    @Test
+    void testGetByIdWithNonExistentCourse() {
+        given()
+                .when().get(API_PATH + "/123")
+                .then()
+                .statusCode(404);
+    }
 }
