@@ -8,6 +8,7 @@ import com.mindera.finalproject.be.dto.project.ProjectPublicDto;
 import com.mindera.finalproject.be.entity.Course;
 import com.mindera.finalproject.be.entity.Person;
 import com.mindera.finalproject.be.entity.Project;
+import com.mindera.finalproject.be.exception.course.CourseNotFoundException;
 import com.mindera.finalproject.be.exception.project.ProjectNotFoundException;
 import com.mindera.finalproject.be.exception.student.PersonNotFoundException;
 import com.mindera.finalproject.be.service.CourseService;
@@ -56,7 +57,7 @@ public class ProjectServiceImpl implements ProjectService {
             CoursePublicDto course = null;
             List<PersonPublicDto> students = new ArrayList<>();
             try {
-                course = courseService.getById(project.getCourseId());
+                 course = courseService.getById(project.getCourseId());
                 for (String studentId : project.getStudents()) {
                     students.add(personService.getById(studentId));
                 }
@@ -82,11 +83,11 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ProjectPublicDto create(ProjectCreateDto projectCreateDto) throws ProjectNotFoundException, PersonNotFoundException {
+    public ProjectPublicDto create(ProjectCreateDto projectCreateDto) throws ProjectNotFoundException, PersonNotFoundException, CourseNotFoundException {
         Project project = ProjectConverter.convertFromDtoToEntity(projectCreateDto);
         Course course = courseService.findById(projectCreateDto.courseId());
         if (course == null) {
-            return null; // throw exception
+            throw new CourseNotFoundException("Course not found");
         }
         List<String> studentIds = projectCreateDto.studentIds();
         List<String> studentsNotExists = new ArrayList<>();
@@ -97,7 +98,7 @@ public class ProjectServiceImpl implements ProjectService {
             }
         }
         if (!studentsNotExists.isEmpty()) {
-            throw new ProjectNotFoundException("Students with ids " + studentsNotExists + " not found");
+            throw new PersonNotFoundException("Students with ids " + studentsNotExists + " not found");
         }
         project.setPK(PROJECT);
         project.setSK(PROJECT + UUID.randomUUID());
@@ -112,10 +113,10 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ProjectPublicDto update(String id, ProjectCreateDto projectCreateDto) throws PersonNotFoundException {
+    public ProjectPublicDto update(String id, ProjectCreateDto projectCreateDto) throws PersonNotFoundException, ProjectNotFoundException {
         Project project = projectTable.getItem(Key.builder().partitionValue(PROJECT).sortValue(id).build());
         if (project == null) {
-            return null; // throw exception
+            throw new ProjectNotFoundException("Project with id " + id + " not found");
         }
         project.setName(projectCreateDto.name());
         project.setStudents(projectCreateDto.studentIds());
@@ -131,10 +132,10 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public void delete(String id) {
+    public void delete(String id) throws ProjectNotFoundException {
         Project project = projectTable.getItem(Key.builder().partitionValue(PROJECT).sortValue(id).build());
         if (project == null) {
-            return; // throw exception
+            throw new ProjectNotFoundException("Project with id " + id + " not found");
         }
         project.setActive(false);
         projectTable.updateItem(project);
