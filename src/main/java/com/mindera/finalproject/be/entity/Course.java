@@ -77,13 +77,14 @@ public class Course {
         this.edition = edition;
     }
 
+
     @DynamoDbAttribute("TeacherId")
     public String getTeacherId() {
         return teacherId;
     }
 
-    public void setTeacherId(String teacher) {
-        this.teacherId = teacher;
+    public void setTeacherId(String teacherId) {
+        this.teacherId = teacherId;
     }
 
     @DynamoDbAttribute("Syllabus")

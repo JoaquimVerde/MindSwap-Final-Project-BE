@@ -20,9 +20,7 @@ public class Registration {
     public Registration() {
     }
 
-    public Registration(String PK, String SK, String personId, String courseId, String status, String finalGrade, Boolean active) {
-        this.PK = PK;
-        this.SK = SK;
+    public Registration(String personId, String courseId, String status, String finalGrade, Boolean active) {
         this.personId = personId;
         this.courseId = courseId;
         this.status = status;
