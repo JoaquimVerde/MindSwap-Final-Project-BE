@@ -55,7 +55,7 @@ public class PersonController {
     })
     @PUT
     @Path("/{id}")
-    public Response update(@PathParam("id") String id, @Valid @RequestBody PersonCreateDto personCreateDto) {
+    public Response update(@PathParam("id") String id, @Valid @RequestBody PersonCreateDto personCreateDto) throws PersonNotFoundException {
         return Response.ok(personService.update(id, personCreateDto)).build();
     }
 
