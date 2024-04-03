@@ -20,7 +20,7 @@ import java.util.UUID;
 public class PersonServiceImpl implements PersonService {
 
     private final String TABLE_NAME = "Person";
-    private final String GSIPK = "GSIPK";
+
     @Inject
     TableCreation tableCreation;
     private DynamoDbTable<Person> personTable;
@@ -61,10 +61,8 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public PersonPublicDto delete(String id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'delete'");
+    public void delete(String id) {
+        personTable.deleteItem(Key.builder().partitionValue(id).build());
     }
-
 
 }

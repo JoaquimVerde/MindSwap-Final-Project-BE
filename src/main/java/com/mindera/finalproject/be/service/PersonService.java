@@ -8,8 +8,12 @@ import java.util.List;
 public interface PersonService {
 
     List<PersonPublicDto> getAll();
+
     PersonPublicDto getById(String id);
+
     PersonPublicDto create(PersonCreateDto personCreateDto);
+
     PersonPublicDto update(String id, PersonCreateDto personCreateDto);
-    PersonPublicDto delete(String id);
+
+    void delete(String id);
 }
