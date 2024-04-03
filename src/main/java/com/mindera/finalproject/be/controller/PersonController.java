@@ -1,6 +1,7 @@
 package com.mindera.finalproject.be.controller;
 
 import com.mindera.finalproject.be.dto.person.PersonCreateDto;
+import com.mindera.finalproject.be.exception.student.PersonNotFoundException;
 import com.mindera.finalproject.be.service.PersonService;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
@@ -34,7 +35,7 @@ public class PersonController {
     })
     @GET
     @Path("/{id}")
-    public Response getById(@PathParam("id") String id) {
+    public Response getById(@PathParam("id") String id) throws PersonNotFoundException {
         return Response.ok(personService.getById(id)).build();
     }
 

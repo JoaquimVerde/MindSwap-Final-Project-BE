@@ -2,14 +2,18 @@ package com.mindera.finalproject.be.service;
 
 import com.mindera.finalproject.be.dto.registration.RegistrationCreateDto;
 import com.mindera.finalproject.be.dto.registration.RegistrationPublicDto;
-import com.mindera.finalproject.be.entity.Registration;
+import com.mindera.finalproject.be.exception.student.PersonNotFoundException;
 
 import java.util.List;
 
 public interface RegistrationService {
     List<RegistrationPublicDto> getAll();
-    RegistrationPublicDto getById(String id);
-    RegistrationPublicDto create(RegistrationCreateDto registrationCreateDto);
-    RegistrationPublicDto update(String id, RegistrationCreateDto registrationCreateDto);
+
+    RegistrationPublicDto getById(String id) throws PersonNotFoundException;
+
+    RegistrationPublicDto create(RegistrationCreateDto registrationCreateDto) throws PersonNotFoundException;
+
+    RegistrationPublicDto update(String id, RegistrationCreateDto registrationCreateDto) throws PersonNotFoundException;
+
     void delete(String id);
 }

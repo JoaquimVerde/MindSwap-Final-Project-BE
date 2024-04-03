@@ -5,6 +5,7 @@ import com.mindera.finalproject.be.converter.PersonConverter;
 import com.mindera.finalproject.be.dto.person.PersonCreateDto;
 import com.mindera.finalproject.be.dto.person.PersonPublicDto;
 import com.mindera.finalproject.be.entity.Person;
+import com.mindera.finalproject.be.exception.student.PersonNotFoundException;
 import com.mindera.finalproject.be.service.PersonService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -24,19 +25,20 @@ import java.util.UUID;
 public class PersonServiceImpl implements PersonService {
 
     private final String TABLE_NAME = "Person";
+    private final String PERSON = "PERSON#";
 
     @Inject
     TableCreation tableCreation;
     private DynamoDbTable<Person> personTable;
 
     @Inject
-    void personEnchancedService(DynamoDbEnhancedClient dynamoEnhancedClient) {
+    void personEnhancedService(DynamoDbEnhancedClient dynamoEnhancedClient) {
         personTable = dynamoEnhancedClient.table(TABLE_NAME, TableSchema.fromBean(Person.class));
     }
 
     @Override
     public List<PersonPublicDto> getAll() {
-        QueryConditional queryConditional = QueryConditional.sortBeginsWith(k -> k.partitionValue("PERSON#").sortValue("PERSON#"));
+        QueryConditional queryConditional = QueryConditional.sortBeginsWith(k -> k.partitionValue(PERSON).sortValue(PERSON));
         SdkIterable<Page<Person>> persons = personTable.query(queryConditional);
         List<Person> personList = new ArrayList<>();
         persons.forEach(page -> personList.addAll(page.items()));
@@ -44,10 +46,10 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public PersonPublicDto getById(String id) {
-        Person person = personTable.getItem(Key.builder().partitionValue(id).build());
+    public PersonPublicDto getById(String id) throws PersonNotFoundException {
+        Person person = findById(id);
         if (person == null) {
-            throw new RuntimeException("TODO yet to implement new expection");
+            throw new PersonNotFoundException("Person with id " + id + " not found");
         }
         return PersonConverter.fromEntityToPublicDto(person);
 
@@ -56,9 +58,8 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public PersonPublicDto create(PersonCreateDto personCreateDto) {
         Person person = PersonConverter.fromCreateDtoToEntity(personCreateDto);
-        String id = "PERSON#" + UUID.randomUUID();
-        person.setPK(id);
-        person.setSK(id);
+        person.setPK(PERSON);
+        person.setSK(PERSON + UUID.randomUUID());
         personTable.putItem(person);
         return PersonConverter.fromEntityToPublicDto(person);
     }
@@ -71,9 +72,13 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public void delete(String id) {
-        Person person = personTable.getItem(Key.builder().partitionValue(id).build());
+        Person person = personTable.getItem(Key.builder().partitionValue(PERSON).sortValue(id).build());
         person.setActive(false);
         personTable.updateItem(person);
     }
 
+    @Override
+    public Person findById(String id) {
+        return personTable.getItem(Key.builder().partitionValue(PERSON).sortValue(id).build());
+    }
 }

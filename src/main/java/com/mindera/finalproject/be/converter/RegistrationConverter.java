@@ -1,16 +1,14 @@
 package com.mindera.finalproject.be.converter;
 
+import com.mindera.finalproject.be.dto.course.CoursePublicDto;
+import com.mindera.finalproject.be.dto.person.PersonPublicDto;
 import com.mindera.finalproject.be.dto.registration.RegistrationCreateDto;
 import com.mindera.finalproject.be.dto.registration.RegistrationPublicDto;
-import com.mindera.finalproject.be.entity.Course;
-import com.mindera.finalproject.be.entity.Person;
 import com.mindera.finalproject.be.entity.Registration;
-
-import java.util.List;
 
 public class RegistrationConverter {
 
-    public static RegistrationPublicDto fromEntityToPublicDto(Registration registration, Person student, Course course) {
+    public static RegistrationPublicDto fromEntityToPublicDto(Registration registration, PersonPublicDto student, CoursePublicDto course) {
         return new RegistrationPublicDto(
                 student,
                 course,
@@ -31,7 +29,7 @@ public class RegistrationConverter {
         }).toList();
     }*/
 
-    public static  Registration fromCreateDtoToEntity(RegistrationCreateDto registrationCreateDto) {
+    public static Registration fromCreateDtoToEntity(RegistrationCreateDto registrationCreateDto) {
         return new Registration(
                 registrationCreateDto.personId(),
                 registrationCreateDto.courseId(),

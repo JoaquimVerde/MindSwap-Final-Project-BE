@@ -2,12 +2,11 @@ package com.mindera.finalproject.be.service.impl;
 
 
 import com.mindera.finalproject.be.TableCreation.TableCreation;
-
 import com.mindera.finalproject.be.converter.CourseConverter;
-
 import com.mindera.finalproject.be.dto.course.CourseCreateDto;
 import com.mindera.finalproject.be.dto.course.CoursePublicDto;
 import com.mindera.finalproject.be.entity.Course;
+import com.mindera.finalproject.be.exception.student.PersonNotFoundException;
 import com.mindera.finalproject.be.service.CourseService;
 import com.mindera.finalproject.be.service.PersonService;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -25,15 +24,13 @@ import java.util.UUID;
 public class CourseServiceImpl implements CourseService {
 
     private final String TABLE_NAME = "Course";
-    private final String TABLE2_NAME = "Person";
+    private final String COURSE = "COURSE#";
     private final String GSIPK = "GSIPK";
-    private DynamoDbTable<Course> courseTable;
-
     @Inject
     TableCreation tableCreation;
-
     @Inject
     PersonService personService;
+    private DynamoDbTable<Course> courseTable;
 
     @Inject
     void projectEnhancedService(DynamoDbEnhancedClient dynamoEnhancedClient) {
@@ -42,7 +39,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public List<CoursePublicDto> getAll() {
-        QueryConditional queryConditional = QueryConditional.sortBeginsWith(k -> k.partitionValue("COURSE#").sortValue("COURSE#"));
+        QueryConditional queryConditional = QueryConditional.sortBeginsWith(k -> k.partitionValue(COURSE).sortValue(COURSE));
         SdkIterable<Page<Course>> courses = courseTable.query(queryConditional);
         List<Course> coursesList = new ArrayList<>();
         courses.forEach(page -> coursesList.addAll(page.items()));
@@ -50,13 +47,17 @@ public class CourseServiceImpl implements CourseService {
             if (course.getTeacherId() == null) {
                 return CourseConverter.fromEntityToPublicDto(course, null);
             }
-            return CourseConverter.fromEntityToPublicDto(course, personService.getById(course.getTeacherId()));
+            try {
+                return CourseConverter.fromEntityToPublicDto(course, personService.getById(course.getTeacherId()));
+            } catch (PersonNotFoundException e) {
+                return CourseConverter.fromEntityToPublicDto(course, null);
+            }
         }).toList();
     }
 
     @Override
-    public CoursePublicDto getById(String id) {
-        Course course = courseTable.getItem(Key.builder().partitionValue(id).sortValue(id).build());
+    public CoursePublicDto getById(String id) throws PersonNotFoundException {
+        Course course = findById(id);
         if (course.getTeacherId() == null) {
             return CourseConverter.fromEntityToPublicDto(course, null);
         }
@@ -64,11 +65,10 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public CoursePublicDto create(CourseCreateDto courseCreateDto) {
+    public CoursePublicDto create(CourseCreateDto courseCreateDto) throws PersonNotFoundException {
         Course course = CourseConverter.fromCreateDtoToEntity(courseCreateDto);
-        String id = "COURSE#" + UUID.randomUUID();
-        course.setPK(id);
-        course.setSK(id);
+        course.setPK(COURSE);
+        course.setSK(COURSE + UUID.randomUUID());
         courseTable.putItem(course);
         return course.getTeacherId() == null ? CourseConverter.fromEntityToPublicDto(course, null) : CourseConverter.fromEntityToPublicDto(course, personService.getById(course.getTeacherId()));
     }
@@ -84,12 +84,16 @@ public class CourseServiceImpl implements CourseService {
             if (course.getTeacherId() == null) {
                 return CourseConverter.fromEntityToPublicDto(course, null);
             }
-            return CourseConverter.fromEntityToPublicDto(course, personService.getById(course.getTeacherId()));
+            try {
+                return CourseConverter.fromEntityToPublicDto(course, personService.getById(course.getTeacherId()));
+            } catch (PersonNotFoundException e) {
+                return CourseConverter.fromEntityToPublicDto(course, null);
+            }
         }).toList();
     }
 
     @Override
-    public CoursePublicDto update(String id, CourseCreateDto coursePublicDto) {
+    public CoursePublicDto update(String id, CourseCreateDto coursePublicDto) throws PersonNotFoundException {
         Course course = new Course();
         courseTable.putItem(course);
         return CourseConverter.fromEntityToPublicDto(course, personService.getById(course.getTeacherId()));
@@ -100,6 +104,11 @@ public class CourseServiceImpl implements CourseService {
         Course course = courseTable.getItem(Key.builder().partitionValue(id).sortValue(id).build());
         course.setActive(false);
         courseTable.updateItem(course);
+    }
+
+    @Override
+    public Course findById(String id) {
+        return courseTable.getItem(Key.builder().partitionValue(COURSE).sortValue(id).build());
     }
 
 }
