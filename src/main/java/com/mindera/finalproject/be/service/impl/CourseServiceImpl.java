@@ -8,6 +8,7 @@ import com.mindera.finalproject.be.converter.CourseConverter;
 import com.mindera.finalproject.be.dto.course.CourseCreateDto;
 import com.mindera.finalproject.be.dto.course.CoursePublicDto;
 import com.mindera.finalproject.be.entity.Course;
+import com.mindera.finalproject.be.entity.Person;
 import com.mindera.finalproject.be.service.CourseService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -26,6 +27,7 @@ public class CourseServiceImpl implements CourseService {
     private final String TABLE_NAME = "Course";
     private final String GSIPK = "GSIPK";
     private DynamoDbTable<Course> courseTable;
+    private DynamoDbTable<Person> personTable;
 
     @Inject
     TableCreation tableCreation;
@@ -33,6 +35,7 @@ public class CourseServiceImpl implements CourseService {
     @Inject
     void projectEnhancedService(DynamoDbEnhancedClient dynamoEnhancedClient) {
         courseTable = dynamoEnhancedClient.table(TABLE_NAME, TableSchema.fromBean(Course.class));
+        personTable = dynamoEnhancedClient.table(TABLE_NAME, TableSchema.fromBean(Person.class));
     }
 
     @Override
@@ -42,7 +45,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public CoursePublicDto getById(String id) {
-        return CourseConverter.fromEntityToPublicDto(courseTable.getItem(Key.builder().partitionValue(id).build()));
+        return CourseConverter.fromEntityToPublicDto(courseTable.getItem(Key.builder().partitionValue(id).sortValue(id).build()));
     }
 
     @Override
@@ -74,7 +77,9 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public void delete(String id) {
-        courseTable.deleteItem(Key.builder().partitionValue(id).build());
+        Course course = courseTable.getItem(Key.builder().partitionValue(id).sortValue(id).build());
+        course.setActive(false);
+        courseTable.updateItem(course);
     }
 
 }
