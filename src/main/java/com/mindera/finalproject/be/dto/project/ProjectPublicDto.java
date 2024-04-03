@@ -6,11 +6,12 @@ import java.util.List;
 
 public record ProjectPublicDto(
 
-        String id,
-        List<PersonPublicDto> firstName, //change to studentPublicDto
-        Course courseName, // change to coursePublicDto
+        String PK,
         String name,
-        String gitHubRepo
+        List<String> studentIds, //change to studentPublicDto
+        String courseId, // change to coursePublicDto
+        String gitHubRepo,
+        Integer grade
 
 ) {
 }

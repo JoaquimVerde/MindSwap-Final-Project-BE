@@ -50,6 +50,7 @@ public class PersonServiceImpl implements PersonService {
             throw new RuntimeException("TODO yet to implement new expection");
         }
         return PersonConverter.fromEntityToPublicDto(person);
+
     }
 
     @Override

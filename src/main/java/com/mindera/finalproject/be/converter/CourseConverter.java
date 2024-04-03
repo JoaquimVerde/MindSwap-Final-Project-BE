@@ -2,17 +2,32 @@ package com.mindera.finalproject.be.converter;
 
 import com.mindera.finalproject.be.dto.course.CourseCreateDto;
 import com.mindera.finalproject.be.dto.course.CoursePublicDto;
+import com.mindera.finalproject.be.dto.person.PersonPublicDto;
 import com.mindera.finalproject.be.entity.Course;
+import jakarta.enterprise.context.ApplicationScoped;
 
-import java.util.List;
 
+@ApplicationScoped
 public class CourseConverter {
 
-    public static CoursePublicDto fromEntityToPublicDto(Course course) {
+    public static CoursePublicDto fromEntityToPublicDto(Course course, PersonPublicDto teacher) {
+        if (teacher== null) {
+            return new CoursePublicDto(
+                    course.getName(),
+                    course.getEdition(),
+                    null,
+                    course.getSyllabus(),
+                    course.getProgram(),
+                    course.getSchedule(),
+                    course.getPrice(),
+                    course.getDuration(),
+                    course.getLocation()
+            );
+        }
         return new CoursePublicDto(
                 course.getName(),
                 course.getEdition(),
-                course.getTeacherId(),
+                teacher,
                 course.getSyllabus(),
                 course.getProgram(),
                 course.getSchedule(),
@@ -20,10 +35,6 @@ public class CourseConverter {
                 course.getDuration(),
                 course.getLocation()
         );
-    }
-
-    public static List<CoursePublicDto> fromEntityListToPublicDtoList(List<Course> courses) {
-        return courses.stream().map(CourseConverter::fromEntityToPublicDto).toList();
     }
 
     public static Course fromCreateDtoToEntity(CourseCreateDto courseCreateDto) {

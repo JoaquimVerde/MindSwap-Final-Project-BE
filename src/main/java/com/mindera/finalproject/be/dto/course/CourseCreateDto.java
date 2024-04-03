@@ -6,7 +6,6 @@ import jakarta.validation.constraints.Positive;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import java.math.BigDecimal;
-import java.util.Map;
 
 public record CourseCreateDto(
 
@@ -19,9 +18,7 @@ public record CourseCreateDto(
         @Schema(description = "The course edition", example = "1")
         Integer edition,
 
-        @NotEmpty(message = "Teacher id is mandatory")
-        @Pattern(regexp = "^[0-9]+$", message = "Teacher id can only contain numbers")
-        @Schema(description = "The course teacher id", example = "1")
+        @Schema(description = "The course teacher id", example = "TEACHER#asqwe-1234-asd")
         String teacherId,
 
         @NotEmpty(message = "Syllabus is mandatory")

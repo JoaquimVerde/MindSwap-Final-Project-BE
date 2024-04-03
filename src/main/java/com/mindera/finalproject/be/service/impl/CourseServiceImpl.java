@@ -9,6 +9,7 @@ import com.mindera.finalproject.be.dto.course.CourseCreateDto;
 import com.mindera.finalproject.be.dto.course.CoursePublicDto;
 import com.mindera.finalproject.be.entity.Course;
 import com.mindera.finalproject.be.service.CourseService;
+import com.mindera.finalproject.be.service.PersonService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import software.amazon.awssdk.core.pagination.sync.SdkIterable;
@@ -24,11 +25,15 @@ import java.util.UUID;
 public class CourseServiceImpl implements CourseService {
 
     private final String TABLE_NAME = "Course";
+    private final String TABLE2_NAME = "Person";
     private final String GSIPK = "GSIPK";
     private DynamoDbTable<Course> courseTable;
 
     @Inject
     TableCreation tableCreation;
+
+    @Inject
+    PersonService personService;
 
     @Inject
     void projectEnhancedService(DynamoDbEnhancedClient dynamoEnhancedClient) {
@@ -37,12 +42,25 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public List<CoursePublicDto> getAll() {
-        return CourseConverter.fromEntityListToPublicDtoList(courseTable.scan().items().stream().toList());
+        QueryConditional queryConditional = QueryConditional.sortBeginsWith(k -> k.partitionValue("COURSE#").sortValue("COURSE#"));
+        SdkIterable<Page<Course>> courses = courseTable.query(queryConditional);
+        List<Course> coursesList = new ArrayList<>();
+        courses.forEach(page -> coursesList.addAll(page.items()));
+        return coursesList.stream().filter(Course::getActive).map(course -> {
+            if (course.getTeacherId() == null) {
+                return CourseConverter.fromEntityToPublicDto(course, null);
+            }
+            return CourseConverter.fromEntityToPublicDto(course, personService.getById(course.getTeacherId()));
+        }).toList();
     }
 
     @Override
     public CoursePublicDto getById(String id) {
-        return CourseConverter.fromEntityToPublicDto(courseTable.getItem(Key.builder().partitionValue(id).build()));
+        Course course = courseTable.getItem(Key.builder().partitionValue(id).sortValue(id).build());
+        if (course.getTeacherId() == null) {
+            return CourseConverter.fromEntityToPublicDto(course, null);
+        }
+        return CourseConverter.fromEntityToPublicDto(course, personService.getById(course.getTeacherId()));
     }
 
     @Override
@@ -52,7 +70,7 @@ public class CourseServiceImpl implements CourseService {
         course.setPK(id);
         course.setSK(id);
         courseTable.putItem(course);
-        return CourseConverter.fromEntityToPublicDto(course);
+        return course.getTeacherId() == null ? CourseConverter.fromEntityToPublicDto(course, null) : CourseConverter.fromEntityToPublicDto(course, personService.getById(course.getTeacherId()));
     }
 
     @Override
@@ -62,19 +80,26 @@ public class CourseServiceImpl implements CourseService {
         SdkIterable<Page<Course>> courses = courseIndex.query(queryConditional);
         List<Course> coursesList = new ArrayList<>();
         courses.forEach(page -> coursesList.addAll(page.items()));
-        return CourseConverter.fromEntityListToPublicDtoList(coursesList);
+        return coursesList.stream().filter(Course::getActive).map(course -> {
+            if (course.getTeacherId() == null) {
+                return CourseConverter.fromEntityToPublicDto(course, null);
+            }
+            return CourseConverter.fromEntityToPublicDto(course, personService.getById(course.getTeacherId()));
+        }).toList();
     }
 
     @Override
     public CoursePublicDto update(String id, CourseCreateDto coursePublicDto) {
         Course course = new Course();
         courseTable.putItem(course);
-        return CourseConverter.fromEntityToPublicDto(course);
+        return CourseConverter.fromEntityToPublicDto(course, personService.getById(course.getTeacherId()));
     }
 
     @Override
     public void delete(String id) {
-        courseTable.deleteItem(Key.builder().partitionValue(id).build());
+        Course course = courseTable.getItem(Key.builder().partitionValue(id).sortValue(id).build());
+        course.setActive(false);
+        courseTable.updateItem(course);
     }
 
 }
