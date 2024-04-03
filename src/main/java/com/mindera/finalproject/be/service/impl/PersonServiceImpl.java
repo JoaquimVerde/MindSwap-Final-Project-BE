@@ -65,8 +65,18 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public PersonPublicDto update(String id, PersonCreateDto personCreateDto) {
+    public PersonPublicDto update(String id, PersonCreateDto personCreateDto) throws PersonNotFoundException {
         Person person = findById(id);
+        if (person == null) {
+            throw new PersonNotFoundException("Person with id " + id + " not found");
+        }
+        person.setEmail(personCreateDto.email());
+        person.setFirstName(personCreateDto.firstName());
+        person.setLastName(personCreateDto.lastName());
+        person.setUsername(personCreateDto.username());
+        person.setDateOfBirth(personCreateDto.dateOfBirth());
+        person.setAddress(personCreateDto.address());
+
         personTable.updateItem(person);
         return PersonConverter.fromEntityToPublicDto(person);
     }
