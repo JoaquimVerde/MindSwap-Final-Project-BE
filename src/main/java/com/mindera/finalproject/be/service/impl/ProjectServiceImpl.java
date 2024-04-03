@@ -56,7 +56,7 @@ public class ProjectServiceImpl implements ProjectService {
             CoursePublicDto course = null;
             List<PersonPublicDto> students = new ArrayList<>();
             try {
-                course = courseService.getById(project.getCourseId());
+                 course = courseService.getById(project.getCourseId());
                 for (String studentId : project.getStudents()) {
                     students.add(personService.getById(studentId));
                 }
