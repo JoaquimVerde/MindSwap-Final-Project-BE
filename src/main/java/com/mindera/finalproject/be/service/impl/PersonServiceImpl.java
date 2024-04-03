@@ -14,6 +14,7 @@ import software.amazon.awssdk.enhanced.dynamodb.Key;
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
 
 import java.util.List;
+import java.util.UUID;
 
 @ApplicationScoped
 public class PersonServiceImpl implements PersonService {
@@ -45,8 +46,12 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public PersonPublicDto create(PersonCreateDto personCreateDto) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'create'");
+        Person person = PersonConverter.fromCreateDtoToEntity(personCreateDto);
+        String id = "PERSON#" + UUID.randomUUID();
+        person.setPK(id);
+        person.setSK(id);
+        personTable.putItem(person);
+        return PersonConverter.fromEntityToPublicDto(person);
     }
 
     @Override
