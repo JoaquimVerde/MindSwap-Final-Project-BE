@@ -17,18 +17,16 @@ public class Project {
     private String name;
     private String gitHubRepo;
     private Integer grade;
+    private Boolean active;
 
     public Project() {
     }
 
-    public Project(String PK, String SK, List<String> students, String courseId, String name, String gitHubRepo, Integer grade) {
-        this.PK = PK;
-        this.SK = SK;
+    public Project(List<String> students, String courseId, String name, String gitHubRepo) {
         this.students = students;
         this.courseId = courseId;
         this.name = name;
         this.gitHubRepo = gitHubRepo;
-        this.grade = grade;
     }
 
     @DynamoDbPartitionKey
@@ -89,6 +87,14 @@ public class Project {
         this.grade = grade;
     }
 
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -114,4 +120,5 @@ public class Project {
                 ", grade=" + grade +
                 '}';
     }
+
 }

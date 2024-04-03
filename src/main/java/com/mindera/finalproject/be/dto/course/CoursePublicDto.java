@@ -1,10 +1,9 @@
 package com.mindera.finalproject.be.dto.course;
 
-import com.mindera.finalproject.be.entity.Person;
+import com.mindera.finalproject.be.dto.person.PersonPublicDto;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import java.math.BigDecimal;
-import java.util.Map;
 
 public record CoursePublicDto(
 
@@ -13,7 +12,7 @@ public record CoursePublicDto(
         @Schema(description = "The course edition", example = "1")
         Integer edition,
         @Schema(description = "The course teacher", example = "John Doe")
-        String teacherId,
+        PersonPublicDto teacher,
         @Schema(description = "The course syllabus", example = "HTML, CSS, JavaScript")
         String syllabus,
         @Schema(description = "The course program", example = "Frontend")
