@@ -36,7 +36,7 @@ jobs:
         uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_TEST_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_TEST_SECRET }}
+          aws-secret-access-key: ${{ secrets.AWS_TEST_SECRET }}
           aws-region: ${{ env.AWS_REGION }}
       - name: Setup DynamoDB Local
         uses: rrainn/dynamodb-action@v2.0.1
