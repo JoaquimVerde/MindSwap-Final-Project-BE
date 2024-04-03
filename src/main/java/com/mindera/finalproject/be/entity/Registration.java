@@ -16,16 +16,22 @@ public class Registration {
     private String status;
     private String finalGrade;
     private Boolean active;
+    private String aboutYou;
+    private Boolean prevKnowledge;
+    private Boolean prevExperience;
 
     public Registration() {
     }
 
-    public Registration(String personId, String courseId, String status, String finalGrade, Boolean active) {
+    public Registration(String personId, String courseId, String status, String finalGrade, Boolean active, String aboutYou, Boolean prevKnowledge, Boolean prevExperience) {
         this.personId = personId;
         this.courseId = courseId;
         this.status = status;
         this.finalGrade = finalGrade;
         this.active = active;
+        this.aboutYou = aboutYou;
+        this.prevKnowledge = prevKnowledge;
+        this.prevExperience = prevExperience;
     }
 
     @DynamoDbPartitionKey
@@ -83,6 +89,30 @@ public class Registration {
 
     public void setActive(Boolean active) {
         this.active = active;
+    }
+
+    public String getAboutYou() {
+        return aboutYou;
+    }
+
+    public void setAboutYou(String aboutYou) {
+        this.aboutYou = aboutYou;
+    }
+
+    public Boolean getPrevKnowledge() {
+        return prevKnowledge;
+    }
+
+    public void setPrevKnowledge(Boolean prevKnowledge) {
+        this.prevKnowledge = prevKnowledge;
+    }
+
+    public Boolean getPrevExperience() {
+        return prevExperience;
+    }
+
+    public void setPrevExperience(Boolean prevExperience) {
+        this.prevExperience = prevExperience;
     }
 
     @Override

@@ -8,7 +8,6 @@ import java.util.List;
 
 public interface RegistrationService {
     List<RegistrationPublicDto> getAll();
-    /* RegistrationPublicDto getByCompositeKey(String compositeKey); */
     RegistrationPublicDto getById(String id);
     RegistrationPublicDto create(RegistrationCreateDto registrationCreateDto);
     RegistrationPublicDto update(String id, RegistrationCreateDto registrationCreateDto);
