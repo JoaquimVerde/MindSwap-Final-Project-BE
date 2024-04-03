@@ -37,11 +37,10 @@ class CourseControllerTest {
     void setUp() {
         courseTable = dynamoEnhancedClient.table("Course", TableSchema.fromBean(Course.class));
         personTable = dynamoEnhancedClient.table("Person", TableSchema.fromBean(Person.class));
-
         try {
             courseTable.createTable();
             personTable.createTable();
-            Thread.sleep(3000);
+            Thread.sleep(100);
         } catch (Exception e) {
             courseTable.deleteTable();
             personTable.deleteTable();
@@ -91,6 +90,5 @@ class CourseControllerTest {
         assertEquals(exampleCourse.location(), response.location());
         assertEquals(teacherId, response.teacher().id());
     }
-
 
 }
