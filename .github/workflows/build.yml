@@ -47,6 +47,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_TEST_ID }}
           aws-secret-access-key: ${{ secrets.AWS_TEST_SECRET }}
           aws-region: ${{ env.AWS_REGION }}
+          aws-session-token: ${{ null }}
       - name: Setup DynamoDB Local
         uses: rrainn/dynamodb-action@v2.0.1
         with:
