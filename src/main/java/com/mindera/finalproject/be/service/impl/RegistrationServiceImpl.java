@@ -36,10 +36,14 @@ public class RegistrationServiceImpl implements RegistrationService {
     TableCreation tableCreation;
 
     @Inject
+    PersonServiceImpl personService;
+
+    @Inject
+    CourseServiceImpl courseService;
+
+    @Inject
     void projectEnhancedService(DynamoDbEnhancedClient dynamoEnhancedClient) {
         registrationTable = dynamoEnhancedClient.table(TABLE_NAME, TableSchema.fromBean(Registration.class));
-        personTable = dynamoEnhancedClient.table("Person", TableSchema.fromBean(Person.class));
-        courseTable = dynamoEnhancedClient.table("Course", TableSchema.fromBean(Course.class));
     }
 
     @Override
