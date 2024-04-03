@@ -27,7 +27,7 @@ public class Person {
     public Person() {
     }
 
-    public Person(String email, String firstName, String lastName, String role, String username, LocalDate dateOfBirth, String address, String cv, boolean active) {
+    public Person(String email, String firstName, String lastName, String role, String username, LocalDate dateOfBirth, String address, String cv) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -36,7 +36,7 @@ public class Person {
         this.dateOfBirth = dateOfBirth;
         this.address = address;
         this.cv = cv;
-        this.active = active;
+        this.active = true;
     }
 
     @DynamoDbPartitionKey

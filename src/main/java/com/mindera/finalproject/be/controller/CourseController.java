@@ -1,7 +1,7 @@
 package com.mindera.finalproject.be.controller;
 
 import com.mindera.finalproject.be.dto.course.CourseCreateDto;
-import com.mindera.finalproject.be.entity.Course;
+import com.mindera.finalproject.be.exception.student.PersonNotFoundException;
 import com.mindera.finalproject.be.service.CourseService;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
@@ -35,7 +35,7 @@ public class CourseController {
     })
     @GET
     @Path("/{id}")
-    public Response getById(@PathParam("id") String id) {
+    public Response getById(@PathParam("id") String id) throws PersonNotFoundException {
         return Response.ok(courseService.getById(id)).build();
     }
 
@@ -44,7 +44,7 @@ public class CourseController {
             @APIResponse(responseCode = "201", description = "Course created")
     })
     @POST
-    public Response create(@Valid @RequestBody CourseCreateDto courseCreateDto) {
+    public Response create(@Valid @RequestBody CourseCreateDto courseCreateDto) throws PersonNotFoundException {
         return Response.ok(courseService.create(courseCreateDto)).status(Response.Status.CREATED).build();
     }
 
@@ -62,7 +62,7 @@ public class CourseController {
     })
     @PUT
     @Path("/{id}")
-    public Response update(@PathParam("id") String id, @Valid @RequestBody CourseCreateDto courseCreateDto) {
+    public Response update(@PathParam("id") String id, @Valid @RequestBody CourseCreateDto courseCreateDto) throws PersonNotFoundException {
         return Response.ok(courseService.update(id, courseCreateDto)).build();
     }
 

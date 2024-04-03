@@ -6,7 +6,8 @@ import org.eclipse.microprofile.openapi.annotations.media.Schema;
 import java.math.BigDecimal;
 
 public record CoursePublicDto(
-
+        @Schema(description = "The course id", example = "COURSE#asdf-1234-1235")
+        String id,
         @Schema(description = "The course name", example = "Frontend")
         String name,
         @Schema(description = "The course edition", example = "1")

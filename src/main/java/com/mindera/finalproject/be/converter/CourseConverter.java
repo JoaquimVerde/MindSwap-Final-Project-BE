@@ -11,8 +11,9 @@ import jakarta.enterprise.context.ApplicationScoped;
 public class CourseConverter {
 
     public static CoursePublicDto fromEntityToPublicDto(Course course, PersonPublicDto teacher) {
-        if (teacher== null) {
+        if (teacher == null) {
             return new CoursePublicDto(
+                    course.getSK(),
                     course.getName(),
                     course.getEdition(),
                     null,
@@ -25,6 +26,7 @@ public class CourseConverter {
             );
         }
         return new CoursePublicDto(
+                course.getSK(),
                 course.getName(),
                 course.getEdition(),
                 teacher,

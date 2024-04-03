@@ -27,6 +27,7 @@ public class Project {
         this.courseId = courseId;
         this.name = name;
         this.gitHubRepo = gitHubRepo;
+        this.active = true;
     }
 
     @DynamoDbPartitionKey
