@@ -11,16 +11,16 @@ import com.mindera.finalproject.be.entity.Registration;
 import com.mindera.finalproject.be.service.RegistrationService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import software.amazon.awssdk.core.pagination.sync.SdkIterable;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 import software.amazon.awssdk.enhanced.dynamodb.Key;
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
+import software.amazon.awssdk.enhanced.dynamodb.model.Page;
+import software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional;
 import software.amazon.awssdk.services.dynamodb.model.AttributeValueUpdate;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @ApplicationScoped
@@ -44,13 +44,13 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public List<RegistrationPublicDto> getAll() {
-        List<Registration> registrations = registrationTable.scan().items().stream().filter(Registration::getActive).toList();
-
-        return registrations.stream().map(registration -> {
-            String personId = registration.getPersonId();
-            String courseId = registration.getCourseId();
-            Person student = personTable.getItem(Key.builder().partitionValue(personId).sortValue(personId).build()) != null ? personTable.getItem(Key.builder().partitionValue(personId).build()) : null;
-            Course course = courseTable.getItem(Key.builder().partitionValue(courseId).sortValue(courseId).build()) != null ? courseTable.getItem(Key.builder().partitionValue(courseId).build()) : null;
+        QueryConditional queryConditional = QueryConditional.sortBeginsWith(k -> k.partitionValue("REGISTRATION#").sortValue("REGISTRATION#"));
+        SdkIterable<Page<Registration>> registrations = registrationTable.query(queryConditional);
+        List<Registration> registrationsList = new ArrayList<>();
+        registrations.forEach(page -> registrationsList.addAll(page.items()));
+        return registrationsList.stream().filter(Registration::getActive).map(registration -> {
+            Person student = personTable.getItem(Key.builder().partitionValue(registration.getPersonId()).build());
+            Course course = courseTable.getItem(Key.builder().partitionValue(registration.getCourseId()).build());
             return RegistrationConverter.fromEntityToPublicDto(registration, student, course);
         }).toList();
     }
