@@ -5,7 +5,6 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbParti
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortKey;
 
 import java.time.LocalDate;
-import java.time.Period;
 import java.util.Objects;
 
 
@@ -27,14 +26,13 @@ public class Person {
     public Person() {
     }
 
-    public Person(String email, String firstName, String lastName, String role, String username, LocalDate dateOfBirth, Integer age, String address, String cv) {
+    public Person(String email, String firstName, String lastName, String role, String username, LocalDate dateOfBirth, String address, String cv) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
         this.role = role;
         this.username = username;
         this.dateOfBirth = dateOfBirth;
-        this.age = age;
         this.address = address;
         this.cv = cv;
     }
@@ -109,16 +107,16 @@ public class Person {
         return age;
     }
 
+    public void setAge(Integer age) {
+        this.age = age;
+    }
+
     public String getAddress() {
         return address;
     }
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    public void setAge(Integer age) {
-        this.age = age;
     }
 
     public String getCurriculum() {

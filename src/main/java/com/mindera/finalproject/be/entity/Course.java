@@ -17,9 +17,9 @@ public class Course {
     private String teacherId;
     private String syllabus;
     private String program;
-    private String schedule; //Can be something like {monday=10-18, tuesday=14-18}
+    private String schedule;
     private BigDecimal price;
-    private Integer duration; //I used Integer assuming days or months, but this can be changed
+    private Integer duration;
     private String location;
     private Integer numberOfApplications;
     private Integer maxNumberOfApplications;
@@ -27,7 +27,7 @@ public class Course {
     public Course() {
     }
 
-    public Course(String name, Integer edition, String teacherId, String syllabus, String program, String schedule, BigDecimal price, Integer duration, String location, Integer numberOfApplications, Integer maxNumberOfApplications) {
+    public Course(String name, Integer edition, String teacherId, String syllabus, String program, String schedule, BigDecimal price, Integer duration, String location) {
         this.name = name;
         this.edition = edition;
         this.teacherId = teacherId;
@@ -37,8 +37,6 @@ public class Course {
         this.price = price;
         this.duration = duration;
         this.location = location;
-        this.numberOfApplications = numberOfApplications;
-        this.maxNumberOfApplications = maxNumberOfApplications;
     }
 
     @DynamoDbPartitionKey
@@ -79,8 +77,9 @@ public class Course {
         this.edition = edition;
     }
 
-    @DynamoDbAttribute("Teacher")
-    public String getTeacher() {
+
+    @DynamoDbAttribute("TeacherId")
+    public String getTeacherId() {
         return teacherId;
     }
 

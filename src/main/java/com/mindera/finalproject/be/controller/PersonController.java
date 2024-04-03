@@ -1,6 +1,5 @@
 package com.mindera.finalproject.be.controller;
 
-import com.mindera.finalproject.be.dto.course.CourseCreateDto;
 import com.mindera.finalproject.be.dto.person.PersonCreateDto;
 import com.mindera.finalproject.be.service.PersonService;
 import jakarta.inject.Inject;
@@ -39,19 +38,19 @@ public class PersonController {
         return Response.ok(personService.getById(id)).build();
     }
 
-    @Operation(summary = "Create a course")
+    @Operation(summary = "Create a person")
     @APIResponses(value = {
             @APIResponse(responseCode = "201", description = "Person created")
     })
     @POST
-    public Response create(@Valid @RequestBody PersonCreateDto courseCreateDto) {
-        return Response.ok(personService.create(courseCreateDto)).status(Response.Status.CREATED).build();
+    public Response create(@Valid @RequestBody PersonCreateDto personCreateDto) {
+        return Response.ok(personService.create(personCreateDto)).status(Response.Status.CREATED).build();
     }
 
-    @Operation(summary = "Update a course")
+    @Operation(summary = "Update a person")
     @APIResponses(value = {
-            @APIResponse(responseCode = "200", description = "Course updated"),
-            @APIResponse(responseCode = "404", description = "Course not found")
+            @APIResponse(responseCode = "200", description = "Person updated"),
+            @APIResponse(responseCode = "404", description = "Person not found")
     })
     @PUT
     @Path("/{id}")
@@ -59,10 +58,10 @@ public class PersonController {
         return Response.ok(personService.update(id, personCreateDto)).build();
     }
 
-    @Operation(summary = "Delete a course")
+    @Operation(summary = "Delete a person")
     @APIResponses(value = {
-            @APIResponse(responseCode = "200", description = "Course deleted"),
-            @APIResponse(responseCode = "404", description = "Course not found")
+            @APIResponse(responseCode = "200", description = "Person deleted"),
+            @APIResponse(responseCode = "404", description = "Person not found")
     })
     @DELETE
     @Path("/{id}")
