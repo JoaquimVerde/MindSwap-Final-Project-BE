@@ -18,8 +18,7 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public PersonPublicDto getById(String id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getById'");
+        return null;
     }
 
     @Override
