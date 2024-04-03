@@ -1,6 +1,7 @@
 package com.mindera.finalproject.be.controller;
 
 import com.mindera.finalproject.be.dto.project.ProjectCreateDto;
+import com.mindera.finalproject.be.exception.course.CourseNotFoundException;
 import com.mindera.finalproject.be.exception.project.ProjectNotFoundException;
 import com.mindera.finalproject.be.exception.student.PersonNotFoundException;
 import com.mindera.finalproject.be.service.ProjectService;
@@ -49,7 +50,7 @@ public class ProjectController {
             @APIResponse(responseCode = "201", description = "Project created")
     })
     @POST
-    public Response create(@Valid @RequestBody ProjectCreateDto projectCreateDto) throws ProjectNotFoundException, PersonNotFoundException {
+    public Response create(@Valid @RequestBody ProjectCreateDto projectCreateDto) throws ProjectNotFoundException, PersonNotFoundException, CourseNotFoundException {
         return Response.ok(projectService.create(projectCreateDto)).status(Response.Status.CREATED).build();
     }
 
@@ -61,7 +62,7 @@ public class ProjectController {
     })
     @PUT
     @Path("/{id}")
-    public Response update(@PathParam("id") String id, @Valid @RequestBody ProjectCreateDto projectCreateDto) throws PersonNotFoundException {
+    public Response update(@PathParam("id") String id, @Valid @RequestBody ProjectCreateDto projectCreateDto) throws PersonNotFoundException, ProjectNotFoundException {
         return Response.ok(projectService.update(id, projectCreateDto)).build();
     }
 
@@ -73,7 +74,7 @@ public class ProjectController {
     })
     @DELETE
     @Path("/{id}")
-    public Response delete(@PathParam("id") String id) {
+    public Response delete(@PathParam("id") String id) throws ProjectNotFoundException {
         projectService.delete(id);
         return Response.ok().build();
     }
