@@ -70,9 +70,9 @@ public class RegistrationController {
             @APIResponse(responseCode = "200", description = "Registration deleted"),
             @APIResponse(responseCode = "404", description = "Registration not found")
     })
-    @DELETE
-    @Path("/{id}")
-    public Response deleteRegistration(@PathParam("id") String id) { //Este id é personId#courseId, deve ser concatenado antes de chegar aqui
+    @PUT
+    @Path("/delete/{id}")
+    public Response deleteRegistration(@PathParam("id") String id) {
         return Response.ok().build();
     }
 
