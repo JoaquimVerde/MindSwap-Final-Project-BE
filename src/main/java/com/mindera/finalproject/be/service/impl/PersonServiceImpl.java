@@ -8,11 +8,15 @@ import com.mindera.finalproject.be.entity.Person;
 import com.mindera.finalproject.be.service.PersonService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import software.amazon.awssdk.core.pagination.sync.SdkIterable;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 import software.amazon.awssdk.enhanced.dynamodb.Key;
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
+import software.amazon.awssdk.enhanced.dynamodb.model.Page;
+import software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -32,7 +36,11 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public List<PersonPublicDto> getAll() {
-        return PersonConverter.fromEntityToPublicDtoList(personTable.scan().items().stream().toList());
+        QueryConditional queryConditional = QueryConditional.sortBeginsWith(k -> k.partitionValue("PERSON#").sortValue("PERSON#"));
+        SdkIterable<Page<Person>> persons = personTable.query(queryConditional);
+        List<Person> personList = new ArrayList<>();
+        persons.forEach(page -> personList.addAll(page.items()));
+        return personList.stream().filter(Person::isActive).map(PersonConverter::fromEntityToPublicDto).toList();
     }
 
     @Override
@@ -62,7 +70,9 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public void delete(String id) {
-        personTable.deleteItem(Key.builder().partitionValue(id).build());
+        Person person = personTable.getItem(Key.builder().partitionValue(id).build());
+        person.setActive(false);
+        personTable.updateItem(person);
     }
 
 }

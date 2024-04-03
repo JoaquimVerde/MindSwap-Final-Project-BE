@@ -22,11 +22,12 @@ public class Person {
     private Integer age;
     private String address;
     private String cv;
+    private boolean active;
 
     public Person() {
     }
 
-    public Person(String email, String firstName, String lastName, String role, String username, LocalDate dateOfBirth, String address, String cv) {
+    public Person(String email, String firstName, String lastName, String role, String username, LocalDate dateOfBirth, String address, String cv, boolean active) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -35,6 +36,7 @@ public class Person {
         this.dateOfBirth = dateOfBirth;
         this.address = address;
         this.cv = cv;
+        this.active = active;
     }
 
     @DynamoDbPartitionKey
@@ -125,6 +127,14 @@ public class Person {
 
     public void setCurriculum(String cv) {
         this.cv = cv;
+    }
+
+    public boolean isActive() {
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
     }
 
     @Override
