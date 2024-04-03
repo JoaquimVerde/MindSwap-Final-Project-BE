@@ -66,8 +66,9 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public PersonPublicDto update(String id, PersonCreateDto personCreateDto) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'update'");
+        Person person = findById(id);
+        personTable.updateItem(person);
+        return PersonConverter.fromEntityToPublicDto(person);
     }
 
     @Override
