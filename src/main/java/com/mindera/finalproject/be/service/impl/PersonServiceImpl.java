@@ -1,6 +1,7 @@
 package com.mindera.finalproject.be.service.impl;
 
 import com.mindera.finalproject.be.TableCreation.TableCreation;
+import com.mindera.finalproject.be.converter.PersonConverter;
 import com.mindera.finalproject.be.dto.person.PersonCreateDto;
 import com.mindera.finalproject.be.dto.person.PersonPublicDto;
 import com.mindera.finalproject.be.entity.Person;
@@ -9,6 +10,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
+import software.amazon.awssdk.enhanced.dynamodb.Key;
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
 
 import java.util.List;
@@ -29,14 +31,12 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public List<PersonPublicDto> getAll() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAll'");
+        return PersonConverter.fromEntityToPublicDtoList(personTable.scan().items().stream().toList());
     }
 
     @Override
     public PersonPublicDto getById(String id) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getById'");
+        return PersonConverter.fromEntityToPublicDto(personTable.getItem(Key.builder().partitionValue(id).build()));
     }
 
     @Override
