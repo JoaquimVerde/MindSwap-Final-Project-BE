@@ -36,7 +36,11 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public PersonPublicDto getById(String id) {
-        return PersonConverter.fromEntityToPublicDto(personTable.getItem(Key.builder().partitionValue(id).build()));
+        Person person = personTable.getItem(Key.builder().partitionValue(id).build());
+        if (person == null) {
+            throw new RuntimeException("TODO yet to implement new expection");
+        }
+        return PersonConverter.fromEntityToPublicDto(person);
     }
 
     @Override
