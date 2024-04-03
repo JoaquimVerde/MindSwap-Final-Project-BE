@@ -10,6 +10,7 @@ public class PersonConverter {
 
     public static PersonPublicDto fromEntityToPublicDto(Person person) {
         return new PersonPublicDto(
+                person.getSK(),
                 person.getEmail(),
                 person.getFirstName(),
                 person.getLastName(),

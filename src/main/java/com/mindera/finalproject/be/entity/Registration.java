@@ -23,12 +23,12 @@ public class Registration {
     public Registration() {
     }
 
-    public Registration(String personId, String courseId, String status, String finalGrade, Boolean active, String aboutYou, Boolean prevKnowledge, Boolean prevExperience) {
+    public Registration(String personId, String courseId, String status, String finalGrade, String aboutYou, Boolean prevKnowledge, Boolean prevExperience) {
         this.personId = personId;
         this.courseId = courseId;
         this.status = status;
         this.finalGrade = finalGrade;
-        this.active = active;
+        this.active = true;
         this.aboutYou = aboutYou;
         this.prevKnowledge = prevKnowledge;
         this.prevExperience = prevExperience;
@@ -42,6 +42,7 @@ public class Registration {
     public void setPK(String PK) {
         this.PK = PK;
     }
+
     @DynamoDbSortKey
     public String getSK() {
         return SK;

@@ -10,6 +10,7 @@ public class RegistrationConverter {
 
     public static RegistrationPublicDto fromEntityToPublicDto(Registration registration, PersonPublicDto student, CoursePublicDto course) {
         return new RegistrationPublicDto(
+                registration.getSK(),
                 student,
                 course,
                 registration.getStatus(),
@@ -35,7 +36,6 @@ public class RegistrationConverter {
                 registrationCreateDto.courseId(),
                 registrationCreateDto.status(),
                 registrationCreateDto.finalGrade(),
-                registrationCreateDto.active(),
                 registrationCreateDto.aboutYou(),
                 registrationCreateDto.prevKnowledge(),
                 registrationCreateDto.prevExperience()

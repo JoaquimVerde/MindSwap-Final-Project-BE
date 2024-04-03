@@ -12,11 +12,11 @@ public interface ProjectService {
 
     List<ProjectPublicDto> getAll();
 
-    ProjectPublicDto getById(String id) throws ProjectNotFoundException;
+    ProjectPublicDto getById(String id) throws ProjectNotFoundException, PersonNotFoundException;
 
     ProjectPublicDto create(ProjectCreateDto projectCreateDto) throws ProjectNotFoundException, PersonNotFoundException;
 
-    ProjectPublicDto update(String id, ProjectCreateDto projectCreateDto);
+    ProjectPublicDto update(String id, ProjectCreateDto projectCreateDto) throws PersonNotFoundException;
 
     void delete(String id);
 

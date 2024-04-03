@@ -1,6 +1,8 @@
 package com.mindera.finalproject.be.service.impl;
 
 import com.mindera.finalproject.be.converter.ProjectConverter;
+import com.mindera.finalproject.be.dto.course.CoursePublicDto;
+import com.mindera.finalproject.be.dto.person.PersonPublicDto;
 import com.mindera.finalproject.be.dto.project.ProjectCreateDto;
 import com.mindera.finalproject.be.dto.project.ProjectPublicDto;
 import com.mindera.finalproject.be.entity.Course;
@@ -50,16 +52,33 @@ public class ProjectServiceImpl implements ProjectService {
         SdkIterable<Page<Project>> projects = projectTable.query(queryConditional);
         List<Project> projectsList = new ArrayList<>();
         projects.forEach(page -> projectsList.addAll(page.items()));
-        return projectsList.stream().filter(Project::getActive).map(ProjectConverter::fromEntityToPublicDto).toList();
+        return projectsList.stream().filter(Project::getActive).map(project -> {
+            CoursePublicDto course = null;
+            List<PersonPublicDto> students = new ArrayList<>();
+            try {
+                course = courseService.getById(project.getCourseId());
+                for (String studentId : project.getStudents()) {
+                    students.add(personService.getById(studentId));
+                }
+            } catch (PersonNotFoundException e) {
+                throw new RuntimeException(e);
+            }
+            return ProjectConverter.fromEntityToPublicDto(project, course, students);
+        }).toList();
     }
 
     @Override
-    public ProjectPublicDto getById(String id) throws ProjectNotFoundException {
+    public ProjectPublicDto getById(String id) throws ProjectNotFoundException, PersonNotFoundException {
         Project project = projectTable.getItem(Key.builder().partitionValue(PROJECT).sortValue(id).build());
         if (project == null) {
             throw new ProjectNotFoundException("Project not found");
         }
-        return ProjectConverter.fromEntityToPublicDto(project);
+        CoursePublicDto course = courseService.getById(project.getCourseId());
+        List<PersonPublicDto> students = new ArrayList<>();
+        for (String studentId : project.getStudents()) {
+            students.add(personService.getById(studentId));
+        }
+        return ProjectConverter.fromEntityToPublicDto(project, course, students);
     }
 
     @Override
@@ -83,11 +102,17 @@ public class ProjectServiceImpl implements ProjectService {
         project.setPK(PROJECT);
         project.setSK(PROJECT + UUID.randomUUID());
         projectTable.putItem(project);
-        return ProjectConverter.fromEntityToPublicDto(project);
+
+        CoursePublicDto coursePublicDto = courseService.getById(projectCreateDto.courseId());
+        List<PersonPublicDto> students = new ArrayList<>();
+        for (String studentId : projectCreateDto.studentIds()) {
+            students.add(personService.getById(studentId));
+        }
+        return ProjectConverter.fromEntityToPublicDto(project, coursePublicDto, students);
     }
 
     @Override
-    public ProjectPublicDto update(String id, ProjectCreateDto projectCreateDto) {
+    public ProjectPublicDto update(String id, ProjectCreateDto projectCreateDto) throws PersonNotFoundException {
         Project project = projectTable.getItem(Key.builder().partitionValue(PROJECT).sortValue(id).build());
         if (project == null) {
             return null; // throw exception
@@ -97,7 +122,12 @@ public class ProjectServiceImpl implements ProjectService {
         project.setCourseId(projectCreateDto.courseId());
         project.setGitHubRepo(projectCreateDto.gitHubRepo());
         projectTable.updateItem(project);
-        return ProjectConverter.fromEntityToPublicDto(project);
+        CoursePublicDto course = courseService.getById(project.getCourseId());
+        List<PersonPublicDto> students = new ArrayList<>();
+        for (String studentId : project.getStudents()) {
+            students.add(personService.getById(studentId));
+        }
+        return ProjectConverter.fromEntityToPublicDto(project, course, students);
     }
 
     @Override

@@ -1,6 +1,8 @@
 package com.mindera.finalproject.be.controller;
 
 import com.mindera.finalproject.be.dto.project.ProjectCreateDto;
+import com.mindera.finalproject.be.exception.project.ProjectNotFoundException;
+import com.mindera.finalproject.be.exception.student.PersonNotFoundException;
 import com.mindera.finalproject.be.service.ProjectService;
 import jakarta.inject.Inject;
 import jakarta.validation.Valid;
@@ -25,53 +27,53 @@ public class ProjectController {
     @Operation(summary = "Find all projects")
     @APIResponse(responseCode = "200", description = "List of all projects")
     @GET
-    public Response getAll(){
+    public Response getAll() {
         return Response.ok(projectService.getAll()).build();
     }
 
 
     @Operation(summary = "Find project by id")
-    @APIResponses( value = {
+    @APIResponses(value = {
             @APIResponse(responseCode = "200", description = "Project found"),
             @APIResponse(responseCode = "404", description = "Project not found")
     })
     @Path("/{id}")
     @GET
-        public Response getById(@PathParam("id") String id){
-            return Response.ok(projectService.getById(id)).build();
+    public Response getById(@PathParam("id") String id) throws ProjectNotFoundException, PersonNotFoundException {
+        return Response.ok(projectService.getById(id)).build();
     }
 
 
     @Operation(summary = "Create new project")
-    @APIResponses( value = {
+    @APIResponses(value = {
             @APIResponse(responseCode = "201", description = "Project created")
     })
     @POST
-    public Response create(@Valid @RequestBody ProjectCreateDto ProjectCreateDto){
-        return Response.ok(projectService.create(ProjectCreateDto)).status(Response.Status.CREATED).build();
+    public Response create(@Valid @RequestBody ProjectCreateDto projectCreateDto) throws ProjectNotFoundException, PersonNotFoundException {
+        return Response.ok(projectService.create(projectCreateDto)).status(Response.Status.CREATED).build();
     }
 
 
     @Operation(summary = "Update a project")
-    @APIResponses( value = {
+    @APIResponses(value = {
             @APIResponse(responseCode = "200", description = "Project edited"),
             @APIResponse(responseCode = "404", description = "Project not found")
     })
     @PUT
     @Path("/{id}")
-    public Response update(@PathParam("id") String id, @Valid @RequestBody ProjectCreateDto ProjectCreateDto){
-        return Response.ok(projectService.update(id, ProjectCreateDto)).build();
+    public Response update(@PathParam("id") String id, @Valid @RequestBody ProjectCreateDto projectCreateDto) throws PersonNotFoundException {
+        return Response.ok(projectService.update(id, projectCreateDto)).build();
     }
 
 
     @Operation(summary = "Delete a project")
-    @APIResponses( value = {
+    @APIResponses(value = {
             @APIResponse(responseCode = "200", description = "Project deleted"),
             @APIResponse(responseCode = "404", description = "Project not found")
     })
     @DELETE
     @Path("/{id}")
-    public Response delete(@PathParam("id") String id){
+    public Response delete(@PathParam("id") String id) {
         projectService.delete(id);
         return Response.ok().build();
     }

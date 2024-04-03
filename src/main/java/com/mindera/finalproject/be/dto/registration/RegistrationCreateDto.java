@@ -16,9 +16,6 @@ public record RegistrationCreateDto(
 
         String finalGrade,
 
-        @NotNull(message = "Active status is required")
-        Boolean active,
-
         @NotEmpty(message = "About you is required")
         String aboutYou,
 

@@ -4,7 +4,7 @@ import com.mindera.finalproject.be.dto.course.CoursePublicDto;
 import com.mindera.finalproject.be.dto.person.PersonPublicDto;
 
 public record RegistrationPublicDto(
-
+        String id,
         PersonPublicDto student,
         CoursePublicDto course,
         String status,
