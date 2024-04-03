@@ -21,6 +21,7 @@ public class Course {
     private BigDecimal price;
     private Integer duration;
     private String location;
+    private Boolean active;
     private Integer numberOfApplications;
     private Integer maxNumberOfApplications;
 
@@ -37,6 +38,7 @@ public class Course {
         this.price = price;
         this.duration = duration;
         this.location = location;
+        this.active = true;
     }
 
     @DynamoDbPartitionKey
@@ -142,6 +144,14 @@ public class Course {
         this.location = location;
     }
 
+    public Boolean getActive() {
+        return active;
+    }
+
+    public void setActive(Boolean active) {
+        this.active = active;
+    }
+
     @DynamoDbAttribute("NumberOfApplications")
     public Integer getNumberOfApplications() {
         return numberOfApplications;
@@ -161,34 +171,35 @@ public class Course {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Course course = (Course) o;
+        return Objects.equals(PK, course.PK) && Objects.equals(SK, course.SK) && Objects.equals(name, course.name) && Objects.equals(edition, course.edition) && Objects.equals(teacherId, course.teacherId) && Objects.equals(syllabus, course.syllabus) && Objects.equals(program, course.program) && Objects.equals(schedule, course.schedule) && Objects.equals(price, course.price) && Objects.equals(duration, course.duration) && Objects.equals(location, course.location) && Objects.equals(active, course.active) && Objects.equals(numberOfApplications, course.numberOfApplications) && Objects.equals(maxNumberOfApplications, course.maxNumberOfApplications);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(PK, SK, name, edition, teacherId, syllabus, program, schedule, price, duration, location, active, numberOfApplications, maxNumberOfApplications);
+    }
+
+    @Override
     public String toString() {
         return "Course{" +
                 "PK='" + PK + '\'' +
                 ", SK='" + SK + '\'' +
                 ", name='" + name + '\'' +
                 ", edition=" + edition +
-                ", teacher=" + teacherId +
+                ", teacherId='" + teacherId + '\'' +
                 ", syllabus='" + syllabus + '\'' +
                 ", program='" + program + '\'' +
-                ", schedule=" + schedule +
+                ", schedule='" + schedule + '\'' +
                 ", price=" + price +
                 ", duration=" + duration +
                 ", location='" + location + '\'' +
+                ", active=" + active +
                 ", numberOfApplications=" + numberOfApplications +
                 ", maxNumberOfApplications=" + maxNumberOfApplications +
                 '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Course course = (Course) o;
-        return Objects.equals(PK, course.PK) && Objects.equals(SK, course.SK) && Objects.equals(name, course.name) && Objects.equals(edition, course.edition) && Objects.equals(teacherId, course.teacherId) && Objects.equals(syllabus, course.syllabus) && Objects.equals(program, course.program) && Objects.equals(schedule, course.schedule) && Objects.equals(price, course.price) && Objects.equals(duration, course.duration) && Objects.equals(location, course.location) && Objects.equals(numberOfApplications, course.numberOfApplications) && Objects.equals(maxNumberOfApplications, course.maxNumberOfApplications);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(PK, SK, name, edition, teacherId, syllabus, program, schedule, price, duration, location, numberOfApplications, maxNumberOfApplications);
     }
 }
