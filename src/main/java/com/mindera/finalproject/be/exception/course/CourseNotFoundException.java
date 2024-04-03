@@ -1,4 +1,4 @@
-package com.mindera.finalproject.be.exception.CourseExceptions;
+package com.mindera.finalproject.be.exception.course;
 
 public class CourseNotFoundException extends CourseExceptions{
 
