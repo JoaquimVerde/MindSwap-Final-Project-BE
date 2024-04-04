@@ -6,8 +6,8 @@ import com.mindera.finalproject.be.dto.person.PersonPublicDto;
 import com.mindera.finalproject.be.dto.project.ProjectCreateDto;
 import com.mindera.finalproject.be.dto.project.ProjectPublicDto;
 import com.mindera.finalproject.be.dto.project.ProjectUpdateGradeDto;
-import com.mindera.finalproject.be.entity.Person;
 import com.mindera.finalproject.be.entity.Project;
+import com.mindera.finalproject.be.exception.course.CourseNotFoundException;
 import com.mindera.finalproject.be.exception.project.ProjectNotFoundException;
 import com.mindera.finalproject.be.exception.student.PersonNotFoundException;
 import com.mindera.finalproject.be.service.CourseService;
@@ -22,7 +22,6 @@ import software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 @ApplicationScoped
@@ -60,7 +59,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ProjectPublicDto getById(String id) throws ProjectNotFoundException, PersonNotFoundException {
+    public ProjectPublicDto getById(String id) throws ProjectNotFoundException, PersonNotFoundException, CourseNotFoundException {
         Project project = verifyIfProjectExists(id);
         CoursePublicDto course = courseService.getById(project.getCourseId());
         List<PersonPublicDto> students = new ArrayList<>();
@@ -71,7 +70,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ProjectPublicDto create(ProjectCreateDto projectCreateDto) throws ProjectNotFoundException, PersonNotFoundException {
+    public ProjectPublicDto create(ProjectCreateDto projectCreateDto) throws ProjectNotFoundException, PersonNotFoundException, CourseNotFoundException {
         Project project = ProjectConverter.convertFromDtoToEntity(projectCreateDto);
         project.setPK(PROJECT);
         project.setSK(PROJECT + UUID.randomUUID());
@@ -85,18 +84,18 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ProjectPublicDto update(String id, ProjectCreateDto projectCreateDto) throws ProjectNotFoundException, PersonNotFoundException {
+    public ProjectPublicDto update(String id, ProjectCreateDto projectCreateDto) throws ProjectNotFoundException, PersonNotFoundException, CourseNotFoundException {
         Project project = verifyIfProjectExists(id);
-        if(!projectCreateDto.name().equals(project.getName())) {
+        if (!projectCreateDto.name().equals(project.getName())) {
             project.setName(projectCreateDto.name());
         }
-        if(!projectCreateDto.studentIds().equals(project.getStudents())) {
+        if (!projectCreateDto.studentIds().equals(project.getStudents())) {
             project.setStudents(projectCreateDto.studentIds());
         }
-        if(!projectCreateDto.courseId().equals(project.getCourseId())) {
+        if (!projectCreateDto.courseId().equals(project.getCourseId())) {
             project.setCourseId(projectCreateDto.courseId());
         }
-        if(!projectCreateDto.gitHubRepo().equals(project.getGitHubRepo())) {
+        if (!projectCreateDto.gitHubRepo().equals(project.getGitHubRepo())) {
             project.setGitHubRepo(projectCreateDto.gitHubRepo());
         }
         projectTable.putItem(project);
@@ -109,7 +108,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public ProjectPublicDto updateGrade(String id, ProjectUpdateGradeDto projectUpdateGradeDto) throws ProjectNotFoundException, PersonNotFoundException {
+    public ProjectPublicDto updateGrade(String id, ProjectUpdateGradeDto projectUpdateGradeDto) throws ProjectNotFoundException, PersonNotFoundException, CourseNotFoundException {
         Project project = verifyIfProjectExists(id);
         project.setGrade(projectUpdateGradeDto.grade());
         CoursePublicDto course = courseService.getById(project.getCourseId());
@@ -136,7 +135,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<ProjectPublicDto> getProjectsByCourseId(String courseId){
+    public List<ProjectPublicDto> getProjectsByCourseId(String courseId) throws CourseNotFoundException {
         courseService.findById(courseId);
         QueryConditional queryConditional = QueryConditional.sortBeginsWith(s -> s.partitionValue(courseId).sortValue(PROJECT));
         DynamoDbIndex<Project> projectIndex = projectTable.index("GSIPK1");
@@ -154,7 +153,7 @@ public class ProjectServiceImpl implements ProjectService {
             for (String studentId : project.getStudents()) {
                 students.add(personService.getById(studentId));
             }
-        } catch (PersonNotFoundException e) {
+        } catch (Exception e) {
             throw new RuntimeException(e);
         }
         return ProjectConverter.fromEntityToPublicDto(project, course, students);

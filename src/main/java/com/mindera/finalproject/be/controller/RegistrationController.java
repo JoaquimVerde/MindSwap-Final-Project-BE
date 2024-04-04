@@ -1,6 +1,7 @@
 package com.mindera.finalproject.be.controller;
 
 import com.mindera.finalproject.be.dto.registration.RegistrationCreateDto;
+import com.mindera.finalproject.be.exception.course.CourseNotFoundException;
 import com.mindera.finalproject.be.exception.student.PersonNotFoundException;
 import com.mindera.finalproject.be.service.RegistrationService;
 import jakarta.inject.Inject;
@@ -37,7 +38,7 @@ public class RegistrationController {
     })
     @GET
     @Path("/{id}")
-    public Response getById(@PathParam("id") String id) throws PersonNotFoundException {
+    public Response getById(@PathParam("id") String id) throws PersonNotFoundException, CourseNotFoundException {
         return Response.ok(registrationService.getById(id)).build();
     }
 
@@ -45,7 +46,7 @@ public class RegistrationController {
     @Operation(summary = "Create a registration")
     @APIResponse(responseCode = "201", description = "Registration created")
     @POST
-    public Response create(RegistrationCreateDto registrationCreateDto) throws PersonNotFoundException {
+    public Response create(RegistrationCreateDto registrationCreateDto) throws PersonNotFoundException, CourseNotFoundException {
         return Response.ok(registrationService.create(registrationCreateDto)).build();
     }
 
@@ -57,7 +58,7 @@ public class RegistrationController {
     })
     @PUT
     @Path("/{id}")
-    public Response update(@PathParam("id") String id, @Valid @RequestBody RegistrationCreateDto registrationCreateDto) throws PersonNotFoundException {
+    public Response update(@PathParam("id") String id, @Valid @RequestBody RegistrationCreateDto registrationCreateDto) throws PersonNotFoundException, CourseNotFoundException {
         return Response.ok(registrationService.update(id, registrationCreateDto)).build();
     }
 

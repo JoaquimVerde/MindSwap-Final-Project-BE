@@ -2,6 +2,7 @@ package com.mindera.finalproject.be.controller;
 
 import com.mindera.finalproject.be.dto.project.ProjectCreateDto;
 import com.mindera.finalproject.be.dto.project.ProjectUpdateGradeDto;
+import com.mindera.finalproject.be.exception.course.CourseNotFoundException;
 import com.mindera.finalproject.be.exception.project.ProjectNotFoundException;
 import com.mindera.finalproject.be.exception.student.PersonNotFoundException;
 import com.mindera.finalproject.be.service.ProjectService;
@@ -40,7 +41,7 @@ public class ProjectController {
     })
     @Path("/{id}")
     @GET
-    public Response getById(@PathParam("id") String id) throws ProjectNotFoundException, PersonNotFoundException {
+    public Response getById(@PathParam("id") String id) throws ProjectNotFoundException, PersonNotFoundException, CourseNotFoundException {
         return Response.ok(projectService.getById(id)).build();
     }
 
@@ -62,7 +63,7 @@ public class ProjectController {
     })
     @GET
     @Path("/course/{courseId}")
-    public Response getProjectsByCourseId(@PathParam("courseId") String courseId) throws  PersonNotFoundException {
+    public Response getProjectsByCourseId(@PathParam("courseId") String courseId) throws PersonNotFoundException, CourseNotFoundException {
         return Response.ok(projectService.getProjectsByCourseId(courseId)).build();
     }
 
@@ -71,7 +72,7 @@ public class ProjectController {
             @APIResponse(responseCode = "201", description = "Project created")
     })
     @POST
-    public Response create(@Valid @RequestBody ProjectCreateDto projectCreateDto) throws ProjectNotFoundException, PersonNotFoundException {
+    public Response create(@Valid @RequestBody ProjectCreateDto projectCreateDto) throws ProjectNotFoundException, PersonNotFoundException, CourseNotFoundException {
         return Response.ok(projectService.create(projectCreateDto)).status(Response.Status.CREATED).build();
     }
 
@@ -82,7 +83,7 @@ public class ProjectController {
     })
     @PUT
     @Path("/{id}")
-    public Response update(@PathParam("id") String id, @Valid @RequestBody ProjectCreateDto projectCreateDto) throws PersonNotFoundException, ProjectNotFoundException {
+    public Response update(@PathParam("id") String id, @Valid @RequestBody ProjectCreateDto projectCreateDto) throws PersonNotFoundException, ProjectNotFoundException, CourseNotFoundException {
         return Response.ok(projectService.update(id, projectCreateDto)).build();
     }
 
@@ -93,7 +94,7 @@ public class ProjectController {
     })
     @PATCH
     @Path("/grade/{id}")
-    public Response updateGrade(@PathParam("id") String id, @Valid @RequestBody ProjectUpdateGradeDto projectUpdateGradeDto) throws ProjectNotFoundException, PersonNotFoundException {
+    public Response updateGrade(@PathParam("id") String id, @Valid @RequestBody ProjectUpdateGradeDto projectUpdateGradeDto) throws ProjectNotFoundException, PersonNotFoundException, CourseNotFoundException {
         return Response.ok(projectService.updateGrade(id, projectUpdateGradeDto)).build();
     }
 
