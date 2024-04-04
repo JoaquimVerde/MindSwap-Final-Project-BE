@@ -1,8 +1,6 @@
 package com.mindera.finalproject.be.entity;
 
-import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
-import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
-import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortKey;
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.*;
 
 import java.util.List;
 import java.util.Objects;
@@ -31,6 +29,7 @@ public class Project {
     }
 
     @DynamoDbPartitionKey
+    @DynamoDbSecondarySortKey(indexNames = {"GSIPK1"})
     public String getPK() {
         return PK;
     }
@@ -56,6 +55,7 @@ public class Project {
         this.students = students;
     }
 
+    @DynamoDbSecondaryPartitionKey(indexNames = {"GSIPK1"})
     public String getCourseId() {
         return courseId;
     }

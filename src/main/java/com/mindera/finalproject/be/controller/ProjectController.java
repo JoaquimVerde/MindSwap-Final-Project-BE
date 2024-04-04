@@ -1,7 +1,7 @@
 package com.mindera.finalproject.be.controller;
 
 import com.mindera.finalproject.be.dto.project.ProjectCreateDto;
-import com.mindera.finalproject.be.exception.course.CourseNotFoundException;
+import com.mindera.finalproject.be.dto.project.ProjectUpdateGradeDto;
 import com.mindera.finalproject.be.exception.project.ProjectNotFoundException;
 import com.mindera.finalproject.be.exception.student.PersonNotFoundException;
 import com.mindera.finalproject.be.service.ProjectService;
@@ -44,16 +44,36 @@ public class ProjectController {
         return Response.ok(projectService.getById(id)).build();
     }
 
+    @Operation(summary = "Find project by person id")
+    @APIResponses(value = {
+            @APIResponse(responseCode = "200", description = "Project found"),
+            @APIResponse(responseCode = "404", description = "Project not found")
+    })
+    @GET
+    @Path("/person/{personId}")
+    public Response getProjectsByPersonId(@PathParam("personId") String personId) throws PersonNotFoundException {
+        return Response.ok(projectService.getProjectsByPersonId(personId)).build();
+    }
+
+    @Operation(summary = "Find project by course id")
+    @APIResponses(value = {
+            @APIResponse(responseCode = "200", description = "Project found"),
+            @APIResponse(responseCode = "404", description = "Project not found")
+    })
+    @GET
+    @Path("/course/{courseId}")
+    public Response getProjectsByCourseId(@PathParam("courseId") String courseId) throws  PersonNotFoundException {
+        return Response.ok(projectService.getProjectsByCourseId(courseId)).build();
+    }
 
     @Operation(summary = "Create new project")
     @APIResponses(value = {
             @APIResponse(responseCode = "201", description = "Project created")
     })
     @POST
-    public Response create(@Valid @RequestBody ProjectCreateDto projectCreateDto) throws ProjectNotFoundException, PersonNotFoundException, CourseNotFoundException {
+    public Response create(@Valid @RequestBody ProjectCreateDto projectCreateDto) throws ProjectNotFoundException, PersonNotFoundException {
         return Response.ok(projectService.create(projectCreateDto)).status(Response.Status.CREATED).build();
     }
-
 
     @Operation(summary = "Update a project")
     @APIResponses(value = {
@@ -66,6 +86,16 @@ public class ProjectController {
         return Response.ok(projectService.update(id, projectCreateDto)).build();
     }
 
+    @Operation(summary = "Update a project grade")
+    @APIResponses(value = {
+            @APIResponse(responseCode = "200", description = "Project grade updated"),
+            @APIResponse(responseCode = "404", description = "Project not found")
+    })
+    @PATCH
+    @Path("/grade/{id}")
+    public Response updateGrade(@PathParam("id") String id, @Valid @RequestBody ProjectUpdateGradeDto projectUpdateGradeDto) throws ProjectNotFoundException, PersonNotFoundException {
+        return Response.ok(projectService.updateGrade(id, projectUpdateGradeDto)).build();
+    }
 
     @Operation(summary = "Delete a project")
     @APIResponses(value = {

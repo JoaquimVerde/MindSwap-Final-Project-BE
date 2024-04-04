@@ -85,7 +85,11 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public Person findById(String id) {
-        return personTable.getItem(Key.builder().partitionValue(PERSON).sortValue(id).build());
+    public Person findById(String id) throws PersonNotFoundException {
+        Person person = personTable.getItem(Key.builder().partitionValue(PERSON).sortValue(id).build());
+        if (person == null) {
+            throw new PersonNotFoundException("Person with id " + id + " not found");
+        }
+        return person;
     }
 }
