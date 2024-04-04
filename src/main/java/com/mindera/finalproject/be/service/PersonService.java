@@ -13,6 +13,8 @@ public interface PersonService {
 
     PersonPublicDto getById(String id) throws PersonNotFoundException;
 
+    List<PersonPublicDto> getByRole(String role);
+
     PersonPublicDto create(PersonCreateDto personCreateDto);
 
     PersonPublicDto update(String id, PersonCreateDto personCreateDto) throws PersonNotFoundException;
@@ -20,4 +22,5 @@ public interface PersonService {
     void delete(String id);
 
     Person findById(String id) throws PersonNotFoundException;
+
 }
