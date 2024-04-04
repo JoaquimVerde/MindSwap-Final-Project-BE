@@ -105,12 +105,15 @@ public class CourseServiceImpl implements CourseService {
         } catch (PersonNotFoundException e) {
             course.setTeacherId(null);
         }
+        course.setName(courseCreateDto.name());
+        course.setEdition(courseCreateDto.edition());
         course.setSyllabus(courseCreateDto.syllabus());
         course.setProgram(courseCreateDto.program());
         course.setSchedule(courseCreateDto.schedule());
         course.setPrice(courseCreateDto.price());
         course.setDuration(courseCreateDto.duration());
         course.setLocation(courseCreateDto.location());
+
 
         courseTable.putItem(course);
         if (course.getTeacherId() == null) {

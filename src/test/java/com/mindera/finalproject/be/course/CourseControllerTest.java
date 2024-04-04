@@ -275,18 +275,17 @@ class CourseControllerTest {
     void testUpdateCourseWithEmptyData() {
         String courseId = createCourse(courseLocation);
 
-        String courseJson = "{teacherId: \"" + teacherId + "\", name: \"\", edition: 0, syllabus: \"\", program: \"\", schedule: \"\", price: 0, duration: 0, location: \"\"}";
-        //TODO ver como queremos que o update funcione
-        CoursePublicDto response = given()
-                .body(courseJson)
+        CourseCreateDto updatedCourse = new CourseCreateDto("", 0, "", "", "", "", new BigDecimal("0"), 0, "");
+        
+        Error response = given()
+                .body(updatedCourse)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .when().put(API_PATH + "/" + courseId)
                 .then()
                 .statusCode(400)
-                .extract().as(CoursePublicDto.class);
+                .extract().as(Error.class);
 
-
-        System.out.println(response);
+        assertTrue(response.getMessage().contains("Name can only contain letters"));
     }
 
     @Test
@@ -295,15 +294,15 @@ class CourseControllerTest {
 
         CourseCreateDto updatedCourse = new CourseCreateDto("Backend", 2, "PERSON#1", "Java, Spring", "Backend", "Tuesday 10-18", new BigDecimal("1000.13"), 60, "Lisbon");
 
-        Error error = given()
+        CoursePublicDto response = given()
                 .body(updatedCourse)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .when().put(API_PATH + "/" + courseId)
                 .then()
-                .statusCode(404)
-                .extract().as(Error.class);
+                .statusCode(200)
+                .extract().as(CoursePublicDto.class);
 
-        assertTrue(error.getMessage().contains("Person with id PERSON#1 not found"));
+        assertNull(response.teacher());
     }
 
     @Test
