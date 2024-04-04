@@ -1,6 +1,5 @@
 package com.mindera.finalproject.be.service.impl;
 
-import com.mindera.finalproject.be.TableCreation.TableCreation;
 import com.mindera.finalproject.be.converter.PersonConverter;
 import com.mindera.finalproject.be.dto.person.PersonCreateDto;
 import com.mindera.finalproject.be.dto.person.PersonPublicDto;
@@ -48,7 +47,6 @@ public class PersonServiceImpl implements PersonService {
             throw new PersonNotFoundException("Person with id " + id + " not found");
         }
         return PersonConverter.fromEntityToPublicDto(person);
-
     }
 
     @Override

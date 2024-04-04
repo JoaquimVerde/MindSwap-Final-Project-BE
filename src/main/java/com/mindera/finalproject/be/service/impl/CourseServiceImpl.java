@@ -1,11 +1,11 @@
 package com.mindera.finalproject.be.service.impl;
 
 
-import com.mindera.finalproject.be.TableCreation.TableCreation;
 import com.mindera.finalproject.be.converter.CourseConverter;
 import com.mindera.finalproject.be.dto.course.CourseCreateDto;
 import com.mindera.finalproject.be.dto.course.CoursePublicDto;
 import com.mindera.finalproject.be.entity.Course;
+import com.mindera.finalproject.be.entity.Person;
 import com.mindera.finalproject.be.exception.course.CourseNotFoundException;
 import com.mindera.finalproject.be.exception.student.PersonNotFoundException;
 import com.mindera.finalproject.be.service.CourseService;
@@ -27,6 +27,7 @@ public class CourseServiceImpl implements CourseService {
     private final String TABLE_NAME = "Course";
     private final String COURSE = "COURSE#";
     private final String GSIPK = "GSIPK";
+
     @Inject
     PersonService personService;
     private DynamoDbTable<Course> courseTable;
@@ -65,7 +66,11 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public CoursePublicDto create(CourseCreateDto courseCreateDto) throws PersonNotFoundException {
+        Person teacher = personService.findById(courseCreateDto.teacherId());
         Course course = CourseConverter.fromCreateDtoToEntity(courseCreateDto);
+        if (teacher == null) {
+            course.setTeacherId(null);
+        }
         course.setPK(COURSE);
         course.setSK(COURSE + UUID.randomUUID());
         courseTable.putItem(course);
