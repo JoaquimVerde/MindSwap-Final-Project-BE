@@ -19,5 +19,5 @@ public interface PersonService {
 
     void delete(String id);
 
-    Person findById(String id);
+    Person findById(String id) throws PersonNotFoundException;
 }

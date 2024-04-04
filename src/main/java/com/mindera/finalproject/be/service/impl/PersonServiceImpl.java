@@ -1,6 +1,5 @@
 package com.mindera.finalproject.be.service.impl;
 
-import com.mindera.finalproject.be.TableCreation.TableCreation;
 import com.mindera.finalproject.be.converter.PersonConverter;
 import com.mindera.finalproject.be.dto.person.PersonCreateDto;
 import com.mindera.finalproject.be.dto.person.PersonPublicDto;
@@ -87,7 +86,11 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public Person findById(String id) {
-        return personTable.getItem(Key.builder().partitionValue(PERSON).sortValue(id).build());
+    public Person findById(String id) throws PersonNotFoundException {
+        Person person = personTable.getItem(Key.builder().partitionValue(PERSON).sortValue(id).build());
+        if (person == null) {
+            throw new PersonNotFoundException("Person with id " + id + " not found");
+        }
+        return person;
     }
 }
