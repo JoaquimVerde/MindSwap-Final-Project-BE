@@ -66,7 +66,7 @@ public class PersonController {
     })
     @DELETE
     @Path("/{id}")
-    public Response delete(@PathParam("id") String id) {
+    public Response delete(@PathParam("id") String id) throws PersonNotFoundException {
         personService.delete(id);
         return Response.ok().build();
     }

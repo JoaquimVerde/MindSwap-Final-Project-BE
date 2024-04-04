@@ -147,8 +147,7 @@ public class PersonControllerTests {
     @Test
     public void testDeleteNotFound() {
 
-        String id = "XXXXXXXXX";
-        //PersonCreateDto personCreateDto = new PersonCreateDto("peter@email.com", "joe", "doe", "admin", "peter", LocalDate.of(2000, 10, 10), "address", "cv");
+        String id = "XXXXXXXXX"; //non-existing ID
         given()
                 .pathParam("id", id)
                 .when()
