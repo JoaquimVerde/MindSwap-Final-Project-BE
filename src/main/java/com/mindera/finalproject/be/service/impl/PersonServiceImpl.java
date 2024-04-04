@@ -78,8 +78,8 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public void delete(String id) {
-        Person person = personTable.getItem(Key.builder().partitionValue(PERSON).sortValue(id).build());
+    public void delete(String id) throws PersonNotFoundException {
+        Person person = findById(id); //personTable.getItem(Key.builder().partitionValue(PERSON).sortValue(id).build());
         person.setActive(false);
         personTable.updateItem(person);
     }

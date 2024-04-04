@@ -17,7 +17,7 @@ public interface PersonService {
 
     PersonPublicDto update(String id, PersonCreateDto personCreateDto) throws PersonNotFoundException;
 
-    void delete(String id);
+    void delete(String id) throws PersonNotFoundException;
 
     Person findById(String id) throws PersonNotFoundException;
 }
