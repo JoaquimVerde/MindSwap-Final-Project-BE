@@ -1,6 +1,5 @@
 package com.mindera.finalproject.be.Person;
 
-import com.mindera.finalproject.be.converter.PersonConverter;
 import com.mindera.finalproject.be.dto.person.PersonCreateDto;
 import com.mindera.finalproject.be.entity.Person;
 import io.quarkus.test.junit.QuarkusTest;
@@ -31,9 +30,15 @@ public class PersonControllerTests {
     @BeforeEach
     public void setUp() {
         personTable = dynamoEnhancedClient.table("Person", TableSchema.fromBean(Person.class));
-        personTable.createTable();
+        try {
+            personTable.createTable();
+            Thread.sleep(100);
         }
-
+        catch (Exception e) {
+            personTable.deleteTable();
+            setUp();
+        }
+}
         @AfterEach
         public void tearDown() {
             personTable.deleteTable();
