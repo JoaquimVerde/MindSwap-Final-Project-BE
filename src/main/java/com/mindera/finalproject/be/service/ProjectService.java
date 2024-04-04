@@ -14,17 +14,17 @@ public interface ProjectService {
 
     List<ProjectPublicDto> getAll();
 
-    ProjectPublicDto getById(String id) throws ProjectNotFoundException, PersonNotFoundException;
+    ProjectPublicDto getById(String id) throws ProjectNotFoundException, PersonNotFoundException, CourseNotFoundException;
 
-    ProjectPublicDto create(ProjectCreateDto projectCreateDto) throws ProjectNotFoundException, PersonNotFoundException;
+    ProjectPublicDto create(ProjectCreateDto projectCreateDto) throws ProjectNotFoundException, PersonNotFoundException, CourseNotFoundException;
 
-    ProjectPublicDto update(String id, ProjectCreateDto projectCreateDto) throws PersonNotFoundException, ProjectNotFoundException;
+    ProjectPublicDto update(String id, ProjectCreateDto projectCreateDto) throws PersonNotFoundException, ProjectNotFoundException, CourseNotFoundException;
 
-    ProjectPublicDto updateGrade(String id, ProjectUpdateGradeDto projectUpdateGradeDto) throws ProjectNotFoundException, PersonNotFoundException;
+    ProjectPublicDto updateGrade(String id, ProjectUpdateGradeDto projectUpdateGradeDto) throws ProjectNotFoundException, PersonNotFoundException, CourseNotFoundException;
 
     void delete(String id) throws ProjectNotFoundException;
 
     List<ProjectPublicDto> getProjectsByPersonId(String personId) throws PersonNotFoundException;
 
-    List<ProjectPublicDto> getProjectsByCourseId(String courseId);
+    List<ProjectPublicDto> getProjectsByCourseId(String courseId) throws CourseNotFoundException;
 }

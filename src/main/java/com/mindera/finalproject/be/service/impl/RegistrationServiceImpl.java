@@ -6,6 +6,7 @@ import com.mindera.finalproject.be.dto.person.PersonPublicDto;
 import com.mindera.finalproject.be.dto.registration.RegistrationCreateDto;
 import com.mindera.finalproject.be.dto.registration.RegistrationPublicDto;
 import com.mindera.finalproject.be.entity.Registration;
+import com.mindera.finalproject.be.exception.course.CourseNotFoundException;
 import com.mindera.finalproject.be.exception.student.PersonNotFoundException;
 import com.mindera.finalproject.be.service.RegistrationService;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -51,7 +52,7 @@ public class RegistrationServiceImpl implements RegistrationService {
             try {
                 student = personService.getById(registration.getPersonId());
                 course = courseService.getById(registration.getCourseId());
-            } catch (PersonNotFoundException e) {
+            } catch (Exception e) {
                 throw new RuntimeException(e);
             }
             return RegistrationConverter.fromEntityToPublicDto(registration, student, course);
@@ -59,7 +60,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     @Override
-    public RegistrationPublicDto getById(String id) throws PersonNotFoundException {
+    public RegistrationPublicDto getById(String id) throws PersonNotFoundException, CourseNotFoundException {
         Registration registration = registrationTable.getItem(Key.builder().partitionValue(REGISTRATION).sortValue(id).build());
         String personId = registration.getPersonId();
         String courseId = registration.getCourseId();
@@ -69,7 +70,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     @Override
-    public RegistrationPublicDto create(RegistrationCreateDto registrationCreateDto) throws PersonNotFoundException {
+    public RegistrationPublicDto create(RegistrationCreateDto registrationCreateDto) throws PersonNotFoundException, CourseNotFoundException {
         Registration registration = RegistrationConverter.fromCreateDtoToEntity(registrationCreateDto);
         registration.setPK(REGISTRATION);
         registration.setSK(REGISTRATION + UUID.randomUUID());
@@ -80,7 +81,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     @Override
-    public RegistrationPublicDto update(String id, RegistrationCreateDto registrationCreateDto) throws PersonNotFoundException {
+    public RegistrationPublicDto update(String id, RegistrationCreateDto registrationCreateDto) throws PersonNotFoundException, CourseNotFoundException {
         Registration oldRegistration = registrationTable.getItem(Key.builder().partitionValue(id).sortValue(id).build());
 
         oldRegistration.setPK(oldRegistration.getPK());
