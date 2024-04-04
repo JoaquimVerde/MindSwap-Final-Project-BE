@@ -94,10 +94,20 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public CoursePublicDto update(String id, CourseCreateDto coursePublicDto) throws PersonNotFoundException {
-        Course course = new Course();
-        //TODO update course
+    public CoursePublicDto update(String id, CourseCreateDto courseCreateDto) throws PersonNotFoundException, CourseNotFoundException {
+        Course course = findById(id);
+
+        course.setSyllabus(courseCreateDto.syllabus());
+        course.setProgram(courseCreateDto.program());
+        course.setSchedule(courseCreateDto.schedule());
+        course.setPrice(courseCreateDto.price());
+        course.setDuration(courseCreateDto.duration());
+        course.setLocation(courseCreateDto.location());
+
         courseTable.putItem(course);
+        if (course.getTeacherId() == null) {
+            return CourseConverter.fromEntityToPublicDto(course, null);
+        }
         return CourseConverter.fromEntityToPublicDto(course, personService.getById(course.getTeacherId()));
     }
 

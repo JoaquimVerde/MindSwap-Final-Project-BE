@@ -68,7 +68,7 @@ public class CourseController {
     })
     @PUT
     @Path("/{id}")
-    public Response update(@PathParam("id") String id, @Valid @RequestBody CourseCreateDto courseCreateDto) throws PersonNotFoundException {
+    public Response update(@PathParam("id") String id, @Valid @RequestBody CourseCreateDto courseCreateDto) throws PersonNotFoundException, CourseNotFoundException {
         return Response.ok(courseService.update(id, courseCreateDto)).build();
     }
 

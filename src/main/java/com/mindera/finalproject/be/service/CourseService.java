@@ -19,7 +19,7 @@ public interface CourseService {
 
     CoursePublicDto create(CourseCreateDto courseCreateDto) throws PersonNotFoundException;
 
-    CoursePublicDto update(String id, CourseCreateDto coursePublicDto) throws PersonNotFoundException;
+    CoursePublicDto update(String id, CourseCreateDto coursePublicDto) throws PersonNotFoundException, CourseNotFoundException;
 
     void delete(String id) throws CourseNotFoundException;
 
