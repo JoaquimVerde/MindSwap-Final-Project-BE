@@ -11,7 +11,7 @@ import java.math.BigDecimal;
 public record CourseCreateDto(
 
         @NotEmpty(message = "Name is mandatory")
-        @Pattern(regexp = "^[\\p{L} ]+$", message = "Name can only contain letters")
+        @Pattern(regexp = "^[\\p{L}- ]+$", message = "Invalid name")
         @Schema(description = "The course name", example = "Frontend")
         String name,
 
@@ -32,16 +32,16 @@ public record CourseCreateDto(
         String program,
 
         @NotEmpty(message = "Schedule is mandatory")
-        @Schema(description = "The course schedule", example = "{monday=10-18, tuesday=14-18}")
+        @Schema(description = "The course schedule", example = "Part-time")
         String schedule,
 
-        @NotNull(message = "Start date is mandatory")
+        @NotNull(message = "Price is mandatory")
         @Positive(message = "Price can't be negative")
         @Schema(description = "The course price", example = "900.00")
         BigDecimal price,
 
-        @NotNull(message = "Start date is mandatory")
-        @Positive(message = "Duration is mandatory")
+        @NotNull(message = "Duration is mandatory")
+        @Positive(message = "Duration be bigger than 0")
         @Schema(description = "The course duration", example = "30")
         Integer duration,
 

@@ -1,8 +1,6 @@
 package com.mindera.finalproject.be.entity;
 
-import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
-import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
-import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortKey;
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.*;
 
 import java.time.LocalDate;
 import java.util.Objects;
@@ -40,6 +38,7 @@ public class Person {
     }
 
     @DynamoDbPartitionKey
+    @DynamoDbSecondarySortKey(indexNames = {"GSIPK1"})
     public String getPK() {
         return PK;
     }
@@ -81,6 +80,7 @@ public class Person {
         this.lastName = lastName;
     }
 
+    @DynamoDbSecondaryPartitionKey(indexNames = {"GSIPK1"})
     public String getRole() {
         return role;
     }

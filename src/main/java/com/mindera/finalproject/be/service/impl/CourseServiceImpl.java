@@ -25,7 +25,7 @@ public class CourseServiceImpl implements CourseService {
 
     private final String TABLE_NAME = "Course";
     private final String COURSE = "COURSE#";
-    private final String GSIPK = "GSIPK";
+    private final String GSIPK1 = "GSIPK1";
 
     @Inject
     PersonService personService;
@@ -42,16 +42,18 @@ public class CourseServiceImpl implements CourseService {
         SdkIterable<Page<Course>> courses = courseTable.query(queryConditional);
         List<Course> coursesList = new ArrayList<>();
         courses.forEach(page -> coursesList.addAll(page.items()));
-        return coursesList.stream().filter(Course::getActive).map(course -> {
-            if (course.getTeacherId() == null) {
-                return CourseConverter.fromEntityToPublicDto(course, null);
-            }
-            try {
-                return CourseConverter.fromEntityToPublicDto(course, personService.getById(course.getTeacherId()));
-            } catch (PersonNotFoundException e) {
-                return CourseConverter.fromEntityToPublicDto(course, null);
-            }
-        }).toList();
+        return coursesList.stream().filter(Course::getActive).map(this::mapCourseList).toList();
+    }
+
+    private CoursePublicDto mapCourseList(Course course) {
+        if (course.getTeacherId() == null) {
+            return CourseConverter.fromEntityToPublicDto(course, null);
+        }
+        try {
+            return CourseConverter.fromEntityToPublicDto(course, personService.getById(course.getTeacherId()));
+        } catch (PersonNotFoundException e) {
+            return CourseConverter.fromEntityToPublicDto(course, null);
+        }
     }
 
     @Override
@@ -66,10 +68,12 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public CoursePublicDto create(CourseCreateDto courseCreateDto) throws PersonNotFoundException {
         Course course = CourseConverter.fromCreateDtoToEntity(courseCreateDto);
-        try {
-            personService.findById(courseCreateDto.teacherId());
-        } catch (PersonNotFoundException e) {
-            course.setTeacherId(null);
+        if (courseCreateDto.teacherId() != null) {
+            try {
+                personService.findById(courseCreateDto.teacherId());
+            } catch (PersonNotFoundException e) {
+                course.setTeacherId(null);
+            }
         }
         course.setPK(COURSE);
         course.setSK(COURSE + UUID.randomUUID());
@@ -80,20 +84,11 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public List<CoursePublicDto> getByLocation(String location) {
         QueryConditional queryConditional = QueryConditional.keyEqualTo(k -> k.partitionValue(location));
-        DynamoDbIndex<Course> courseIndex = courseTable.index(GSIPK);
+        DynamoDbIndex<Course> courseIndex = courseTable.index(GSIPK1);
         SdkIterable<Page<Course>> courses = courseIndex.query(queryConditional);
         List<Course> coursesList = new ArrayList<>();
         courses.forEach(page -> coursesList.addAll(page.items()));
-        return coursesList.stream().filter(Course::getActive).map(course -> {
-            if (course.getTeacherId() == null) {
-                return CourseConverter.fromEntityToPublicDto(course, null);
-            }
-            try {
-                return CourseConverter.fromEntityToPublicDto(course, personService.getById(course.getTeacherId()));
-            } catch (PersonNotFoundException e) {
-                return CourseConverter.fromEntityToPublicDto(course, null);
-            }
-        }).toList();
+        return coursesList.stream().filter(Course::getActive).map(this::mapCourseList).toList();
     }
 
     @Override
@@ -137,5 +132,4 @@ public class CourseServiceImpl implements CourseService {
         }
         return course;
     }
-
 }

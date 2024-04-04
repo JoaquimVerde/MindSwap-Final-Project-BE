@@ -13,6 +13,7 @@ import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 
+
 @Path("/api/v1/persons")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -37,6 +38,17 @@ public class PersonController {
     @Path("/{id}")
     public Response getById(@PathParam("id") String id) throws PersonNotFoundException {
         return Response.ok(personService.getById(id)).build();
+    }
+
+    @Operation(summary = "Find Person by role")
+    @APIResponses(value = {
+            @APIResponse(responseCode = "200", description = "Person found"),
+            @APIResponse(responseCode = "404", description = "Person not found")
+    })
+    @GET
+    @Path("/role/{role}")
+    public Response getByRole(@PathParam("role") String role) {
+        return Response.ok(personService.getByRole(role)).build();
     }
 
     @Operation(summary = "Create a person")

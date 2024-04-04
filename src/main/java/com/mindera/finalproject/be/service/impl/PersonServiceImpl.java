@@ -9,10 +9,7 @@ import com.mindera.finalproject.be.service.PersonService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import software.amazon.awssdk.core.pagination.sync.SdkIterable;
-import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
-import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
-import software.amazon.awssdk.enhanced.dynamodb.Key;
-import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
+import software.amazon.awssdk.enhanced.dynamodb.*;
 import software.amazon.awssdk.enhanced.dynamodb.model.Page;
 import software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional;
 
@@ -25,6 +22,8 @@ public class PersonServiceImpl implements PersonService {
 
     private final String TABLE_NAME = "Person";
     private final String PERSON = "PERSON#";
+    private final String GSIPK1 = "GSIPK1";
+
     private DynamoDbTable<Person> personTable;
     @Inject
     void personEnhancedService(DynamoDbEnhancedClient dynamoEnhancedClient) {
@@ -47,6 +46,16 @@ public class PersonServiceImpl implements PersonService {
             throw new PersonNotFoundException("Person with id " + id + " not found");
         }
         return PersonConverter.fromEntityToPublicDto(person);
+    }
+
+    @Override
+    public List<PersonPublicDto> getByRole(String role) {
+        QueryConditional queryConditional = QueryConditional.keyEqualTo(k -> k.partitionValue(role));
+        DynamoDbIndex<Person> personIndex = personTable.index(GSIPK1);
+        SdkIterable<Page<Person>> persons = personIndex.query(queryConditional);
+        List<Person> personList = new ArrayList<>();
+        persons.forEach(page -> personList.addAll(page.items()));
+        return personList.stream().filter(Person::isActive).map(PersonConverter::fromEntityToPublicDto).toList();
     }
 
     @Override
