@@ -4,9 +4,9 @@ import java.util.Date;
 
 public class Error {
 
-    private final String message;
-    private final int status;
-    private final Date timestamp;
+    private String message;
+    private int status;
+    private Date timestamp;
 
     private Error(Builder builder) {
         this.message = builder.message;
@@ -14,6 +14,8 @@ public class Error {
         this.timestamp = builder.timestamp;
     }
 
+    public Error() {
+    }
 
     public String getMessage() {
         return message;
@@ -32,7 +34,8 @@ public class Error {
         private int status;
         private Date timestamp;
 
-        public Builder() {}
+        public Builder() {
+        }
 
 
         public Builder message(String message) {

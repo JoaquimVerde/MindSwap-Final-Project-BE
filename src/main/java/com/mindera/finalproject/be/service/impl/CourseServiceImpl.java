@@ -100,7 +100,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public void delete(String id) {
-        Course course = courseTable.getItem(Key.builder().partitionValue(id).sortValue(id).build());
+        Course course = courseTable.getItem(Key.builder().partitionValue(COURSE).sortValue(id).build());
         course.setActive(false);
         courseTable.updateItem(course);
     }

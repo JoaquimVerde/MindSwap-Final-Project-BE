@@ -51,7 +51,6 @@ public class PersonServiceImpl implements PersonService {
             throw new PersonNotFoundException("Person with id " + id + " not found");
         }
         return PersonConverter.fromEntityToPublicDto(person);
-
     }
 
     @Override
