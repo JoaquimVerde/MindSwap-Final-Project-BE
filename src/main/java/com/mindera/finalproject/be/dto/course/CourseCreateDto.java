@@ -32,7 +32,7 @@ public record CourseCreateDto(
         String program,
 
         @NotEmpty(message = "Schedule is mandatory")
-        @Schema(description = "The course schedule", example = "{monday=10-18, tuesday=14-18}")
+        @Schema(description = "The course schedule", example = "Part-time")
         String schedule,
 
         @NotNull(message = "Start date is mandatory")

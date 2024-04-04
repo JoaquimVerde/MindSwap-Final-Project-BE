@@ -43,7 +43,7 @@ public class Course {
 
     @DynamoDbPartitionKey
     @DynamoDbAttribute("PK")
-    @DynamoDbSecondarySortKey(indexNames = {"GSIPK"})
+    @DynamoDbSecondarySortKey(indexNames = {"GSIPK1"})
     public String getPK() {
         return PK;
     }
@@ -135,7 +135,7 @@ public class Course {
     }
 
     @DynamoDbAttribute("Location")
-    @DynamoDbSecondaryPartitionKey(indexNames = {"GSIPK"})
+    @DynamoDbSecondaryPartitionKey(indexNames = {"GSIPK1"})
     public String getLocation() {
         return location;
     }

@@ -22,6 +22,8 @@ public class PersonServiceImpl implements PersonService {
 
     private final String TABLE_NAME = "Person";
     private final String PERSON = "PERSON#";
+    private final String GSIPK1 = "GSIPK1";
+
     private DynamoDbTable<Person> personTable;
     @Inject
     void personEnhancedService(DynamoDbEnhancedClient dynamoEnhancedClient) {
@@ -49,7 +51,7 @@ public class PersonServiceImpl implements PersonService {
     @Override
     public List<PersonPublicDto> getByRole(String role) {
         QueryConditional queryConditional = QueryConditional.keyEqualTo(k -> k.partitionValue(role));
-        DynamoDbIndex<Person> personIndex = personTable.index("GSIPK1");
+        DynamoDbIndex<Person> personIndex = personTable.index(GSIPK1);
         SdkIterable<Page<Person>> persons = personIndex.query(queryConditional);
         List<Person> personList = new ArrayList<>();
         persons.forEach(page -> personList.addAll(page.items()));
