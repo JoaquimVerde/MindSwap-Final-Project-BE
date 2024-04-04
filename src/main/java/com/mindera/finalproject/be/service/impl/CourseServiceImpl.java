@@ -6,6 +6,7 @@ import com.mindera.finalproject.be.converter.CourseConverter;
 import com.mindera.finalproject.be.dto.course.CourseCreateDto;
 import com.mindera.finalproject.be.dto.course.CoursePublicDto;
 import com.mindera.finalproject.be.entity.Course;
+import com.mindera.finalproject.be.exception.course.CourseNotFoundException;
 import com.mindera.finalproject.be.exception.student.PersonNotFoundException;
 import com.mindera.finalproject.be.service.CourseService;
 import com.mindera.finalproject.be.service.PersonService;
@@ -56,7 +57,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public CoursePublicDto getById(String id) throws PersonNotFoundException {
+    public CoursePublicDto getById(String id) throws PersonNotFoundException, CourseNotFoundException {
         Course course = findById(id);
         if (course.getTeacherId() == null) {
             return CourseConverter.fromEntityToPublicDto(course, null);
@@ -95,20 +96,25 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public CoursePublicDto update(String id, CourseCreateDto coursePublicDto) throws PersonNotFoundException {
         Course course = new Course();
+        //TODO update course
         courseTable.putItem(course);
         return CourseConverter.fromEntityToPublicDto(course, personService.getById(course.getTeacherId()));
     }
 
     @Override
-    public void delete(String id) {
-        Course course = courseTable.getItem(Key.builder().partitionValue(id).sortValue(id).build());
+    public void delete(String id) throws CourseNotFoundException {
+        Course course = findById(id);
         course.setActive(false);
         courseTable.updateItem(course);
     }
 
     @Override
-    public Course findById(String id) {
-        return courseTable.getItem(Key.builder().partitionValue(COURSE).sortValue(id).build());
+    public Course findById(String id) throws CourseNotFoundException {
+        Course course = courseTable.getItem(Key.builder().partitionValue(COURSE).sortValue(id).build());
+        if (course == null) {
+            throw new CourseNotFoundException("Course with id " + id + " not found");
+        }
+        return course;
     }
 
 }
