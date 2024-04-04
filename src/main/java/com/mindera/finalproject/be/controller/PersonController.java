@@ -39,6 +39,17 @@ public class PersonController {
         return Response.ok(personService.getById(id)).build();
     }
 
+    @Operation(summary = "Find Person by role")
+    @APIResponses(value = {
+            @APIResponse(responseCode = "200", description = "Person found"),
+            @APIResponse(responseCode = "404", description = "Person not found")
+    })
+    @GET
+    @Path("/role/{role}")
+    public Response getByRole(@PathParam("role") String role) throws PersonNotFoundException {
+        return Response.ok(personService.getByRole(role)).build();
+    }
+
     @Operation(summary = "Create a person")
     @APIResponses(value = {
             @APIResponse(responseCode = "201", description = "Person created")
