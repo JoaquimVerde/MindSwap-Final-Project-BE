@@ -24,4 +24,7 @@ public interface ProjectService {
 
     void delete(String id) throws ProjectNotFoundException;
 
+    List<ProjectPublicDto> getProjectsByPersonId(String personId) throws PersonNotFoundException;
+
+    List<ProjectPublicDto> getProjectsByCourseId(String courseId);
 }

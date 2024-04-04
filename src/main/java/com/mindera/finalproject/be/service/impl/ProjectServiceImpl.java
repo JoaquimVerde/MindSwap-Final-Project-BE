@@ -6,6 +6,7 @@ import com.mindera.finalproject.be.dto.person.PersonPublicDto;
 import com.mindera.finalproject.be.dto.project.ProjectCreateDto;
 import com.mindera.finalproject.be.dto.project.ProjectPublicDto;
 import com.mindera.finalproject.be.dto.project.ProjectUpdateGradeDto;
+import com.mindera.finalproject.be.entity.Person;
 import com.mindera.finalproject.be.entity.Project;
 import com.mindera.finalproject.be.exception.project.ProjectNotFoundException;
 import com.mindera.finalproject.be.exception.student.PersonNotFoundException;
@@ -15,10 +16,7 @@ import com.mindera.finalproject.be.service.ProjectService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import software.amazon.awssdk.core.pagination.sync.SdkIterable;
-import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
-import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
-import software.amazon.awssdk.enhanced.dynamodb.Key;
-import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
+import software.amazon.awssdk.enhanced.dynamodb.*;
 import software.amazon.awssdk.enhanced.dynamodb.model.Page;
 import software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional;
 
@@ -50,19 +48,15 @@ public class ProjectServiceImpl implements ProjectService {
         SdkIterable<Page<Project>> projects = projectTable.query(queryConditional);
         List<Project> projectsList = new ArrayList<>();
         projects.forEach(page -> projectsList.addAll(page.items()));
-        return projectsList.stream().filter(Project::getActive).map(project -> {
-            CoursePublicDto course = null;
-            List<PersonPublicDto> students = new ArrayList<>();
-            try {
-                 course = courseService.getById(project.getCourseId());
-                for (String studentId : project.getStudents()) {
-                    students.add(personService.getById(studentId));
-                }
-            } catch (PersonNotFoundException e) {
-                throw new RuntimeException(e);
-            }
-            return ProjectConverter.fromEntityToPublicDto(project, course, students);
-        }).toList();
+        return projectsList.stream().filter(Project::getActive).map(this::mapProjectList).toList();
+    }
+
+    private List<Project> getAllProjects() {
+        QueryConditional queryConditional = QueryConditional.sortBeginsWith(s -> s.partitionValue(PROJECT).sortValue(PROJECT));
+        SdkIterable<Page<Project>> projects = projectTable.query(queryConditional);
+        List<Project> projectsList = new ArrayList<>();
+        projects.forEach(page -> projectsList.addAll(page.items()));
+        return projectsList;
     }
 
     @Override
@@ -132,6 +126,38 @@ public class ProjectServiceImpl implements ProjectService {
         Project project = verifyIfProjectExists(id);
         project.setActive(false);
         projectTable.updateItem(project);
+    }
+
+    @Override
+    public List<ProjectPublicDto> getProjectsByPersonId(String personId) throws PersonNotFoundException {
+        personService.findById(personId);
+        List<Project> projectsOfPerson = getAllProjects().stream().filter(project -> project.getStudents().contains(personId)).toList();
+        return projectsOfPerson.stream().filter(Project::getActive).map(this::mapProjectList).toList();
+    }
+
+    @Override
+    public List<ProjectPublicDto> getProjectsByCourseId(String courseId){
+        courseService.findById(courseId);
+        QueryConditional queryConditional = QueryConditional.sortBeginsWith(s -> s.partitionValue(courseId).sortValue(PROJECT));
+        DynamoDbIndex<Project> projectIndex = projectTable.index("GSIPK1");
+        SdkIterable<Page<Project>> projects = projectIndex.query(queryConditional);
+        List<Project> projectsList = new ArrayList<>();
+        projects.forEach(page -> projectsList.addAll(page.items()));
+        return projectsList.stream().filter(Project::getActive).map(this::mapProjectList).toList();
+    }
+
+    private ProjectPublicDto mapProjectList(Project project) {
+        CoursePublicDto course = null;
+        List<PersonPublicDto> students = new ArrayList<>();
+        try {
+            course = courseService.getById(project.getCourseId());
+            for (String studentId : project.getStudents()) {
+                students.add(personService.getById(studentId));
+            }
+        } catch (PersonNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        return ProjectConverter.fromEntityToPublicDto(project, course, students);
     }
 
     private Project verifyIfProjectExists(String id) throws ProjectNotFoundException {
