@@ -99,7 +99,12 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public CoursePublicDto update(String id, CourseCreateDto courseCreateDto) throws PersonNotFoundException, CourseNotFoundException {
         Course course = findById(id);
-
+        course.setTeacherId(courseCreateDto.teacherId());
+        try {
+            personService.findById(courseCreateDto.teacherId());
+        } catch (PersonNotFoundException e) {
+            course.setTeacherId(null);
+        }
         course.setSyllabus(courseCreateDto.syllabus());
         course.setProgram(courseCreateDto.program());
         course.setSchedule(courseCreateDto.schedule());
