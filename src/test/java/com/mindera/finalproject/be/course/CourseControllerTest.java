@@ -131,20 +131,20 @@ class CourseControllerTest {
     void testCreateCourseWithInvalidTeacher() {
         CourseCreateDto exampleCourse = new CourseCreateDto(courseName, courseEdition, "PERSON#1", courseSyllabus, courseProgram, courseSchedule, coursePrice, courseDuration, courseLocation);
 
-        given()
+        String id = given()
                 .body(exampleCourse)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .when().post(API_PATH)
                 .then()
-                .statusCode(404);
-        // TODO Verificar se teacher existe ao criar course ou queremos deixar com teacher vazio
+                .statusCode(201)
+                .extract().jsonPath().getString("id");
 
         given()
-                .when().get(API_PATH)
+                .when().get(API_PATH + "/" + id)
                 .then()
                 .statusCode(200)
                 .and()
-                .body("size()", equalTo(0));
+                .body("teacher", equalTo(null));
     }
 
     @Test
