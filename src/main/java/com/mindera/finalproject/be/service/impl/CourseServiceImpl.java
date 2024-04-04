@@ -27,8 +27,6 @@ public class CourseServiceImpl implements CourseService {
     private final String COURSE = "COURSE#";
     private final String GSIPK = "GSIPK";
     @Inject
-    TableCreation tableCreation;
-    @Inject
     PersonService personService;
     private DynamoDbTable<Course> courseTable;
 
