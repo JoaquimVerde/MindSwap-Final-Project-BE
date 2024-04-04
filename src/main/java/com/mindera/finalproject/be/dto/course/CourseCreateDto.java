@@ -1,6 +1,7 @@
 package com.mindera.finalproject.be.dto.course;
 
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Positive;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -14,7 +15,8 @@ public record CourseCreateDto(
         @Schema(description = "The course name", example = "Frontend")
         String name,
 
-        @Positive(message = "Edition is mandatory")
+        @NotNull(message = "Edition is mandatory")
+        @Positive(message = "Edition must be bigger than 0")
         @Schema(description = "The course edition", example = "1")
         Integer edition,
 
@@ -33,10 +35,12 @@ public record CourseCreateDto(
         @Schema(description = "The course schedule", example = "{monday=10-18, tuesday=14-18}")
         String schedule,
 
-        @Positive(message = "Price is mandatory")
+        @NotNull(message = "Start date is mandatory")
+        @Positive(message = "Price can't be negative")
         @Schema(description = "The course price", example = "900.00")
         BigDecimal price,
 
+        @NotNull(message = "Start date is mandatory")
         @Positive(message = "Duration is mandatory")
         @Schema(description = "The course duration", example = "30")
         Integer duration,

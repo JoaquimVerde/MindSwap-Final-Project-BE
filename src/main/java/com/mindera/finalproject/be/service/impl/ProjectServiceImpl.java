@@ -34,10 +34,8 @@ public class ProjectServiceImpl implements ProjectService {
     private final String TABLE_PROJECT = "Project";
     private final String PROJECT = "PROJECT#";
     private DynamoDbTable<Project> projectTable;
-
     @Inject
     private CourseService courseService;
-
     @Inject
     private PersonService personService;
 

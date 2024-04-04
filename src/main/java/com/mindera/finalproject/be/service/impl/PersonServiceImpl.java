@@ -25,11 +25,7 @@ public class PersonServiceImpl implements PersonService {
 
     private final String TABLE_NAME = "Person";
     private final String PERSON = "PERSON#";
-
-    //    @Inject
-//    TableCreation tableCreation;
     private DynamoDbTable<Person> personTable;
-
     @Inject
     void personEnhancedService(DynamoDbEnhancedClient dynamoEnhancedClient) {
         personTable = dynamoEnhancedClient.table(TABLE_NAME, TableSchema.fromBean(Person.class));

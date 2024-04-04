@@ -27,8 +27,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private final String TABLE_NAME = "Registration";
     private final String REGISTRATION = "REGISTRATION#";
-    //    @Inject
-//    TableCreation tableCreation;
+
     @Inject
     PersonServiceImpl personService;
     @Inject
