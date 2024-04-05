@@ -20,6 +20,7 @@ import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import static com.mindera.finalproject.be.messages.Messages.INVALID_NAME;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.*;
@@ -123,7 +124,7 @@ class CourseControllerTest {
                 .extract().as(Error.class);
 
         // TODO verificar todas as mensagens de validação
-        assertTrue(response.getMessage().contains("Invalid name"));
+        assertTrue(response.getMessage().contains(INVALID_NAME));
         assertEquals(400, response.getStatus());
     }
 
@@ -285,7 +286,7 @@ class CourseControllerTest {
                 .statusCode(400)
                 .extract().as(Error.class);
         //TODO check other erros messages
-        assertTrue(response.getMessage().contains("Invalid name"));
+        assertTrue(response.getMessage().contains(INVALID_NAME));
     }
 
     @Test

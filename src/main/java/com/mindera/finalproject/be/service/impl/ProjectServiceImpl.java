@@ -24,6 +24,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static com.mindera.finalproject.be.messages.Messages.PROJECT_NOT_FOUND;
+
 @ApplicationScoped
 public class ProjectServiceImpl implements ProjectService {
 
@@ -164,7 +166,7 @@ public class ProjectServiceImpl implements ProjectService {
     private Project verifyIfProjectExists(String id) throws ProjectNotFoundException {
         Project project = projectTable.getItem(Key.builder().partitionValue(PROJECT).sortValue(id).build());
         if (project == null) {
-            throw new ProjectNotFoundException("Project with id " + id + " not found");
+            throw new ProjectNotFoundException(PROJECT_NOT_FOUND + id);
         }
         return project;
     }
