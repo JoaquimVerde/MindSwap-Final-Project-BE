@@ -11,15 +11,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import software.amazon.awssdk.core.pagination.sync.SdkIterable;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 import software.amazon.awssdk.enhanced.dynamodb.Key;
-import software.amazon.awssdk.enhanced.dynamodb.model.Page;
-import software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional;
-
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -109,6 +103,20 @@ public class PersonServiceTests {
         assertEquals(updateDto.username(),result.username());
         assertEquals(updateDto.dateOfBirth(), result.dateOfBirth());
         assertEquals(updateDto.address(), result.address());
+    }
+    @Test
+    void testDelete() {
+        String id = PERSON + UUID.randomUUID();
+        Person person = new Person();
+        person.setPK(PERSON);
+        person.setSK(id);
+        Key key = Key.builder().partitionValue(PERSON).sortValue(id).build();
+
+        when(mockPersonTable.getItem(key)).thenReturn(person);
+
+        personService.delete(id);
+
+        verify(mockPersonTable, times(1)).updateItem(person);
     }
 
 
