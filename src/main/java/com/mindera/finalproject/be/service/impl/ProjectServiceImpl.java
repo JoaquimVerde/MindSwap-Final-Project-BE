@@ -29,6 +29,7 @@ public class ProjectServiceImpl implements ProjectService {
 
     private final String TABLE_PROJECT = "Project";
     private final String PROJECT = "PROJECT#";
+
     private DynamoDbTable<Project> projectTable;
     @Inject
     private CourseService courseService;
@@ -48,6 +49,7 @@ public class ProjectServiceImpl implements ProjectService {
         List<Project> projectsList = new ArrayList<>();
         projects.forEach(page -> projectsList.addAll(page.items()));
         return projectsList.stream().filter(Project::getActive).map(this::mapProjectList).toList();
+
     }
 
     private List<Project> getAllProjects() {
