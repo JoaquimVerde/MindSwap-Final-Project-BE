@@ -54,7 +54,6 @@ public class PersonServiceTests {
         Person person = new Person();
         person.setPK(PERSON);
         person.setSK(id);
-        person.setActive(true);
         Key key = Key.builder().partitionValue(PERSON).sortValue(id).build();
 
         when(mockPersonTable.getItem(key)).thenReturn(person);
@@ -82,6 +81,34 @@ public class PersonServiceTests {
         assertEquals(createDto.username(),result.username());
         assertEquals(createDto.dateOfBirth(), result.dateOfBirth());
         assertEquals(createDto.address(), result.address());
+    }
+    @Test
+    void testUpdate() throws PersonNotFoundException {
+
+        String id = PERSON + UUID.randomUUID();
+        Person person = new Person();
+        person.setPK(PERSON);
+        person.setSK(id);
+        Key key = Key.builder().partitionValue(PERSON).sortValue(id).build();
+
+        PersonCreateDto updateDto =  new PersonCreateDto(email,firstName,lastName,role,username,dateOfBirth,address,cv);
+
+
+
+        when(mockPersonTable.getItem(key)).thenReturn(person);
+
+
+        PersonPublicDto result = personService.update(id, updateDto);
+
+
+        assertNotNull(result);
+        assertEquals(updateDto.email(), result.email());
+        assertEquals(updateDto.firstName(), result.firstName());
+        assertEquals(updateDto.lastName(), result.lastName());
+        assertEquals(updateDto.role(),result.role());
+        assertEquals(updateDto.username(),result.username());
+        assertEquals(updateDto.dateOfBirth(), result.dateOfBirth());
+        assertEquals(updateDto.address(), result.address());
     }
 
 
