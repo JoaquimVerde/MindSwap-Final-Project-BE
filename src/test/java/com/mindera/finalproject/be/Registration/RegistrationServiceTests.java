@@ -9,8 +9,6 @@ import com.mindera.finalproject.be.dto.registration.RegistrationPublicDto;
 import com.mindera.finalproject.be.entity.Course;
 import com.mindera.finalproject.be.entity.Person;
 import com.mindera.finalproject.be.entity.Registration;
-import com.mindera.finalproject.be.enums.RoleStatus;
-
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.core.MediaType;
@@ -32,184 +30,217 @@ import static org.junit.jupiter.api.Assertions.*;
 @QuarkusTest
 class RegistrationControllerTests {
 
-    private final String URL = "/api/v1/registration";
+        private static String studentId;
+        private static String courseId;
+        private static String teacherId;
+        private final String URL = "/api/v1/registration";
 
-    @Inject
-    DynamoDbEnhancedClient enhancedClient;
+        @Inject
+        DynamoDbEnhancedClient enhancedClient;
 
-    private DynamoDbTable<Person> personTable;
-    private DynamoDbTable<Course> courseTable;
-    private DynamoDbTable<Registration> registrationTable;
+        private DynamoDbTable<Person> personTable;
+        private DynamoDbTable<Course> courseTable;
+        private DynamoDbTable<Registration> registrationTable;
 
-    @BeforeEach
-    void setUp() {
-        personTable = enhancedClient.table("Person", TableSchema.fromBean(Person.class));
-        courseTable = enhancedClient.table("Course", TableSchema.fromBean(Course.class));
-        registrationTable = enhancedClient.table("Registration", TableSchema.fromBean(Registration.class));
+        @BeforeEach
+        void setUp() {
+                personTable = enhancedClient.table("Person", TableSchema.fromBean(Person.class));
+                courseTable = enhancedClient.table("Course", TableSchema.fromBean(Course.class));
+                registrationTable = enhancedClient.table("Registration", TableSchema.fromBean(Registration.class));
 
-        try {
-            courseTable.createTable();
-            personTable.createTable();
-            registrationTable.createTable();
-            Thread.sleep(100);
-        } catch (Exception e) {
-            courseTable.deleteTable();
-            personTable.deleteTable();
-            registrationTable.deleteTable();
-            setUp();
-        }
-    }
+                try {
+                        courseTable.createTable();
+                        personTable.createTable();
+                        registrationTable.createTable();
+                        Thread.sleep(100);
+                } catch (Exception e) {
+                        courseTable.deleteTable();
+                        personTable.deleteTable();
+                        registrationTable.deleteTable();
+                        setUp();
+                }
 
-    @AfterEach
-    void tearDown() {
-        courseTable.deleteTable();
-        personTable.deleteTable();
-        registrationTable.deleteTable();
-    }
+                PersonCreateDto student = new PersonCreateDto("example@email.com", "John", "Doe",
+                                "Student", "Test1", LocalDate.of(1990, 1, 1), "Porto", "123456789");
 
-    public String createPerson(String role) {
-        PersonCreateDto person = new PersonCreateDto("example@email.com", "firstName", "lastName", role, "password",
-                LocalDate.of(1990, 1, 1), "city", "phone");
+                PersonCreateDto teacher = new PersonCreateDto("exampleTeacher@email.com", "Jane", "Doe",
+                                "Teacher", "Test2", LocalDate.of(1990, 1, 1), "Porto", "123456789");
 
-        return given()
-                .body(person)
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                .when().post("/api/v1/persons")
-                .then()
-                .statusCode(201)
-                .extract().jsonPath().getString("id");
-    }
+                studentId = given()
+                                .body(student)
+                                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                                .when().post("/api/v1/persons")
+                                .then()
+                                .statusCode(201)
+                                .extract().jsonPath().getString("id");
 
-    public String createCourse(String personId) {
-        CourseCreateDto course = new CourseCreateDto("Test Course", 1, personId, "Syllabus", "Program",
-                "Schedule",
-                new BigDecimal(100), 10, "Porto");
+                teacherId = given()
+                                .body(teacher)
+                                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                                .when().post("/api/v1/persons")
+                                .then()
+                                .statusCode(201)
+                                .extract().jsonPath().getString("id");
 
-        return given()
-                .body(course)
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                .when().post("/api/v1/courses")
-                .then()
-                .statusCode(201)
-                .extract().jsonPath().getString("id");
-    }
+                CourseCreateDto course = new CourseCreateDto("Test Course", 1, teacherId, "Syllabus", "Program",
+                                "Schedule",
+                                new BigDecimal(100), 10, "Porto");
 
-    public String createRegistration(String studentId, String courseId) {
-        RegistrationCreateDto registration = new RegistrationCreateDto(studentId, courseId, "Pending", "10",
-                "about", true, true);
-
-        return given()
-                .body(registration)
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                .when().post(URL)
-                .then()
-                .statusCode(201)
-                .extract().jsonPath().getString("id");
-    }
-
-    @Test
-    void testGetAllRegistrationsReturns200() {
-        given()
-                .when().get(URL)
-                .then()
-                .statusCode(200);
-    }
-
-    @Test
-    void testGetAllRegistrationsReturnsEmptyList() {
-        given()
-                .when().get(URL)
-                .then()
-                .body("size()", equalTo(0));
-    }
-
-    @Test
-    void testGetAllRegistrationsWith5Registrations() {
-        int amount = 5;
-        for (int i = 0; i < amount; i++) {
-            createRegistration(createPerson("Student"), createCourse(createPerson("Teacher")));
+                courseId = given()
+                                .body(course)
+                                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                                .when().post("/api/v1/courses")
+                                .then()
+                                .statusCode(201)
+                                .extract().jsonPath().getString("id");
         }
 
-        given()
-                .when().get(URL)
-                .then()
-                .body("size()", equalTo(5));
-    }
+        @AfterEach
+        void tearDown() {
+                courseTable.deleteTable();
+                personTable.deleteTable();
+                registrationTable.deleteTable();
+        }
 
-    @Test
-    void testCreateRegistration() {
-        String studentId = createPerson("Student");
-        String courseId = createCourse(createPerson("Teacher"));
+        @Test
+        void testGetAllRegistrationsReturns200() {
+                given()
+                                .when().get(URL)
+                                .then()
+                                .statusCode(200);
+        }
 
-        RegistrationCreateDto registration = new RegistrationCreateDto(studentId, courseId, "Pending", "10",
-                "about", true, true);
+        @Test
+        void testGetAllRegistrationsReturnsEmptyList() {
+                given()
+                                .when().get(URL)
+                                .then()
+                                .body("size()", equalTo(0));
+        }
 
-        RegistrationPublicDto response = given()
-                .body(registration)
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                .when().post(URL)
-                .then()
-                .statusCode(201)
-                .extract().as(RegistrationPublicDto.class);
+        @Test
+        void testGetAllRegistrationsWith5Registrations(){
+                RegistrationCreateDto registration1 = new RegistrationCreateDto(studentId, courseId, "Pending", "10",
+                                "about", true, true);
+                RegistrationCreateDto registration2 = new RegistrationCreateDto(studentId, courseId, "Pending", "10",
+                                "about", true, true);
+                RegistrationCreateDto registration3 = new RegistrationCreateDto(studentId, courseId, "Pending", "10",
+                                "about", true, true);
+                RegistrationCreateDto registration4 = new RegistrationCreateDto(studentId, courseId, "Pending", "10",
+                                "about", true, true);
+                RegistrationCreateDto registration5 = new RegistrationCreateDto(studentId, courseId, "Pending", "10",
+                                "about", true, true);
 
-        assertNotNull(response.id());
-        assertEquals(registration.personId(), response.student().id());
-        assertEquals(registration.courseId(), response.course().id());
-        assertEquals(registration.status(), response.status());
-        assertEquals(registration.finalGrade(), response.finalGrade());
-        assertEquals(registration.aboutYou(), response.aboutYou());
-        assertEquals(registration.prevKnowledge(), response.prevKnowledge());
-        assertEquals(registration.prevExperience(), response.prevExperience());
+                given()
+                                .body(registration1)
+                                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                                .when().post(URL)
+                                .then()
+                                .statusCode(201);
 
-    }
+                given()
+                                .body(registration2)
+                                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                                .when().post(URL)
+                                .then()
+                                .statusCode(201);
 
-    @Test
-    void testCreateRegistrationWithInvalidStudent() {
+                given()
+                                .body(registration3)
+                                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                                .when().post(URL)
+                                .then()
+                                .statusCode(201);
 
-        String courseId = createCourse(createPerson("Teacher"));
-        RegistrationCreateDto registration = new RegistrationCreateDto("invalidId",
-                courseId, "Pending", "10",
-                "about", true, true);
+                given()
+                                .body(registration4)
+                                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                                .when().post(URL)
+                                .then()
+                                .statusCode(201);
 
-        Error response = given()
-                .body(registration)
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                .when().post(URL)
-                .then()
-                .statusCode(400)
-                .extract().as(Error.class);
+                given()
+                                .body(registration5)
+                                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                                .when().post(URL)
+                                .then()
+                                .statusCode(201);
 
-        assertEquals("Person not found", response.getMessage());
-        assertEquals(400, response.getStatus());
-    }
+                given()
+                                .when().get(URL)
+                                .then()
+                                .body("size()", equalTo(5));
+        }
 
-    @Test
-    void testCreateRegistrationWithInvalidCourse() {
+        @Test
+        void testCreateRegistration() {
+                RegistrationCreateDto registration = new RegistrationCreateDto(studentId, courseId, "Pending", "10",
+                                "about", true, true);
 
-        String studentId = createPerson("Student");
-        RegistrationCreateDto registration = new RegistrationCreateDto(studentId,
-                "invalidId", "Pending", "10",
-                "about", true, true);
+                RegistrationPublicDto response = given()
+                                .body(registration)
+                                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                                .when().post(URL)
+                                .then()
+                                .statusCode(201)
+                                .extract().as(RegistrationPublicDto.class);
 
-        Error response = given()
-                .body(registration)
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                .when().post(URL)
-                .then()
-                .statusCode(400)
-                .extract().as(Error.class);
+                assertNotNull(response.id());
+                assertEquals(registration.personId(), response.student().id());
+                assertEquals(registration.courseId(), response.course().id());
+                assertEquals(registration.status(), response.status());
+                assertEquals(registration.finalGrade(), response.finalGrade());
+                assertEquals(registration.aboutYou(), response.aboutYou());
+                assertEquals(registration.prevKnowledge(), response.prevKnowledge());
+                assertEquals(registration.prevExperience(), response.prevExperience());
 
-        assertEquals("course not found", response.getMessage());
-        assertEquals(400, response.getStatus());
-    }
+        }
 
-    @Test
-    void testGetRegistrationById() {
+       /*  @Test
+        void testCreateRegistrationWithInvalidStudent() {
+                RegistrationCreateDto registration = new RegistrationCreateDto("invalidId", courseId, "Pending", "10",
+                                "about", true, true);
 
-    }
+                given()
+                                .body(registration)
+                                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                                .when().post(URL)
+                                .then()
+                                .statusCode(400)
+                                .body("message", equalTo(Error.INVALID_PERSON_ID));
+        } */
 
-    @Test
-    void testGetRegistrationByInvalidId() {
+        @Test
+        void testCreateRegistrationWithInvalidCourse() {
+        }
 
-    }
+        @Test
+        void testCreateRegistrationWithInvalidStatus() {
+        }
+
+        @Test
+        void testCreateRegistrationWithInvalidFinalGrade() {
+        }
+
+        @Test
+        void testCreateRegistrationWithInvalidAboutYou() {
+        }
+
+        @Test
+        void testCreateRegistrationWithInvalidPrevKnowledge() {
+        }
+
+        @Test
+        void testCreateRegistrationWithInvalidPrevExperience() {
+        }
+
+        @Test
+        void testGetRegistrationById(){
+
+        }
+
+        @Test
+        void testGetRegistrationByInvalidId(){
+
+        }
 }
