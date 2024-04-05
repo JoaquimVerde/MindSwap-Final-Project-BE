@@ -20,16 +20,16 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
-@QuarkusTest
+
 public class PersonServiceTests {
-    private  String email = "test@example.com";
-    private String firstName ="John";
-    private String lastName = "Doe";
-    private String role = "student";
-    private String username = "JohnDoe";
-    private LocalDate dateOfBirth = LocalDate.of(1999,10,10);
-    private String address = "Portugal";
-    private String cv = "www.example.com";
+    private final String email = "test@example.com";
+    private final String firstName ="John";
+    private final String lastName = "Doe";
+    private final String role = "student";
+    private final String username = "JohnDoe";
+    private final LocalDate dateOfBirth = LocalDate.of(1999,10,10);
+    private final String address = "Portugal";
+    private final String cv = "www.example.com";
     private final String PERSON = "PERSON#";
     @Mock
     private DynamoDbTable<Person> mockPersonTable;
