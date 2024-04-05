@@ -123,7 +123,7 @@ class CourseControllerTest {
                 .extract().as(Error.class);
 
         // TODO verificar todas as mensagens de validação
-        assertTrue(response.getMessage().contains("Name can only contain letters"));
+        assertTrue(response.getMessage().contains("Invalid name"));
         assertEquals(400, response.getStatus());
     }
 
@@ -276,7 +276,7 @@ class CourseControllerTest {
         String courseId = createCourse(courseLocation);
 
         CourseCreateDto updatedCourse = new CourseCreateDto("", 0, "", "", "", "", new BigDecimal("0"), 0, "");
-        
+
         Error response = given()
                 .body(updatedCourse)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
@@ -284,8 +284,8 @@ class CourseControllerTest {
                 .then()
                 .statusCode(400)
                 .extract().as(Error.class);
-
-        assertTrue(response.getMessage().contains("Name can only contain letters"));
+        //TODO check other erros messages
+        assertTrue(response.getMessage().contains("Invalid name"));
     }
 
     @Test
