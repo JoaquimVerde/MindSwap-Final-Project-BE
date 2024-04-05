@@ -2,6 +2,7 @@ package com.mindera.finalproject.be.controller;
 
 import com.mindera.finalproject.be.dto.registration.RegistrationCreateDto;
 import com.mindera.finalproject.be.exception.course.CourseNotFoundException;
+import com.mindera.finalproject.be.exception.registration.RegistrationAlreadyExistsException;
 import com.mindera.finalproject.be.exception.student.PersonNotFoundException;
 import com.mindera.finalproject.be.service.RegistrationService;
 import jakarta.inject.Inject;
@@ -22,14 +23,12 @@ public class RegistrationController {
     @Inject
     RegistrationService registrationService;
 
-
     @Operation(summary = "Find all registrations")
     @APIResponse(responseCode = "200", description = "List of all registrations")
     @GET
     public Response getAll() {
         return Response.ok(registrationService.getAll()).build();
     }
-
 
     @Operation(summary = "Find registration by id")
     @APIResponses(value = {
@@ -42,14 +41,13 @@ public class RegistrationController {
         return Response.ok(registrationService.getById(id)).build();
     }
 
-
     @Operation(summary = "Create a registration")
     @APIResponse(responseCode = "201", description = "Registration created")
     @POST
-    public Response create(RegistrationCreateDto registrationCreateDto) throws PersonNotFoundException, CourseNotFoundException {
-        return Response.ok(registrationService.create(registrationCreateDto)).build();
+    public Response create(RegistrationCreateDto registrationCreateDto)
+            throws PersonNotFoundException, CourseNotFoundException, RegistrationAlreadyExistsException {
+        return Response.ok(registrationService.create(registrationCreateDto)).status(Response.Status.CREATED).build();
     }
-
 
     @Operation(summary = "Update a registration")
     @APIResponses(value = {
@@ -58,10 +56,10 @@ public class RegistrationController {
     })
     @PUT
     @Path("/{id}")
-    public Response update(@PathParam("id") String id, @Valid @RequestBody RegistrationCreateDto registrationCreateDto) throws PersonNotFoundException, CourseNotFoundException {
+    public Response update(@PathParam("id") String id, @Valid @RequestBody RegistrationCreateDto registrationCreateDto)
+            throws PersonNotFoundException, CourseNotFoundException {
         return Response.ok(registrationService.update(id, registrationCreateDto)).build();
     }
-
 
     @Operation(summary = "Delete a registration")
     @APIResponses(value = {
