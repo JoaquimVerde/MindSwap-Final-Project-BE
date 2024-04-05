@@ -9,11 +9,13 @@ import jakarta.ws.rs.ext.Provider;
 
 import java.util.Date;
 
+import static com.mindera.finalproject.be.messages.Messages.UNEXPECTED_ERROR;
+
 @Provider
 public class PersonExceptionHandler implements ExceptionMapper<PersonException> {
     @Override
     public Response toResponse(PersonException e) {
-        if(e instanceof PersonNotFoundException){
+        if (e instanceof PersonNotFoundException) {
             Error error = new Error.Builder()
                     .message(e.getMessage())
                     .status(Response.Status.NOT_FOUND.getStatusCode())
@@ -21,7 +23,7 @@ public class PersonExceptionHandler implements ExceptionMapper<PersonException> 
                     .build();
             return Response.status(Response.Status.NOT_FOUND).entity(error).build();
         }
-        if(e instanceof PersonAlreadyExistsException){
+        if (e instanceof PersonAlreadyExistsException) {
             Error error = new Error.Builder()
                     .message(e.getMessage())
                     .status(Response.Status.CONFLICT.getStatusCode())
@@ -29,6 +31,6 @@ public class PersonExceptionHandler implements ExceptionMapper<PersonException> 
                     .build();
             return Response.status(Response.Status.CONFLICT).entity(error).build();
         }
-        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity("Unexpected error in person controller").build();
+        return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(UNEXPECTED_ERROR).build();
     }
 }

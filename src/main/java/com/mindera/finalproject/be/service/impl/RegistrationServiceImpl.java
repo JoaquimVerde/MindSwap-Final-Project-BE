@@ -13,17 +13,15 @@ import com.mindera.finalproject.be.service.RegistrationService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import software.amazon.awssdk.core.pagination.sync.SdkIterable;
-import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
-import software.amazon.awssdk.enhanced.dynamodb.DynamoDbIndex;
-import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
-import software.amazon.awssdk.enhanced.dynamodb.Key;
-import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
+import software.amazon.awssdk.enhanced.dynamodb.*;
 import software.amazon.awssdk.enhanced.dynamodb.model.Page;
 import software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import static com.mindera.finalproject.be.messages.Messages.REGISTRATION_ALREADY_EXISTS;
 
 @ApplicationScoped
 public class RegistrationServiceImpl implements RegistrationService {
@@ -75,8 +73,8 @@ public class RegistrationServiceImpl implements RegistrationService {
     @Override
     public RegistrationPublicDto create(RegistrationCreateDto registrationCreateDto) throws PersonNotFoundException, CourseNotFoundException, RegistrationAlreadyExistsException {
         Registration registration = RegistrationConverter.fromCreateDtoToEntity(registrationCreateDto);
-        if(checkIfRegistrationIsDuplicate(registration)){
-            throw new RegistrationAlreadyExistsException("Registration already exists");
+        if (checkIfRegistrationIsDuplicate(registration)) {
+            throw new RegistrationAlreadyExistsException(REGISTRATION_ALREADY_EXISTS);
         }
         registration.setPK(REGISTRATION);
         registration.setSK(REGISTRATION + UUID.randomUUID());
@@ -113,7 +111,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         registrationTable.updateItem(registration);
     }
 
-    private boolean checkIfRegistrationIsDuplicate(Registration registration){
+    private boolean checkIfRegistrationIsDuplicate(Registration registration) {
         QueryConditional queryConditional = QueryConditional.keyEqualTo(k -> k.partitionValue(registration.getPersonId()).sortValue(registration.getCourseId()));
         DynamoDbIndex<Registration> index = registrationTable.index(GSIPK1);
         SdkIterable<Page<Registration>> registrations = index.query(queryConditional);

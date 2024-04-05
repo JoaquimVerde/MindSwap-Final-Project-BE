@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static com.mindera.finalproject.be.messages.Messages.COURSE_NOT_FOUND;
+
 @ApplicationScoped
 public class CourseServiceImpl implements CourseService {
 
@@ -128,7 +130,7 @@ public class CourseServiceImpl implements CourseService {
     public Course findById(String id) throws CourseNotFoundException {
         Course course = courseTable.getItem(Key.builder().partitionValue(COURSE).sortValue(id).build());
         if (course == null) {
-            throw new CourseNotFoundException("Course with id " + id + " not found");
+            throw new CourseNotFoundException(COURSE_NOT_FOUND + id);
         }
         return course;
     }

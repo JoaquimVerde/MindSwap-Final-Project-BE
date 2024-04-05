@@ -4,25 +4,27 @@ package com.mindera.finalproject.be.dto.registration;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
+import static com.mindera.finalproject.be.messages.Messages.*;
+
 public record RegistrationCreateDto(
-        @NotEmpty(message = "Person id is required")
+        @NotEmpty(message = NON_EMPTY_PERSONID)
         String personId,
 
-        @NotEmpty(message = "Course id is required")
+        @NotEmpty(message = NON_EMPTY_COURSEID)
         String courseId,
 
-        @NotEmpty(message = "Registration status is required")
+        @NotEmpty(message = NON_EMPTY_STATUS)
         String status,
 
         String finalGrade,
 
-        @NotEmpty(message = "About you is required")
+        @NotEmpty(message = NON_EMPTY_ABOUT_YOU)
         String aboutYou,
 
-        @NotNull(message = "Previous knowledge status is required")
+        @NotNull(message = NON_EMPTY_PREVKNOWLEDGE)
         Boolean prevKnowledge,
 
-        @NotNull(message = "Previous experience status is required")
+        @NotNull(message = NON_EMPTY_PREVEXPERIENCE)
         Boolean prevExperience
 ) {
 }

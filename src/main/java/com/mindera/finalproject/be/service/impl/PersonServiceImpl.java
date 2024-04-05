@@ -17,6 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static com.mindera.finalproject.be.messages.Messages.PERSON_NOT_FOUND;
+
 @ApplicationScoped
 public class PersonServiceImpl implements PersonService {
 
@@ -25,6 +27,7 @@ public class PersonServiceImpl implements PersonService {
     private final String GSIPK1 = "GSIPK1";
 
     private DynamoDbTable<Person> personTable;
+
     @Inject
     void personEnhancedService(DynamoDbEnhancedClient dynamoEnhancedClient) {
         personTable = dynamoEnhancedClient.table(TABLE_NAME, TableSchema.fromBean(Person.class));
@@ -43,7 +46,7 @@ public class PersonServiceImpl implements PersonService {
     public PersonPublicDto getById(String id) throws PersonNotFoundException {
         Person person = findById(id);
         if (person == null) {
-            throw new PersonNotFoundException("Person with id " + id + " not found");
+            throw new PersonNotFoundException(PERSON_NOT_FOUND + id);
         }
         return PersonConverter.fromEntityToPublicDto(person);
     }
@@ -71,7 +74,7 @@ public class PersonServiceImpl implements PersonService {
     public PersonPublicDto update(String id, PersonCreateDto personCreateDto) throws PersonNotFoundException {
         Person person = findById(id);
         if (person == null) {
-            throw new PersonNotFoundException("Person with id " + id + " not found");
+            throw new PersonNotFoundException(PERSON_NOT_FOUND + id);
         }
         person.setEmail(personCreateDto.email());
         person.setFirstName(personCreateDto.firstName());
@@ -97,7 +100,7 @@ public class PersonServiceImpl implements PersonService {
     public Person findById(String id) throws PersonNotFoundException {
         Person person = personTable.getItem(Key.builder().partitionValue(PERSON).sortValue(id).build());
         if (person == null) {
-            throw new PersonNotFoundException("Person with id " + id + " not found");
+            throw new PersonNotFoundException(PERSON_NOT_FOUND + id);
         }
         return person;
     }
