@@ -1,5 +1,6 @@
 package com.mindera.finalproject.be.Person;
 
+import com.mindera.finalproject.be.dto.person.PersonCreateDto;
 import com.mindera.finalproject.be.dto.person.PersonPublicDto;
 import com.mindera.finalproject.be.entity.Person;
 import com.mindera.finalproject.be.exception.student.PersonNotFoundException;
@@ -16,6 +17,7 @@ import software.amazon.awssdk.enhanced.dynamodb.Key;
 import software.amazon.awssdk.enhanced.dynamodb.model.Page;
 import software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -26,6 +28,14 @@ import static org.mockito.Mockito.*;
 
 @QuarkusTest
 public class PersonServiceTests {
+    private  String email = "test@example.com";
+    private String firstName ="John";
+    private String lastName = "Doe";
+    private String role = "student";
+    private String username = "JohnDoe";
+    private LocalDate dateOfBirth = LocalDate.of(1999,10,10);
+    private String address = "Portugal";
+    private String cv = "www.example.com";
     private final String PERSON = "PERSON#";
     @Mock
     private DynamoDbTable<Person> mockPersonTable;
@@ -40,7 +50,6 @@ public class PersonServiceTests {
 
     @Test
     void testGetById() throws PersonNotFoundException {
-        // Mocking data
         String id = PERSON + UUID.randomUUID();
         Person person = new Person();
         person.setPK(PERSON);
@@ -48,16 +57,33 @@ public class PersonServiceTests {
         person.setActive(true);
         Key key = Key.builder().partitionValue(PERSON).sortValue(id).build();
 
-        // Mocking behavior of DynamoDbTable getItem method
         when(mockPersonTable.getItem(key)).thenReturn(person);
 
-        // Calling the method under test
+
         PersonPublicDto result = personService.getById(id);
 
-        // Verifying the result
+
         assertNotNull(result);
         assertEquals(id, result.id());
     }
+    @Test
+    void testCreate() {
+
+        PersonCreateDto createDto = new PersonCreateDto(email,firstName,lastName,role,username,dateOfBirth,address,cv);
+
+        PersonPublicDto result = personService.create(createDto);
+
+
+        assertNotNull(result);
+        assertEquals(createDto.email(), result.email());
+        assertEquals(createDto.firstName(), result.firstName());
+        assertEquals(createDto.lastName(), result.lastName());
+        assertEquals(createDto.role(),result.role());
+        assertEquals(createDto.username(),result.username());
+        assertEquals(createDto.dateOfBirth(), result.dateOfBirth());
+        assertEquals(createDto.address(), result.address());
+    }
+
 
 
 
