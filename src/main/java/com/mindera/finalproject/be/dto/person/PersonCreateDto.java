@@ -1,5 +1,7 @@
 package com.mindera.finalproject.be.dto.person;
 
+import com.mindera.finalproject.be.enums.RoleStatus;
+import com.mindera.finalproject.be.validator.EnumValidator;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -18,7 +20,7 @@ public record PersonCreateDto(
         @Pattern(regexp = "^[\\p{L}\\p{M}'\\s-]+$", message = "Invalid last name")
         String lastName,
         @NotBlank(message = "Invalid role")
-        @Pattern(regexp = "^[\\p{L}\\p{M}'\\s-]+$", message = "Invalid role")
+        @EnumValidator(enumClass = RoleStatus.class , message = "Invalid role")
         String role,
         @NotBlank(message = "Invalid username")
         @Pattern(regexp = "^[a-zA-Z0-9](?:[a-zA-Z0-9_-]*[a-zA-Z0-9])?$", message = "Invalid username")
