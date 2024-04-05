@@ -13,7 +13,6 @@ import com.mindera.finalproject.be.exception.student.PersonNotFoundException;
 import com.mindera.finalproject.be.service.CourseService;
 import com.mindera.finalproject.be.service.PersonService;
 import com.mindera.finalproject.be.service.ProjectService;
-import com.mindera.finalproject.be.testEmail.Email;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import software.amazon.awssdk.core.pagination.sync.SdkIterable;
@@ -30,15 +29,12 @@ public class ProjectServiceImpl implements ProjectService {
 
     private final String TABLE_PROJECT = "Project";
     private final String PROJECT = "PROJECT#";
+
     private DynamoDbTable<Project> projectTable;
     @Inject
     private CourseService courseService;
     @Inject
     private PersonService personService;
-
-    @Inject
-    Email email;
-
 
     @Inject
     void projectEnhancedService(DynamoDbEnhancedClient dynamoEnhancedClient) {
@@ -52,7 +48,6 @@ public class ProjectServiceImpl implements ProjectService {
         SdkIterable<Page<Project>> projects = projectTable.query(queryConditional);
         List<Project> projectsList = new ArrayList<>();
         projects.forEach(page -> projectsList.addAll(page.items()));
-        email.sendEmail("fadg100@gmail.com");
         return projectsList.stream().filter(Project::getActive).map(this::mapProjectList).toList();
 
     }
