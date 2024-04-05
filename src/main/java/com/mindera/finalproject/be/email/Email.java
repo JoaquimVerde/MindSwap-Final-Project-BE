@@ -16,7 +16,7 @@ public class Email {
     @MailerName("outlook")
     Mailer mailer;
 
-    public void sendAccountVerificationEmail(String recipient, Person person) {
+    public void sendAccountVerificationEmail(Person person) {
         String htmlBody = "<!DOCTYPE html>\n" +
                 "<html lang=\"en\">\n" +
                 "<head>\n" +
@@ -76,15 +76,15 @@ public class Email {
             if (mailer == null) {
                 throw new IllegalStateException("Mailer instance is not injected.");
             }
-            System.out.println("Sending email to: " + recipient);
-            mailer.send(Mail.withHtml(recipient, "test", "test"));
-            System.out.println("Email sent successfully to: " + recipient);
+            System.out.println("Sending email to: " + person.getEmail());
+            mailer.send(Mail.withHtml(person.getEmail(), "test", "test"));
+            System.out.println("Email sent successfully to: " + person.getEmail());
         } catch (Exception e) {
-            System.err.println("Error sending email to " + recipient + ": " + e.getMessage());
+            System.err.println("Error sending email to " + person.getEmail() + ": " + e.getMessage());
         }
     }
 
-    public void sendWelcomeEmail(String recipient, Person person) {
+    public void sendWelcomeEmail(Person person) {
         String htmlBody =
                 "<!DOCTYPE html>\n" +
                         "<html lang=\"en\">\n" +
@@ -147,10 +147,10 @@ public class Email {
                         "    </div>\n" +
                         "</body>\n" +
                         "</html>\n";
-        mailer.send(Mail.withHtml(recipient, "Welcome to Course Applications", htmlBody));
+        mailer.send(Mail.withHtml(person.getEmail(), "Welcome to Course Applications", htmlBody));
     }
 
-    public void sendCourseCandidatureStatusEmail(String recipient, Person person, Course course, Registration registration) {
+    public void sendCourseCandidatureStatusEmail(Person person, Course course, Registration registration) {
         String htmlBody = "<!DOCTYPE html>\n" +
                 "<html lang=\"en\">\n" +
                 "<head>\n" +
@@ -206,10 +206,10 @@ public class Email {
                 "    </div>\n" +
                 "</body>\n" +
                 "</html>\n";
-        mailer.send(Mail.withHtml(recipient, "Course Application Status", htmlBody));
+        mailer.send(Mail.withHtml(person.getEmail(), "Course Application Status", htmlBody));
     }
 
-    public void sendEmailWithCertificate(String recipient, Person person, Course course) {
+    public void sendEmailWithCertificate(Person person, Course course) {
         String htmlBody = "<!DOCTYPE html>\n" +
                 "<html lang=\"en\">\n" +
                 "<head>\n" +
@@ -266,7 +266,6 @@ public class Email {
                 "    </div>\n" +
                 "</body>\n" +
                 "</html>\n";
-        mailer.send(Mail.withHtml(recipient, "Congratulations you have completed the course!", htmlBody).addAttachment("certificate.pdf", "certificate.pdf".getBytes(), "application/pdf"));
+        mailer.send(Mail.withHtml(person.getEmail(), "Congratulations you have completed the course!", htmlBody).addAttachment("certificate.pdf", "certificate.pdf".getBytes(), "application/pdf"));
     }
-
 }
