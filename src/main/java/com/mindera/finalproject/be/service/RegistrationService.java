@@ -2,6 +2,7 @@ package com.mindera.finalproject.be.service;
 
 import com.mindera.finalproject.be.dto.registration.RegistrationCreateDto;
 import com.mindera.finalproject.be.dto.registration.RegistrationPublicDto;
+import com.mindera.finalproject.be.exception.registration.RegistrationAlreadyExistsException;
 import com.mindera.finalproject.be.exception.course.CourseNotFoundException;
 import com.mindera.finalproject.be.exception.student.PersonNotFoundException;
 
@@ -12,9 +13,11 @@ public interface RegistrationService {
 
     RegistrationPublicDto getById(String id) throws PersonNotFoundException, CourseNotFoundException;
 
-    RegistrationPublicDto create(RegistrationCreateDto registrationCreateDto) throws PersonNotFoundException, CourseNotFoundException;
+    RegistrationPublicDto create(RegistrationCreateDto registrationCreateDto)
+            throws PersonNotFoundException, CourseNotFoundException, RegistrationAlreadyExistsException;
 
-    RegistrationPublicDto update(String id, RegistrationCreateDto registrationCreateDto) throws PersonNotFoundException, CourseNotFoundException;
+    RegistrationPublicDto update(String id, RegistrationCreateDto registrationCreateDto)
+            throws PersonNotFoundException, CourseNotFoundException;
 
     void delete(String id);
 }

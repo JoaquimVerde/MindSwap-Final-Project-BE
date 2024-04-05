@@ -7,12 +7,14 @@ import com.mindera.finalproject.be.dto.registration.RegistrationCreateDto;
 import com.mindera.finalproject.be.dto.registration.RegistrationPublicDto;
 import com.mindera.finalproject.be.entity.Registration;
 import com.mindera.finalproject.be.exception.course.CourseNotFoundException;
+import com.mindera.finalproject.be.exception.registration.RegistrationAlreadyExistsException;
 import com.mindera.finalproject.be.exception.student.PersonNotFoundException;
 import com.mindera.finalproject.be.service.RegistrationService;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import software.amazon.awssdk.core.pagination.sync.SdkIterable;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
+import software.amazon.awssdk.enhanced.dynamodb.DynamoDbIndex;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 import software.amazon.awssdk.enhanced.dynamodb.Key;
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
@@ -28,6 +30,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     private final String TABLE_NAME = "Registration";
     private final String REGISTRATION = "REGISTRATION#";
+    private final String GSIPK1 = "GSIPK1";
 
     @Inject
     PersonServiceImpl personService;
@@ -70,8 +73,11 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     @Override
-    public RegistrationPublicDto create(RegistrationCreateDto registrationCreateDto) throws PersonNotFoundException, CourseNotFoundException {
+    public RegistrationPublicDto create(RegistrationCreateDto registrationCreateDto) throws PersonNotFoundException, CourseNotFoundException, RegistrationAlreadyExistsException {
         Registration registration = RegistrationConverter.fromCreateDtoToEntity(registrationCreateDto);
+        if(checkIfRegistrationIsDuplicate(registration)){
+            throw new RegistrationAlreadyExistsException("Registration already exists");
+        }
         registration.setPK(REGISTRATION);
         registration.setSK(REGISTRATION + UUID.randomUUID());
         PersonPublicDto student = personService.getById(registration.getPersonId());
@@ -105,6 +111,15 @@ public class RegistrationServiceImpl implements RegistrationService {
         Registration registration = registrationTable.getItem(Key.builder().partitionValue(REGISTRATION).sortValue(id).build());
         registration.setActive(false);
         registrationTable.updateItem(registration);
+    }
+
+    private boolean checkIfRegistrationIsDuplicate(Registration registration){
+        QueryConditional queryConditional = QueryConditional.keyEqualTo(k -> k.partitionValue(registration.getPersonId()).sortValue(registration.getCourseId()));
+        DynamoDbIndex<Registration> index = registrationTable.index(GSIPK1);
+        SdkIterable<Page<Registration>> registrations = index.query(queryConditional);
+        List<Registration> registrationsList = new ArrayList<>();
+        registrations.forEach(page -> registrationsList.addAll(page.items()));
+        return registrationsList.size() > 0;
     }
 
 }

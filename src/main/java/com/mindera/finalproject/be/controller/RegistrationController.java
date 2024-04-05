@@ -2,6 +2,7 @@ package com.mindera.finalproject.be.controller;
 
 import com.mindera.finalproject.be.dto.registration.RegistrationCreateDto;
 import com.mindera.finalproject.be.exception.course.CourseNotFoundException;
+import com.mindera.finalproject.be.exception.registration.RegistrationAlreadyExistsException;
 import com.mindera.finalproject.be.exception.student.PersonNotFoundException;
 import com.mindera.finalproject.be.service.RegistrationService;
 import jakarta.inject.Inject;
@@ -44,7 +45,7 @@ public class RegistrationController {
     @APIResponse(responseCode = "201", description = "Registration created")
     @POST
     public Response create(RegistrationCreateDto registrationCreateDto)
-            throws PersonNotFoundException, CourseNotFoundException {
+            throws PersonNotFoundException, CourseNotFoundException, RegistrationAlreadyExistsException {
         return Response.ok(registrationService.create(registrationCreateDto)).status(Response.Status.CREATED).build();
     }
 
