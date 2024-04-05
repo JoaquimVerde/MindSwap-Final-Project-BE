@@ -45,7 +45,9 @@ public class PersonControllerTests {
         }
 
         public String createPerson() {
-            PersonCreateDto newPerson = new PersonCreateDto("peter@email.com", "joe", "doe", "student", "peter", LocalDate.of(2001, 10, 10), "address", "cv");
+            PersonCreateDto newPerson = new PersonCreateDto("peter@email.com",
+                    "joe", "doe", "student", "peter",
+                    LocalDate.of(2001, 10, 10), "address", "cv");
 
             return given()
                     .body(newPerson)
