@@ -13,8 +13,8 @@ public class ProjectConverter {
     public static Project convertFromDtoToEntity(ProjectCreateDto projectCreateDto) {
         return new Project(
                 projectCreateDto.studentIds(),
-                projectCreateDto.name(),
                 projectCreateDto.courseId(),
+                projectCreateDto.name(),
                 projectCreateDto.gitHubRepo()
         );
     }
