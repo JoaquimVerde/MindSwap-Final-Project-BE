@@ -1,6 +1,5 @@
 package com.mindera.finalproject.be.Project;
 
-import com.mindera.finalproject.be.aspect.Error;
 import com.mindera.finalproject.be.dto.course.CourseCreateDto;
 import com.mindera.finalproject.be.dto.person.PersonCreateDto;
 import com.mindera.finalproject.be.dto.project.ProjectCreateDto;
@@ -20,11 +19,8 @@ import org.junit.jupiter.api.Test;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
-import software.amazon.awssdk.services.dynamodb.endpoints.internal.Value;
-
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -156,26 +152,95 @@ public class ProjectControllerTests {
 
         String projectId = createProject();
 
-
-        Error response = given()
+        ProjectPublicDto response = given()
                 .when().get("/api/v1/projects/" + projectId)
                 .then()
-                .statusCode(404)
-                .extract().as(Error.class);
-        System.out.println("Response: " + response);
-      /*  assertEquals(projectId, response.id());
+                .statusCode(200)
+                .extract().as(ProjectPublicDto.class);
+
+        assertEquals(projectId, response.id());
         assertEquals("Project name", response.name());
         assertEquals(studentIds, response.students().stream().map(studentIds -> studentIds.id()).collect(Collectors.toList()));
         assertEquals(courseId, response.course().id());
-        assertEquals("https://github.com/user/repo", response.gitHubRepo());*/
+        assertEquals("https://github.com/user/repo", response.gitHubRepo());
 
-       /* given()
-                .pathParam("id", projectId)
-                .when()
-                .get("/api/v1/projects/{id}")
-                .then()
-                .statusCode(Response.Status.OK.getStatusCode())
-                .contentType(ContentType.JSON)
-                .body("id", equalTo(projectId));*/
     }
+
+    @Test
+    public void testGetByIdNotFound() {
+
+        String projectId = "XXXXXXX"; //non-existing ID
+
+        given()
+                .pathParam("id", projectId)
+                .when().get("/api/v1/projects/{id}")
+                .then()
+                .statusCode(Response.Status.NOT_FOUND.getStatusCode());
+    }
+
+    @Test
+    public void testCreate() {
+        ProjectCreateDto newProject = new ProjectCreateDto("Project name", studentIds,
+                courseId,"https://github.com/user/repo");
+        given()
+                .contentType(ContentType.JSON)
+                .body(newProject)
+                .when().post("/api/v1/projects")
+                .then()
+                .statusCode(Response.Status.CREATED.getStatusCode());
+    }
+
+    @Test
+    public void testUpdate() {
+        String projectId = createProject();
+
+        ProjectCreateDto projectCreateDto = new ProjectCreateDto("Project name", studentIds,
+                courseId,"https://github.com/user/repo");
+
+        given()
+                .pathParam("id", projectId)
+                .contentType(ContentType.JSON)
+                .body(projectCreateDto)
+                .when().put("/api/v1/projects/{id}")
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode());
+    }
+
+    @Test
+    public void testUpdateNotFound() {
+
+        String projectId = "XXXXXXX"; //non-existing ID
+        ProjectCreateDto projectCreateDto = new ProjectCreateDto("Project name", studentIds,
+                courseId,"https://github.com/user/repo");
+        given()
+                .pathParam("id", projectId)
+                .contentType(ContentType.JSON)
+                .body(projectCreateDto)
+                .when().put("/api/v1/projects/{id}")
+                .then()
+                .statusCode(Response.Status.NOT_FOUND.getStatusCode());
+    }
+
+    @Test
+    public void testDelete() {
+
+        String projectId = createProject();
+        given()
+                .pathParam("id", projectId)
+                .when().delete("/api/v1/projects/{id}")
+                .then()
+                .statusCode(Response.Status.OK.getStatusCode());
+    }
+
+    @Test
+    public void testDeleteNotFound() {
+
+        String projectId = "XXXXXXX"; //non-existing ID
+        given()
+                .pathParam("id", projectId)
+                .when().delete("/api/v1/projects/{id}")
+                .then()
+                .statusCode(Response.Status.NOT_FOUND.getStatusCode());
+    }
+
 }
