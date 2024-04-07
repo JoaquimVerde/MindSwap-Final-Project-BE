@@ -4,6 +4,7 @@ package com.mindera.finalproject.be.service;
 import com.mindera.finalproject.be.dto.course.CourseCreateDto;
 import com.mindera.finalproject.be.dto.course.CoursePublicDto;
 import com.mindera.finalproject.be.entity.Course;
+import com.mindera.finalproject.be.exception.course.CourseAlreadyExistsException;
 import com.mindera.finalproject.be.exception.course.CourseNotFoundException;
 import com.mindera.finalproject.be.exception.student.PersonNotFoundException;
 
@@ -17,7 +18,7 @@ public interface CourseService {
 
     List<CoursePublicDto> getByLocation(String location);
 
-    CoursePublicDto create(CourseCreateDto courseCreateDto) throws PersonNotFoundException;
+    CoursePublicDto create(CourseCreateDto courseCreateDto) throws PersonNotFoundException, CourseAlreadyExistsException;
 
     CoursePublicDto update(String id, CourseCreateDto coursePublicDto) throws PersonNotFoundException, CourseNotFoundException;
 
