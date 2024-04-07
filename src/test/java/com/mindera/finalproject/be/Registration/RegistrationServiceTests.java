@@ -68,7 +68,7 @@ class RegistrationControllerTests {
     }
 
     public String createPerson(String role) {
-        PersonCreateDto person = new PersonCreateDto("email", "firstName", "lastName", role, "password",
+        PersonCreateDto person = new PersonCreateDto("example@email.com", "firstName", "lastName", role, "password",
                 LocalDate.of(1990, 1, 1), "city", "phone");
 
         return given()
@@ -136,8 +136,11 @@ class RegistrationControllerTests {
                 .body("size()", equalTo(5));
     }
 
-    /* @Test
+    @Test
     void testCreateRegistration() {
+        String studentId = createPerson("Student");
+        String courseId = createCourse(createPerson("Teacher"));
+
         RegistrationCreateDto registration = new RegistrationCreateDto(studentId, courseId, "Pending", "10",
                 "about", true, true);
 
@@ -158,48 +161,32 @@ class RegistrationControllerTests {
         assertEquals(registration.prevKnowledge(), response.prevKnowledge());
         assertEquals(registration.prevExperience(), response.prevExperience());
 
-    } */
+    }
 
-    /*
-     * @Test
-     * void testCreateRegistrationWithInvalidStudent() {
-     * RegistrationCreateDto registration = new RegistrationCreateDto("invalidId",
-     * courseId, "Pending", "10",
-     * "about", true, true);
-     * 
-     * given()
-     * .body(registration)
-     * .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-     * .when().post(URL)
-     * .then()
-     * .statusCode(400)
-     * .body("message", equalTo(Error.INVALID_PERSON_ID));
-     * }
-     */
+    @Test
+    void testCreateRegistrationWithInvalidStudent() {
+
+        String courseId = createCourse(createPerson("Teacher"));
+        RegistrationCreateDto registration = new RegistrationCreateDto("invalidId",
+                courseId, "Pending", "10",
+                "about", true, true);
+
+        Error response = given()
+                .body(registration)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .when().post(URL)
+                .then()
+                .statusCode(400)
+                .extract().as(Error.class);
+        
+        assertEquals("Person not found", response.getMessage());
+        assertEquals(400, response.getStatus());
+    }
 
     @Test
     void testCreateRegistrationWithInvalidCourse() {
     }
 
-    @Test
-    void testCreateRegistrationWithInvalidStatus() {
-    }
-
-    @Test
-    void testCreateRegistrationWithInvalidFinalGrade() {
-    }
-
-    @Test
-    void testCreateRegistrationWithInvalidAboutYou() {
-    }
-
-    @Test
-    void testCreateRegistrationWithInvalidPrevKnowledge() {
-    }
-
-    @Test
-    void testCreateRegistrationWithInvalidPrevExperience() {
-    }
 
     @Test
     void testGetRegistrationById() {
