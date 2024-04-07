@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static com.mindera.finalproject.be.messages.Messages.COURSE_ALREADY_EXISTS;
 import static com.mindera.finalproject.be.messages.Messages.COURSE_NOT_FOUND;
 
 @ApplicationScoped
@@ -73,7 +74,7 @@ public class CourseServiceImpl implements CourseService {
     public CoursePublicDto create(CourseCreateDto courseCreateDto) throws PersonNotFoundException, CourseAlreadyExistsException {
         Course course = CourseConverter.fromCreateDtoToEntity(courseCreateDto);
         if (checkIfCourseIsDuplicate(course)) {
-            throw new CourseAlreadyExistsException("Course already exists");
+            throw new CourseAlreadyExistsException(COURSE_ALREADY_EXISTS);
         }
         if (courseCreateDto.teacherId() != null) {
             try {
