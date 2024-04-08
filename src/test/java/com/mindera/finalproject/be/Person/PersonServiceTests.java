@@ -26,7 +26,7 @@ public class PersonServiceTests {
     private final String firstName ="John";
     private final String lastName = "Doe";
     private final String role = "student";
-    private final String username = "JohnDoe";
+    private final String username = "johndoe";
     private final LocalDate dateOfBirth = LocalDate.of(1999,10,10);
     private final String address = "Portugal";
     private final String cv = "www.example.com";
@@ -105,7 +105,7 @@ public class PersonServiceTests {
         assertEquals(updateDto.address(), result.address());
     }
     @Test
-    void testDelete() {
+    void testDelete() throws PersonNotFoundException{
         String id = PERSON + UUID.randomUUID();
         Person person = new Person();
         person.setPK(PERSON);
