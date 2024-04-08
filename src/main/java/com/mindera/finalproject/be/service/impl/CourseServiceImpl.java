@@ -34,7 +34,7 @@ public class CourseServiceImpl implements CourseService {
     private final String GSIPK2 = "GSIPK2";
 
     @Inject
-    PersonService personService;
+    private PersonService personService;
     private DynamoDbTable<Course> courseTable;
 
     @Inject

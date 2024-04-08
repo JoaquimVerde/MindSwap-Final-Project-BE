@@ -3,9 +3,7 @@ package com.mindera.finalproject.be.entity;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.*;
 
 import java.math.BigDecimal;
-import java.util.Map;
 import java.util.Objects;
-import java.util.UUID;
 
 @DynamoDbBean
 public class Course {
@@ -47,14 +45,15 @@ public class Course {
     public String getPK() {
         return PK;
     }
+
+    public void setPK(String pk) {
+        this.PK = pk;
+    }
+
     @DynamoDbSortKey
     @DynamoDbAttribute("SK")
     public String getSK() {
         return SK;
-    }
-
-    public void setPK(String pk) {
-        this.PK = pk;
     }
 
     public void setSK(String sk) {
