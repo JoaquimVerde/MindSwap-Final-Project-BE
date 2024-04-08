@@ -178,15 +178,30 @@ class RegistrationControllerTests {
                 .then()
                 .statusCode(400)
                 .extract().as(Error.class);
-        
+
         assertEquals("Person not found", response.getMessage());
         assertEquals(400, response.getStatus());
     }
 
     @Test
     void testCreateRegistrationWithInvalidCourse() {
-    }
 
+        String studentId = createPerson("Student");
+        RegistrationCreateDto registration = new RegistrationCreateDto(studentId,
+                "invalidId", "Pending", "10",
+                "about", true, true);
+
+        Error response = given()
+                .body(registration)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .when().post(URL)
+                .then()
+                .statusCode(400)
+                .extract().as(Error.class);
+
+        assertEquals("course not found", response.getMessage());
+        assertEquals(400, response.getStatus());
+    }
 
     @Test
     void testGetRegistrationById() {
