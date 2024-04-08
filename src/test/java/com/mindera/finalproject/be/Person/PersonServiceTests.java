@@ -118,9 +118,4 @@ public class PersonServiceTests {
 
         verify(mockPersonTable, times(1)).updateItem(person);
     }
-
-
-
-
-
 }
