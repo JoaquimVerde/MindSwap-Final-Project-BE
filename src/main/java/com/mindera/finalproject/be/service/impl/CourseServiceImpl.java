@@ -16,6 +16,7 @@ import software.amazon.awssdk.core.pagination.sync.SdkIterable;
 import software.amazon.awssdk.enhanced.dynamodb.*;
 import software.amazon.awssdk.enhanced.dynamodb.model.Page;
 import software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional;
+import software.amazon.awssdk.enhanced.dynamodb.model.QueryEnhancedRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,11 +43,14 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public List<CoursePublicDto> getAll() {
+    public List<CoursePublicDto> getAll(Integer page, Integer limit) {
         QueryConditional queryConditional = QueryConditional.sortBeginsWith(k -> k.partitionValue(COURSE).sortValue(COURSE));
-        SdkIterable<Page<Course>> courses = courseTable.query(queryConditional);
-        List<Course> coursesList = new ArrayList<>();
-        courses.forEach(page -> coursesList.addAll(page.items()));
+        QueryEnhancedRequest limitedQuery = QueryEnhancedRequest.builder()
+                .queryConditional(queryConditional)
+                .limit(limit)
+                .build();
+        SdkIterable<Page<Course>> courses = courseTable.query(limitedQuery);
+        List<Course> coursesList = new ArrayList<>(courses.stream().toList().get(page).items());
         return coursesList.stream().filter(Course::getActive).map(this::mapCourseList).toList();
     }
 
@@ -116,7 +120,6 @@ public class CourseServiceImpl implements CourseService {
         course.setPrice(courseCreateDto.price());
         course.setDuration(courseCreateDto.duration());
         course.setLocation(courseCreateDto.location());
-
 
         courseTable.putItem(course);
         if (course.getTeacherId() == null) {

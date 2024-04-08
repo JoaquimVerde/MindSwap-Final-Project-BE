@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface CourseService {
 
-    List<CoursePublicDto> getAll();
+    List<CoursePublicDto> getAll(Integer page, Integer limit);
 
     CoursePublicDto getById(String id) throws PersonNotFoundException, CourseNotFoundException;
 
