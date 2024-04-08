@@ -75,8 +75,8 @@ class CourseControllerTest {
         personTable.deleteTable();
     }
 
-    public String createCourse(String location) {
-        CourseCreateDto exampleCourse = new CourseCreateDto(courseName, courseEdition, teacherId, courseSyllabus, courseProgram, courseSchedule, coursePrice, courseDuration, location);
+    public String createCourse(String location, int edition) {
+        CourseCreateDto exampleCourse = new CourseCreateDto(courseName, edition, teacherId, courseSyllabus, courseProgram, courseSchedule, coursePrice, courseDuration, location);
 
         return given()
                 .body(exampleCourse)
@@ -162,7 +162,7 @@ class CourseControllerTest {
     void testGetAllCoursesWith5Courses() {
         int amount = 5;
         for (int i = 0; i < amount; i++) {
-            createCourse(courseLocation);
+            createCourse(courseLocation, i + 1);
         }
 
         given()
@@ -175,7 +175,7 @@ class CourseControllerTest {
 
     @Test
     void testGetCourseById() {
-        String courseId = createCourse(courseLocation);
+        String courseId = createCourse(courseLocation, courseEdition);
 
         CoursePublicDto response = given()
                 .when().get(API_PATH + "/" + courseId)
@@ -208,10 +208,10 @@ class CourseControllerTest {
     void testGetByLocation() {
         int amount = 3;
         for (int i = 0; i < amount; i++) {
-            createCourse(courseLocation);
+            createCourse(courseLocation, i + 1);
         }
         for (int i = 0; i < 2; i++) {
-            createCourse("NonExistentLocation");
+            createCourse("NonExistentLocation", i + amount + 1);
         }
 
         given()
@@ -224,7 +224,7 @@ class CourseControllerTest {
 
     @Test
     void testGetByLocationWithNonExistentLocation() {
-        createCourse(courseLocation);
+        createCourse(courseLocation, courseEdition);
 
         given()
                 .when().get(API_PATH + "/location/NonExistentLocation")
@@ -236,7 +236,7 @@ class CourseControllerTest {
 
     @Test
     void testUpdateCourse() {
-        String courseId = createCourse(courseLocation);
+        String courseId = createCourse(courseLocation, courseEdition);
 
         CourseCreateDto updatedCourse = new CourseCreateDto("Backend", 2, teacherId, "Java, Spring", "Backend", "Tuesday 10-18", new BigDecimal("1000.13"), 60, "Lisbon");
 
@@ -274,7 +274,7 @@ class CourseControllerTest {
 
     @Test
     void testUpdateCourseWithEmptyData() {
-        String courseId = createCourse(courseLocation);
+        String courseId = createCourse(courseLocation, courseEdition);
 
         CourseCreateDto updatedCourse = new CourseCreateDto("", 0, "", "", "", "", new BigDecimal("0"), 0, "");
 
@@ -291,7 +291,7 @@ class CourseControllerTest {
 
     @Test
     void testUpdateWithInvalidTeacher() {
-        String courseId = createCourse(courseLocation);
+        String courseId = createCourse(courseLocation, courseEdition);
 
         CourseCreateDto updatedCourse = new CourseCreateDto("Backend", 2, "PERSON#1", "Java, Spring", "Backend", "Tuesday 10-18", new BigDecimal("1000.13"), 60, "Lisbon");
 
@@ -308,7 +308,7 @@ class CourseControllerTest {
 
     @Test
     void testDeleteCourse() {
-        String courseId = createCourse(courseLocation);
+        String courseId = createCourse(courseLocation, courseEdition);
 
         given()
                 .when().delete(API_PATH + "/" + courseId)
