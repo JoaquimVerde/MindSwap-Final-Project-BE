@@ -55,10 +55,10 @@ public class CourseServiceImpl implements CourseService {
     }
 
     private CoursePublicDto mapCourseList(Course course) {
-        if (course.getTeacherId() == null) {
-            return CourseConverter.fromEntityToPublicDto(course, null);
-        }
         try {
+            if (course.getTeacherId() == null || !personService.findById(course.getTeacherId()).isActive()) {
+                return CourseConverter.fromEntityToPublicDto(course, null);
+            }
             return CourseConverter.fromEntityToPublicDto(course, personService.getById(course.getTeacherId()));
         } catch (PersonNotFoundException e) {
             return CourseConverter.fromEntityToPublicDto(course, null);
@@ -68,7 +68,7 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public CoursePublicDto getById(String id) throws PersonNotFoundException, CourseNotFoundException {
         Course course = findById(id);
-        if (course.getTeacherId() == null) {
+        if (course.getTeacherId() == null || !personService.findById(course.getTeacherId()).isActive()) {
             return CourseConverter.fromEntityToPublicDto(course, null);
         }
         return CourseConverter.fromEntityToPublicDto(course, personService.getById(course.getTeacherId()));
