@@ -89,13 +89,14 @@ public class CourseServiceImpl implements CourseService {
         }
         course.setPK(COURSE);
         course.setSK(COURSE + UUID.randomUUID());
+        course.setLocation(courseCreateDto.location().toUpperCase());
         courseTable.putItem(course);
         return course.getTeacherId() == null ? CourseConverter.fromEntityToPublicDto(course, null) : CourseConverter.fromEntityToPublicDto(course, personService.getById(course.getTeacherId()));
     }
 
     @Override
     public List<CoursePublicDto> getByLocation(String location, Integer page, Integer limit) {
-        QueryConditional queryConditional = QueryConditional.keyEqualTo(k -> k.partitionValue(location));
+        QueryConditional queryConditional = QueryConditional.keyEqualTo(k -> k.partitionValue(location.toUpperCase()));
         QueryEnhancedRequest limitedQuery = QueryEnhancedRequest.builder()
                 .queryConditional(queryConditional)
                 .limit(limit)
