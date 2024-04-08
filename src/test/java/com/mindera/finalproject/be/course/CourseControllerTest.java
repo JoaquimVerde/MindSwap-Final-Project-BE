@@ -20,7 +20,7 @@ import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-import static com.mindera.finalproject.be.messages.Messages.INVALID_NAME;
+import static com.mindera.finalproject.be.messages.Messages.*;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.*;
@@ -113,7 +113,7 @@ class CourseControllerTest {
 
     @Test
     void testCreateCourseWithInvalidData() {
-        CourseCreateDto exampleCourse = new CourseCreateDto("123123", -1, "asdasd", "", "", "", new BigDecimal("-100"), -1, "");
+        CourseCreateDto exampleCourse = new CourseCreateDto("1231232#%", -1, "asdasd", "", "", "", new BigDecimal("-100"), -1, "");
 
         Error response = given()
                 .body(exampleCourse)
@@ -123,9 +123,56 @@ class CourseControllerTest {
                 .statusCode(400)
                 .extract().as(Error.class);
 
-        // TODO verificar todas as mensagens de validação
-        assertTrue(response.getMessage().contains(INVALID_NAME));
         assertEquals(400, response.getStatus());
+        assertTrue(response.getMessage().contains(INVALID_NAME));
+        assertTrue(response.getMessage().contains(INVALID_EDITION));
+        assertTrue(response.getMessage().contains(NON_EMPTY_SYLLABUS));
+        assertTrue(response.getMessage().contains(NON_EMPTY_PROGRAM));
+        assertTrue(response.getMessage().contains(NON_EMPTY_SCHEDULE));
+        assertTrue(response.getMessage().contains(NON_NEGATIVE_PRICE));
+        assertTrue(response.getMessage().contains(NON_NEGATIVE_DURATION));
+        assertTrue(response.getMessage().contains(NON_EMPTY_LOCATION));
+    }
+
+    @Test
+    void testCreateCourseWithEmptyData() {
+        CourseCreateDto exampleCourse = new CourseCreateDto("", 0, "", "", "", "", new BigDecimal("0"), 0, "");
+
+        Error response = given()
+                .body(exampleCourse)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .when().post(API_PATH)
+                .then()
+                .statusCode(400)
+                .extract().as(Error.class);
+
+        assertEquals(400, response.getStatus());
+        assertTrue(response.getMessage().contains(NON_EMPTY_NAME));
+        assertTrue(response.getMessage().contains(INVALID_EDITION));
+        assertTrue(response.getMessage().contains(NON_EMPTY_SYLLABUS));
+        assertTrue(response.getMessage().contains(NON_EMPTY_PROGRAM));
+        assertTrue(response.getMessage().contains(NON_EMPTY_SCHEDULE));
+        assertTrue(response.getMessage().contains(NON_NEGATIVE_PRICE));
+        assertTrue(response.getMessage().contains(NON_NEGATIVE_DURATION));
+        assertTrue(response.getMessage().contains(NON_EMPTY_LOCATION));
+    }
+
+    @Test
+    void testCreateCourseWithDuplicateCourse() {
+        createCourse(courseLocation, courseEdition);
+
+        CourseCreateDto exampleCourse = new CourseCreateDto(courseName, courseEdition, teacherId, courseSyllabus, courseProgram, courseSchedule, coursePrice, courseDuration, courseLocation);
+
+        Error response = given()
+                .body(exampleCourse)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .when().post(API_PATH)
+                .then()
+                .statusCode(409)
+                .extract().as(Error.class);
+
+        assertEquals(409, response.getStatus());
+        assertEquals(COURSE_ALREADY_EXISTS, response.getMessage());
     }
 
     @Test
