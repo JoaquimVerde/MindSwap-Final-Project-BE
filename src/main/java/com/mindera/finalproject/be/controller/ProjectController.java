@@ -29,8 +29,11 @@ public class ProjectController {
     @Operation(summary = "Find all projects")
     @APIResponse(responseCode = "200", description = "List of all projects")
     @GET
-    public Response getAll() {
-        return Response.ok(projectService.getAll()).build();
+    public Response getAll(
+            @QueryParam("page") @DefaultValue("0") Integer page,
+            @QueryParam("limit") @DefaultValue("100") Integer limit
+    ) {
+        return Response.ok(projectService.getAll(page, limit)).build();
     }
 
 

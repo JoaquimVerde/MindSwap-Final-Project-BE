@@ -19,6 +19,7 @@ import software.amazon.awssdk.core.pagination.sync.SdkIterable;
 import software.amazon.awssdk.enhanced.dynamodb.*;
 import software.amazon.awssdk.enhanced.dynamodb.model.Page;
 import software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional;
+import software.amazon.awssdk.enhanced.dynamodb.model.QueryEnhancedRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,13 +46,15 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<ProjectPublicDto> getAll() {
+    public List<ProjectPublicDto> getAll(Integer page, Integer limit) {
         QueryConditional queryConditional = QueryConditional.sortBeginsWith(s -> s.partitionValue(PROJECT).sortValue(PROJECT));
-        SdkIterable<Page<Project>> projects = projectTable.query(queryConditional);
-        List<Project> projectsList = new ArrayList<>();
-        projects.forEach(page -> projectsList.addAll(page.items()));
+        QueryEnhancedRequest limitedQuery = QueryEnhancedRequest.builder()
+                .queryConditional(queryConditional)
+                .limit(limit)
+                .build();
+        SdkIterable<Page<Project>> projects = projectTable.query(limitedQuery);
+        List<Project> projectsList = new ArrayList<>(projects.stream().toList().get(page).items());
         return projectsList.stream().filter(Project::getActive).map(this::mapProjectList).toList();
-
     }
 
     private List<Project> getAllProjects() {
