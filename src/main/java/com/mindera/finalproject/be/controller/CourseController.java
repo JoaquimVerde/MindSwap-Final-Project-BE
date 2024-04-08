@@ -1,6 +1,7 @@
 package com.mindera.finalproject.be.controller;
 
 import com.mindera.finalproject.be.dto.course.CourseCreateDto;
+import com.mindera.finalproject.be.exception.course.CourseAlreadyExistsException;
 import com.mindera.finalproject.be.exception.course.CourseNotFoundException;
 import com.mindera.finalproject.be.exception.student.PersonNotFoundException;
 import com.mindera.finalproject.be.service.CourseService;
@@ -45,7 +46,7 @@ public class CourseController {
             @APIResponse(responseCode = "201", description = "Course created")
     })
     @POST
-    public Response create(@Valid @RequestBody CourseCreateDto courseCreateDto) throws PersonNotFoundException {
+    public Response create(@Valid @RequestBody CourseCreateDto courseCreateDto) throws PersonNotFoundException, CourseAlreadyExistsException {
         return Response.ok(courseService.create(courseCreateDto)).status(Response.Status.CREATED).build();
     }
 

@@ -62,6 +62,7 @@ public class Course {
     }
 
     @DynamoDbAttribute("Name")
+    @DynamoDbSecondaryPartitionKey(indexNames = {"GSIPK2"})
     public String getName() {
         return name;
     }
@@ -71,6 +72,7 @@ public class Course {
     }
 
     @DynamoDbAttribute("Edition")
+    @DynamoDbSecondarySortKey(indexNames = {"GSIPK2"})
     public Integer getEdition() {
         return edition;
     }

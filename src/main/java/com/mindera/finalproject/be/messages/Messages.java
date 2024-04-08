@@ -33,9 +33,9 @@ public class Messages {
     public static final String NON_EMPTY_PREVKNOWLEDGE = "Previous knowledge status is required";
     public static final String NON_EMPTY_PREVEXPERIENCE = "Previous experience status is required";
     public static final String COURSE_NOT_FOUND = "Course not found with id: ";
+    public static final String COURSE_ALREADY_EXISTS = "Course already exists";
     public static final String PERSON_NOT_FOUND = "Person not found with id: ";
     public static final String PROJECT_NOT_FOUND = "Project not found with id: ";
     public static final String REGISTRATION_NOT_FOUND = "Registration not found with id: ";
     public static final String REGISTRATION_ALREADY_EXISTS = "Registration already exists";
-
 }

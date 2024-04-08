@@ -5,6 +5,7 @@ import com.mindera.finalproject.be.converter.CourseConverter;
 import com.mindera.finalproject.be.dto.course.CourseCreateDto;
 import com.mindera.finalproject.be.dto.course.CoursePublicDto;
 import com.mindera.finalproject.be.entity.Course;
+import com.mindera.finalproject.be.exception.course.CourseAlreadyExistsException;
 import com.mindera.finalproject.be.exception.course.CourseNotFoundException;
 import com.mindera.finalproject.be.exception.student.PersonNotFoundException;
 import com.mindera.finalproject.be.service.CourseService;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import static com.mindera.finalproject.be.messages.Messages.COURSE_ALREADY_EXISTS;
 import static com.mindera.finalproject.be.messages.Messages.COURSE_NOT_FOUND;
 
 @ApplicationScoped
@@ -28,6 +30,7 @@ public class CourseServiceImpl implements CourseService {
     private final String TABLE_NAME = "Course";
     private final String COURSE = "COURSE#";
     private final String GSIPK1 = "GSIPK1";
+    private final String GSIPK2 = "GSIPK2";
 
     @Inject
     PersonService personService;
@@ -68,8 +71,11 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public CoursePublicDto create(CourseCreateDto courseCreateDto) throws PersonNotFoundException {
+    public CoursePublicDto create(CourseCreateDto courseCreateDto) throws PersonNotFoundException, CourseAlreadyExistsException {
         Course course = CourseConverter.fromCreateDtoToEntity(courseCreateDto);
+        if (checkIfCourseIsDuplicate(course)) {
+            throw new CourseAlreadyExistsException(COURSE_ALREADY_EXISTS);
+        }
         if (courseCreateDto.teacherId() != null) {
             try {
                 personService.findById(courseCreateDto.teacherId());
@@ -133,5 +139,14 @@ public class CourseServiceImpl implements CourseService {
             throw new CourseNotFoundException(COURSE_NOT_FOUND + id);
         }
         return course;
+    }
+
+    private boolean checkIfCourseIsDuplicate(Course course) {
+        QueryConditional queryConditional = QueryConditional.keyEqualTo(k -> k.partitionValue(course.getName()).sortValue(course.getEdition()));
+        DynamoDbIndex<Course> index = courseTable.index(GSIPK2);
+        SdkIterable<Page<Course>> courses = index.query(queryConditional);
+        List<Course> coursesList = new ArrayList<>();
+        courses.forEach(page -> coursesList.addAll(page.items()));
+        return !coursesList.isEmpty();
     }
 }
