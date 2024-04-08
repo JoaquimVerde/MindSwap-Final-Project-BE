@@ -29,8 +29,11 @@ public class ProjectController {
     @Operation(summary = "Find all projects")
     @APIResponse(responseCode = "200", description = "List of all projects")
     @GET
-    public Response getAll() {
-        return Response.ok(projectService.getAll()).build();
+    public Response getAll(
+            @QueryParam("page") @DefaultValue("0") Integer page,
+            @QueryParam("limit") @DefaultValue("100") Integer limit
+    ) {
+        return Response.ok(projectService.getAll(page, limit)).build();
     }
 
 
@@ -45,7 +48,7 @@ public class ProjectController {
         return Response.ok(projectService.getById(id)).build();
     }
 
-    @Operation(summary = "Find project by person id")
+    @Operation(summary = "Find projects by person id")
     @APIResponses(value = {
             @APIResponse(responseCode = "200", description = "Project found"),
             @APIResponse(responseCode = "404", description = "Project not found")
@@ -56,7 +59,7 @@ public class ProjectController {
         return Response.ok(projectService.getProjectsByPersonId(personId)).build();
     }
 
-    @Operation(summary = "Find project by course id")
+    @Operation(summary = "Find projects by course id")
     @APIResponses(value = {
             @APIResponse(responseCode = "200", description = "Project found"),
             @APIResponse(responseCode = "404", description = "Project not found")
