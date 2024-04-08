@@ -26,7 +26,6 @@ public record PersonCreateDto(
         @Pattern(regexp = "^[\\p{L}\\p{M}'\\s-]+$", message = INVALID_LAST_NAME)
         @Schema(description = "The person last name", example = "Verde")
         String lastName,
-        @NotBlank(message = INVALID_ROLE)
         @EnumValidator(enumClass = RoleStatus.class, message = INVALID_ROLE)
         @Schema(description = "The person role", example = "STUDENT")
         String role,

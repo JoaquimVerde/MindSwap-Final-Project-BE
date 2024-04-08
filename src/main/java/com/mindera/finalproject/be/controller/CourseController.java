@@ -26,8 +26,11 @@ public class CourseController {
     @Operation(summary = "Find all courses")
     @APIResponse(responseCode = "200", description = "List of all courses")
     @GET
-    public Response getAll() {
-        return Response.ok(courseService.getAll()).build();
+    public Response getAll(
+            @QueryParam("page") @DefaultValue("0") Integer page,
+            @QueryParam("limit") @DefaultValue("100") Integer limit
+    ){
+        return Response.ok(courseService.getAll(page, limit)).build();
     }
 
     @Operation(summary = "Find course by id")
