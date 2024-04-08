@@ -16,7 +16,7 @@ public interface CourseService {
 
     CoursePublicDto getById(String id) throws PersonNotFoundException, CourseNotFoundException;
 
-    List<CoursePublicDto> getByLocation(String location);
+    List<CoursePublicDto> getByLocation(String location, Integer page, Integer limit);
 
     CoursePublicDto create(CourseCreateDto courseCreateDto) throws PersonNotFoundException, CourseAlreadyExistsException;
 

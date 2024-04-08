@@ -60,8 +60,12 @@ public class CourseController {
     })
     @GET
     @Path("/location/{location}")
-    public Response getByLocation(@PathParam("location") String location) {
-        return Response.ok(courseService.getByLocation(location)).build();
+    public Response getByLocation(
+            @PathParam("location") String location,
+            @QueryParam("page") @DefaultValue("0") Integer page,
+            @QueryParam("limit") @DefaultValue("100") Integer limit
+    ) {
+        return Response.ok(courseService.getByLocation(location, page, limit)).build();
 
     }
 

@@ -34,7 +34,7 @@ public class CourseServiceImpl implements CourseService {
     private final String GSIPK2 = "GSIPK2";
 
     @Inject
-    PersonService personService;
+    private PersonService personService;
     private DynamoDbTable<Course> courseTable;
 
     @Inject
@@ -89,17 +89,21 @@ public class CourseServiceImpl implements CourseService {
         }
         course.setPK(COURSE);
         course.setSK(COURSE + UUID.randomUUID());
+        course.setLocation(courseCreateDto.location().toUpperCase());
         courseTable.putItem(course);
         return course.getTeacherId() == null ? CourseConverter.fromEntityToPublicDto(course, null) : CourseConverter.fromEntityToPublicDto(course, personService.getById(course.getTeacherId()));
     }
 
     @Override
-    public List<CoursePublicDto> getByLocation(String location) {
-        QueryConditional queryConditional = QueryConditional.keyEqualTo(k -> k.partitionValue(location));
+    public List<CoursePublicDto> getByLocation(String location, Integer page, Integer limit) {
+        QueryConditional queryConditional = QueryConditional.keyEqualTo(k -> k.partitionValue(location.toUpperCase()));
+        QueryEnhancedRequest limitedQuery = QueryEnhancedRequest.builder()
+                .queryConditional(queryConditional)
+                .limit(limit)
+                .build();
         DynamoDbIndex<Course> courseIndex = courseTable.index(GSIPK1);
-        SdkIterable<Page<Course>> courses = courseIndex.query(queryConditional);
-        List<Course> coursesList = new ArrayList<>();
-        courses.forEach(page -> coursesList.addAll(page.items()));
+        SdkIterable<Page<Course>> courses = courseIndex.query(limitedQuery);
+        List<Course> coursesList = new ArrayList<>(courses.stream().toList().get(page).items());
         return coursesList.stream().filter(Course::getActive).map(this::mapCourseList).toList();
     }
 

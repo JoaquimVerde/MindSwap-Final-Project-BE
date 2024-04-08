@@ -107,7 +107,7 @@ class CourseControllerTest {
         assertEquals(exampleCourse.schedule(), response.schedule());
         assertEquals(exampleCourse.price(), response.price());
         assertEquals(exampleCourse.duration(), response.duration());
-        assertEquals(exampleCourse.location(), response.location());
+        assertEquals(exampleCourse.location().toUpperCase(), response.location());
         assertEquals(teacherId, response.teacher().id());
     }
 
@@ -191,7 +191,7 @@ class CourseControllerTest {
         assertEquals(courseSchedule, response.schedule());
         assertEquals(coursePrice, response.price());
         assertEquals(courseDuration, response.duration());
-        assertEquals(courseLocation, response.location());
+        assertEquals(courseLocation.toUpperCase(), response.location());
         assertEquals(teacherId, response.teacher().id());
     }
 
