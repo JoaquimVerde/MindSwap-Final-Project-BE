@@ -174,6 +174,27 @@ class CourseControllerTest {
     }
 
     @Test
+    void testGetAllCoursesWith5and2Deleted() {
+        int amount = 5;
+        for (int i = 0; i < amount; i++) {
+            String courseId = createCourse(courseLocation, i + 1);
+            if (i % 2 == 1) {
+                given()
+                        .when().delete(API_PATH + "/" + courseId)
+                        .then()
+                        .statusCode(200);
+            }
+        }
+
+        given()
+                .when().get(API_PATH)
+                .then()
+                .statusCode(200)
+                .and()
+                .body("size()", equalTo(3));
+    }
+
+    @Test
     void testGetCourseById() {
         String courseId = createCourse(courseLocation, courseEdition);
 

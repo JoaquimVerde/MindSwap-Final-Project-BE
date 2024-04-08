@@ -17,6 +17,7 @@ import software.amazon.awssdk.enhanced.dynamodb.*;
 import software.amazon.awssdk.enhanced.dynamodb.model.Page;
 import software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional;
 import software.amazon.awssdk.enhanced.dynamodb.model.QueryEnhancedRequest;
+import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,15 +46,17 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public List<CoursePublicDto> getAll(Integer page, Integer limit) {
         QueryConditional queryConditional = QueryConditional.sortBeginsWith(k -> k.partitionValue(COURSE).sortValue(COURSE));
+        Expression expression = Expression.builder().expression("active = :active").putExpressionValue(":active", AttributeValue.fromBool(true)).build();
         QueryEnhancedRequest limitedQuery = QueryEnhancedRequest.builder()
                 .queryConditional(queryConditional)
+                .filterExpression(expression)
                 .limit(limit)
                 .build();
         SdkIterable<Page<Course>> courses = courseTable.query(limitedQuery);
         List<Course> coursesList = new ArrayList<>(courses.stream().toList().get(page).items());
-        return coursesList.stream().filter(Course::getActive).map(this::mapCourseList).toList();
+        return coursesList.stream().map(this::mapCourseList).toList();
     }
-
+    
     private CoursePublicDto mapCourseList(Course course) {
         if (course.getTeacherId() == null) {
             return CourseConverter.fromEntityToPublicDto(course, null);
