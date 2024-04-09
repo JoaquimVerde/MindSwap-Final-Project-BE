@@ -229,7 +229,7 @@ public class ProjectControllerTests {
     }
 
     @Test
-    public void testDeleteNotFound() {
+    void testDeleteNotFound() {
 
         String projectId = "XXXXXXX"; //non-existing ID
         given()

@@ -20,7 +20,6 @@ public record ProjectCreateDto(
         @NotEmpty(message = NON_EMPTY_COURSE)
         @Schema(description = "The project course id", example = "COURSE#asqwe-1234-asd")
         String courseId,
-
         @URL(message = INVALID_URL)
         @Schema(description = "The project gitHub repo", example = "https://github.com/user/repo")
         String gitHubRepo
