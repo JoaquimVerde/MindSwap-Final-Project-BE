@@ -169,4 +169,14 @@ public class RegistrationServiceImpl implements RegistrationService {
         return RegistrationConverter.fromEntityToPublicDto(registration, student, course);
     }
 
+    @Override
+    public RegistrationPublicDto updateGrade(String id, Integer grade) throws PersonNotFoundException, CourseNotFoundException {
+        Registration registration = registrationTable.getItem(Key.builder().partitionValue(REGISTRATION).sortValue(id).build());
+        registration.setFinalGrade(grade);
+        registrationTable.updateItem(registration);
+        PersonPublicDto student = personService.getById(registration.getPersonId());
+        CoursePublicDto course = courseService.getById(registration.getCourseId());
+        return RegistrationConverter.fromEntityToPublicDto(registration, student, course);
+    }
+
 }

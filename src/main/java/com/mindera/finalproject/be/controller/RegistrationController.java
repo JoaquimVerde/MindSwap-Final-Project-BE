@@ -86,8 +86,15 @@ public class RegistrationController {
 
     @PUT
     @Path("{id}/{status}")
-    public Response updateStatus(@PathParam("id") String id, @PathParam("status") String status, @Valid @RequestBody RegistrationCreateDto registrationCreateDto)
+    public Response updateStatus(@PathParam("id") String id, @PathParam("status") String status)
             throws PersonNotFoundException, CourseNotFoundException {
         return Response.ok(registrationService.updateStatus(id, status)).build();
+    }
+
+    @PUT
+    @Path("/grade/{id}/{grade}")
+    public Response updateGrade(@PathParam("id") String id, @PathParam("grade") Integer grade)
+            throws PersonNotFoundException, CourseNotFoundException {
+        return Response.ok(registrationService.updateGrade(id, grade)).build();
     }
 }
