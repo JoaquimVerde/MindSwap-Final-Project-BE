@@ -55,6 +55,7 @@ public class Registration {
     }
 
     @DynamoDbSecondaryPartitionKey(indexNames = {"GSIPK1"})
+    @DynamoDbSecondarySortKey(indexNames = {"GSIPK2"})
     public String getPersonId() {
         return personId;
     }
@@ -64,6 +65,7 @@ public class Registration {
     }
 
     @DynamoDbSecondarySortKey(indexNames = {"GSIPK1"})
+    @DynamoDbSecondaryPartitionKey(indexNames = {"GSIPK2"})
     public String getCourseId() {
         return courseId;
     }

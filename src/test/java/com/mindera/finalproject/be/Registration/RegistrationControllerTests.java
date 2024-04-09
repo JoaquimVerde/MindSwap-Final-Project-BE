@@ -409,40 +409,40 @@ class RegistrationControllerTests {
         assertEquals(registrationId, response.get(0).id());
     }
 
-//    @Test
-//    void testGetRegistrationByCourseIdPaged() {
-//        String teacherId = createPerson("Teacher");
-//        String courseId = createCourse(teacherId, 1);
-//        for (int i = 0; i < 9; i++) {
-//            String studentId = createPerson("Student");
-//            createRegistration(studentId, courseId);
-//        }
-//        String courseId2 = createCourse(teacherId, 10);
-//        for (int i = 0; i < 5; i++) {
-//            String studentId = createPerson("Student");
-//            createRegistration(studentId, courseId2);
-//        }
-//
-//        List<RegistrationPublicDto> response = given()
-//                .queryParam("page", 0)
-//                .queryParam("limit", 5)
-//                .when().get(URL + "/course/" + courseId)
-//                .then()
-//                .statusCode(200)
-//                .extract().jsonPath().getList(".", RegistrationPublicDto.class);
-//
-//        assertEquals(5, response.size());
-//
-//        List<RegistrationPublicDto> response2 = given()
-//                .queryParam("page", 1)
-//                .queryParam("limit", 5)
-//                .when().get(URL + "/course/" + courseId)
-//                .then()
-//                .statusCode(200)
-//                .extract().jsonPath().getList(".", RegistrationPublicDto.class);
-//
-//        assertEquals(4, response2.size());
-//    }
+    @Test
+    void testGetRegistrationByCourseIdPaged() {
+        String teacherId = createPerson("Teacher");
+        String courseId = createCourse(teacherId, 1);
+        for (int i = 0; i < 9; i++) {
+            String studentId = createPerson("Student");
+            createRegistration(studentId, courseId);
+        }
+        String courseId2 = createCourse(teacherId, 10);
+        for (int i = 0; i < 5; i++) {
+            String studentId = createPerson("Student");
+            createRegistration(studentId, courseId2);
+        }
+
+        List<RegistrationPublicDto> response = given()
+                .queryParam("page", 0)
+                .queryParam("limit", 5)
+                .when().get(URL + "/course/" + courseId)
+                .then()
+                .statusCode(200)
+                .extract().jsonPath().getList(".", RegistrationPublicDto.class);
+
+        assertEquals(5, response.size());
+
+        List<RegistrationPublicDto> response2 = given()
+                .queryParam("page", 1)
+                .queryParam("limit", 5)
+                .when().get(URL + "/course/" + courseId)
+                .then()
+                .statusCode(200)
+                .extract().jsonPath().getList(".", RegistrationPublicDto.class);
+
+        assertEquals(4, response2.size());
+    }
 
     @Test
     void testGetRegistrationByCourseIdWithInvalidId() {
@@ -490,40 +490,40 @@ class RegistrationControllerTests {
         assertEquals(registrationId, response.get(0).id());
     }
 
-//    @Test
-//    void testGetRegistrationByPersonIdPaged() {
-//        String studentId = createPerson("Student");
-//        String teacherId = createPerson("Teacher");
-//        for (int i = 0; i < 9; i++) {
-//            String courseId = createCourse(teacherId, i + 1);
-//            createRegistration(studentId, courseId);
-//        }
-//        String courseId = createCourse(teacherId, 10);
-//        for (int i = 0; i < 5; i++) {
-//            String studentId2 = createPerson("Student");
-//            createRegistration(studentId2, courseId);
-//        }
-//
-//        List<RegistrationPublicDto> response = given()
-//                .queryParam("page", 0)
-//                .queryParam("limit", 5)
-//                .when().get(URL + "/student/" + studentId)
-//                .then()
-//                .statusCode(200)
-//                .extract().jsonPath().getList(".", RegistrationPublicDto.class);
-//
-//        assertEquals(5, response.size());
-//
-//        List<RegistrationPublicDto> response2 = given()
-//                .queryParam("page", 1)
-//                .queryParam("limit", 5)
-//                .when().get(URL + "/student/" + studentId)
-//                .then()
-//                .statusCode(200)
-//                .extract().jsonPath().getList(".", RegistrationPublicDto.class);
-//
-//        assertEquals(4, response2.size());
-//    }
+    @Test
+    void testGetRegistrationByPersonIdPaged() {
+        String studentId = createPerson("Student");
+        String teacherId = createPerson("Teacher");
+        for (int i = 0; i < 9; i++) {
+            String courseId = createCourse(teacherId, i + 1);
+            createRegistration(studentId, courseId);
+        }
+        String courseId = createCourse(teacherId, 10);
+        for (int i = 0; i < 5; i++) {
+            String studentId2 = createPerson("Student");
+            createRegistration(studentId2, courseId);
+        }
+
+        List<RegistrationPublicDto> response = given()
+                .queryParam("page", 0)
+                .queryParam("limit", 5)
+                .when().get(URL + "/student/" + studentId)
+                .then()
+                .statusCode(200)
+                .extract().jsonPath().getList(".", RegistrationPublicDto.class);
+
+        assertEquals(5, response.size());
+
+        List<RegistrationPublicDto> response2 = given()
+                .queryParam("page", 1)
+                .queryParam("limit", 5)
+                .when().get(URL + "/student/" + studentId)
+                .then()
+                .statusCode(200)
+                .extract().jsonPath().getList(".", RegistrationPublicDto.class);
+
+        assertEquals(4, response2.size());
+    }
 
     @Test
     void testGetRegistrationByPersonIdWithInvalidId() {
@@ -610,30 +610,30 @@ class RegistrationControllerTests {
         assertEquals(404, response.getStatus());
     }
 
-//    @Test
-//    void testUpdateStatusWithDeletedRegistration() {
-//        //TODO ver se é suposto dar 404 ou 200
-//        String studentId = createPerson("Student");
-//        String courseId = createCourse(createPerson("Teacher"), 1);
-//        String registrationId = createRegistration(studentId, courseId);
-//        given()
-//                .when().delete(URL + "/" + registrationId)
-//                .then()
-//                .statusCode(200);
-//
-//        RegistrationUpdateStatusDto update = new RegistrationUpdateStatusDto("ACCEPTED");
-//
-//        Error response = given()
-//                .body(update)
-//                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-//                .when().put(URL + "/status/" + registrationId)
-//                .then()
-//                .statusCode(404)
-//                .extract().as(Error.class);
-//
-//        assertEquals(REGISTRATION_NOT_FOUND + registrationId, response.getMessage());
-//        assertEquals(404, response.getStatus());
-//    }
+    /*@Test
+    void testUpdateStatusWithDeletedRegistration() {
+        //TODO ver se é suposto dar 404 ou 200
+        String studentId = createPerson("Student");
+        String courseId = createCourse(createPerson("Teacher"), 1);
+        String registrationId = createRegistration(studentId, courseId);
+        given()
+                .when().delete(URL + "/" + registrationId)
+                .then()
+                .statusCode(200);
+
+        RegistrationUpdateStatusDto update = new RegistrationUpdateStatusDto("ACCEPTED");
+
+        Error response = given()
+                .body(update)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .when().put(URL + "/status/" + registrationId)
+                .then()
+                .statusCode(200)
+                .extract().as(Error.class);
+
+        assertEquals(REGISTRATION_NOT_FOUND + registrationId, response.getMessage());
+        assertEquals(200, response.getStatus());
+    }*/
 
     @Test
     void testUpdateStatusAndHitMaxStudents() {

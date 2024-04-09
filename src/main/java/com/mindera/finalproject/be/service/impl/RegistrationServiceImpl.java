@@ -36,6 +36,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final String TABLE_NAME = "Registration";
     private final String REGISTRATION = "REGISTRATION#";
     private final String GSIPK1 = "GSIPK1";
+    private final String GSIPK2 = "GSIPK2";
     private final String ENROLLED = "ENROLLED";
 
     @Inject
@@ -127,16 +128,17 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public List<RegistrationPublicDto> getRegistrationsByPerson(String personId, Integer page, Integer limit) {
-        QueryConditional queryConditional = QueryConditional.sortBeginsWith(k -> k.partitionValue(REGISTRATION).sortValue(REGISTRATION));
+        QueryConditional queryConditional = QueryConditional.keyEqualTo(k -> k.partitionValue(personId));
         Expression expression = Expression.builder().expression("active = :active").putExpressionValue(":active", AttributeValue.fromBool(true)).build();
         QueryEnhancedRequest limitedQuery = QueryEnhancedRequest.builder()
                 .queryConditional(queryConditional)
                 .filterExpression(expression)
                 .limit(limit)
                 .build();
-        SdkIterable<Page<Registration>> registrations = registrationTable.query(limitedQuery);
+        DynamoDbIndex<Registration> registrationIndex = registrationTable.index(GSIPK1);
+        SdkIterable<Page<Registration>> registrations = registrationIndex.query(limitedQuery);
         List<Registration> registrationsList = new ArrayList<>(registrations.stream().toList().get(page).items());
-        return registrationsList.stream().filter(registration -> registration.getPersonId().equals(personId) && registration.getActive()).map(registration -> {
+        return registrationsList.stream().map(registration -> {
             PersonPublicDto student = null;
             CoursePublicDto course = null;
             try {
@@ -151,16 +153,17 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public List<RegistrationPublicDto> getRegistrationsByCourse(String courseId, Integer page, Integer limit) {
-        QueryConditional queryConditional = QueryConditional.sortBeginsWith(k -> k.partitionValue(REGISTRATION).sortValue(REGISTRATION));
+        QueryConditional queryConditional = QueryConditional.keyEqualTo(k -> k.partitionValue(courseId));
         Expression expression = Expression.builder().expression("active = :active").putExpressionValue(":active", AttributeValue.fromBool(true)).build();
         QueryEnhancedRequest limitedQuery = QueryEnhancedRequest.builder()
                 .queryConditional(queryConditional)
                 .filterExpression(expression)
                 .limit(limit)
                 .build();
-        SdkIterable<Page<Registration>> registrations = registrationTable.query(limitedQuery);
+        DynamoDbIndex<Registration> registrationIndex = registrationTable.index(GSIPK2);
+        SdkIterable<Page<Registration>> registrations = registrationIndex.query(limitedQuery);
         List<Registration> registrationsList = new ArrayList<>(registrations.stream().toList().get(page).items());
-        return registrationsList.stream().filter(registration -> registration.getCourseId().equals(courseId) && registration.getActive()).map(registration -> {
+        return registrationsList.stream().map(registration -> {
             PersonPublicDto student = null;
             CoursePublicDto course = null;
             try {
