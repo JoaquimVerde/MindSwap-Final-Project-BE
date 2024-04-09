@@ -8,8 +8,10 @@ import com.mindera.finalproject.be.dto.project.ProjectPublicDto;
 import com.mindera.finalproject.be.dto.project.ProjectUpdateGradeDto;
 import com.mindera.finalproject.be.entity.Project;
 import com.mindera.finalproject.be.exception.course.CourseNotFoundException;
+import com.mindera.finalproject.be.exception.pdf.PdfException;
 import com.mindera.finalproject.be.exception.project.ProjectNotFoundException;
 import com.mindera.finalproject.be.exception.student.PersonNotFoundException;
+import com.mindera.finalproject.be.pdf.Pdf;
 import com.mindera.finalproject.be.service.CourseService;
 import com.mindera.finalproject.be.service.PersonService;
 import com.mindera.finalproject.be.service.ProjectService;
@@ -32,7 +34,8 @@ public class ProjectServiceImpl implements ProjectService {
 
     private final String TABLE_PROJECT = "Project";
     private final String PROJECT = "PROJECT#";
-
+    @Inject
+    Pdf pdf;
     private DynamoDbTable<Project> projectTable;
     @Inject
     private CourseService courseService;
@@ -46,7 +49,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
-    public List<ProjectPublicDto> getAll(Integer page, Integer limit) {
+    public List<ProjectPublicDto> getAll(Integer page, Integer limit) throws PdfException {
         QueryConditional queryConditional = QueryConditional.sortBeginsWith(s -> s.partitionValue(PROJECT).sortValue(PROJECT));
         QueryEnhancedRequest limitedQuery = QueryEnhancedRequest.builder()
                 .queryConditional(queryConditional)
@@ -54,6 +57,7 @@ public class ProjectServiceImpl implements ProjectService {
                 .build();
         SdkIterable<Page<Project>> projects = projectTable.query(limitedQuery);
         List<Project> projectsList = new ArrayList<>(projects.stream().toList().get(page).items());
+        pdf.generateCertificatePdf();
         return projectsList.stream().filter(Project::getActive).map(this::mapProjectList).toList();
     }
 
