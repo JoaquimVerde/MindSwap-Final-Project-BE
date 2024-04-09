@@ -41,6 +41,5 @@ public class CourseExceptionHandler implements ExceptionMapper<CourseException> 
             return Response.status(Response.Status.CONFLICT).entity(error).build();
         }
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(UNEXPECTED_ERROR).build();
-
     }
 }

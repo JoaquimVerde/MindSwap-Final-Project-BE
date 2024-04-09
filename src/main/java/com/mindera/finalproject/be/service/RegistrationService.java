@@ -20,16 +20,13 @@ public interface RegistrationService {
     RegistrationPublicDto create(RegistrationCreateDto registrationCreateDto)
             throws PersonNotFoundException, CourseNotFoundException, RegistrationAlreadyExistsException;
 
-    RegistrationPublicDto update(String id, RegistrationCreateDto registrationCreateDto)
-            throws PersonNotFoundException, CourseNotFoundException, MaxNumberOfStudentsException;
-
     void delete(String id);
 
     List<RegistrationPublicDto> getRegistrationsByPerson(String personId, Integer page, Integer limit);
 
     List<RegistrationPublicDto> getRegistrationsByCourse(String courseId, Integer page, Integer limit);
 
-    RegistrationPublicDto updateStatus(String id, RegistrationUpdateStatusDto registrationUpdate) throws PersonNotFoundException, CourseNotFoundException, RegistrationNotFoundException;
+    RegistrationPublicDto updateStatus(String id, RegistrationUpdateStatusDto registrationUpdate) throws PersonNotFoundException, CourseNotFoundException, RegistrationNotFoundException, MaxNumberOfStudentsException;
 
     RegistrationPublicDto updateGrade(String id, RegistrationUpdateGradeDto registrationUpdate) throws PersonNotFoundException, CourseNotFoundException,RegistrationNotFoundException;
 
