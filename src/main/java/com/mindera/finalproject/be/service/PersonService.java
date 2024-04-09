@@ -23,4 +23,6 @@ public interface PersonService {
 
     Person findById(String id) throws PersonNotFoundException;
 
+    PersonPublicDto getByEmail(String email) throws PersonNotFoundException;
+
 }

@@ -38,7 +38,7 @@ public class Person {
     }
 
     @DynamoDbPartitionKey
-    @DynamoDbSecondarySortKey(indexNames = {"GSIPK1"})
+    @DynamoDbSecondarySortKey(indexNames = {"GSIPK1", "GSIPK2"})
     public String getPK() {
         return PK;
     }
@@ -56,6 +56,7 @@ public class Person {
         this.SK = SK;
     }
 
+    @DynamoDbSecondaryPartitionKey(indexNames = {"GSIPK2"})
     public String getEmail() {
         return email;
     }
