@@ -5,6 +5,8 @@ public enum RegistrationStatus {
     IN_REVIEW,
     ACCEPTED,
     AUTOMATICALLY_ACCEPTED,
-    ENROLLED
+    ENROLLED,
+    DROPOUT,
+    REJECTED
 }
 
