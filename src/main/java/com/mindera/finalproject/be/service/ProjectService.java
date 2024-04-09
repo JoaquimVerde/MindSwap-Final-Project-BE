@@ -13,7 +13,7 @@ import java.util.List;
 
 public interface ProjectService {
 
-    List<ProjectPublicDto> getAll(Integer page, Integer limit) throws PdfException;
+    List<ProjectPublicDto> getAll(Integer page, Integer limit);
 
     ProjectPublicDto getById(String id) throws ProjectNotFoundException, PersonNotFoundException, CourseNotFoundException;
 
