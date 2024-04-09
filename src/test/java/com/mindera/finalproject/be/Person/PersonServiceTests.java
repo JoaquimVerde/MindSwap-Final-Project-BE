@@ -67,7 +67,7 @@ class PersonServiceTests {
         assertEquals(createDto.email(), result.email());
         assertEquals(createDto.firstName(), result.firstName());
         assertEquals(createDto.lastName(), result.lastName());
-        assertEquals(createDto.role(), result.role());
+        assertEquals(createDto.role().toUpperCase(), result.role());
         assertEquals(createDto.username(), result.username());
         assertEquals(createDto.dateOfBirth(), result.dateOfBirth());
         assertEquals(createDto.address(), result.address());
@@ -95,7 +95,7 @@ class PersonServiceTests {
         assertEquals(updateDto.email(), result.email());
         assertEquals(updateDto.firstName(), result.firstName());
         assertEquals(updateDto.lastName(), result.lastName());
-        assertEquals(updateDto.role(), result.role());
+        assertEquals(updateDto.role().toUpperCase(), result.role());
         assertEquals(updateDto.username(), result.username());
         assertEquals(updateDto.dateOfBirth(), result.dateOfBirth());
         assertEquals(updateDto.address(), result.address());
