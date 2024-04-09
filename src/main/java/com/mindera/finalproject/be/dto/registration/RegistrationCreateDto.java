@@ -15,7 +15,7 @@ public record RegistrationCreateDto(
         @NotEmpty(message = NON_EMPTY_COURSEID)
         String courseId,
 
-        @EnumValidator(enumClass = RegistrationStatus.class)
+        @EnumValidator(enumClass = RegistrationStatus.class, message = INVALID_REGISTRATION_STATUS)
         String status,
 
         String finalGrade,

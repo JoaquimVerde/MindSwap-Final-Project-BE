@@ -38,4 +38,5 @@ public class Messages {
     public static final String PROJECT_NOT_FOUND = "Project not found with id: ";
     public static final String REGISTRATION_NOT_FOUND = "Registration not found with id: ";
     public static final String REGISTRATION_ALREADY_EXISTS = "Registration already exists";
+    public static final String INVALID_REGISTRATION_STATUS = "Invalid registration status";
 }
