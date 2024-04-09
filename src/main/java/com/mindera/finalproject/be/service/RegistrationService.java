@@ -5,14 +5,15 @@ import com.mindera.finalproject.be.dto.registration.RegistrationPublicDto;
 import com.mindera.finalproject.be.exception.course.MaxNumberOfStudentsException;
 import com.mindera.finalproject.be.exception.registration.RegistrationAlreadyExistsException;
 import com.mindera.finalproject.be.exception.course.CourseNotFoundException;
+import com.mindera.finalproject.be.exception.registration.RegistrationNotFoundException;
 import com.mindera.finalproject.be.exception.student.PersonNotFoundException;
 
 import java.util.List;
 
 public interface RegistrationService {
-    List<RegistrationPublicDto> getAll();
+    List<RegistrationPublicDto> getAll(Integer page, Integer limit);
 
-    RegistrationPublicDto getById(String id) throws PersonNotFoundException, CourseNotFoundException;
+    RegistrationPublicDto getById(String id) throws PersonNotFoundException, CourseNotFoundException, RegistrationNotFoundException;
 
     RegistrationPublicDto create(RegistrationCreateDto registrationCreateDto)
             throws PersonNotFoundException, CourseNotFoundException, RegistrationAlreadyExistsException;

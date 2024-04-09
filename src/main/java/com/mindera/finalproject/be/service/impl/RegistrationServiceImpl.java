@@ -5,10 +5,12 @@ import com.mindera.finalproject.be.dto.course.CoursePublicDto;
 import com.mindera.finalproject.be.dto.person.PersonPublicDto;
 import com.mindera.finalproject.be.dto.registration.RegistrationCreateDto;
 import com.mindera.finalproject.be.dto.registration.RegistrationPublicDto;
+import com.mindera.finalproject.be.entity.Course;
 import com.mindera.finalproject.be.entity.Registration;
 import com.mindera.finalproject.be.exception.course.CourseNotFoundException;
 import com.mindera.finalproject.be.exception.course.MaxNumberOfStudentsException;
 import com.mindera.finalproject.be.exception.registration.RegistrationAlreadyExistsException;
+import com.mindera.finalproject.be.exception.registration.RegistrationNotFoundException;
 import com.mindera.finalproject.be.exception.student.PersonNotFoundException;
 import com.mindera.finalproject.be.service.RegistrationService;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -17,12 +19,15 @@ import software.amazon.awssdk.core.pagination.sync.SdkIterable;
 import software.amazon.awssdk.enhanced.dynamodb.*;
 import software.amazon.awssdk.enhanced.dynamodb.model.Page;
 import software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional;
+import software.amazon.awssdk.enhanced.dynamodb.model.QueryEnhancedRequest;
+import software.amazon.awssdk.services.dynamodb.model.AttributeValue;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import static com.mindera.finalproject.be.messages.Messages.REGISTRATION_ALREADY_EXISTS;
+import static com.mindera.finalproject.be.messages.Messages.REGISTRATION_NOT_FOUND;
 
 @ApplicationScoped
 public class RegistrationServiceImpl implements RegistrationService {
@@ -44,11 +49,16 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     @Override
-    public List<RegistrationPublicDto> getAll() {
+    public List<RegistrationPublicDto> getAll(Integer page, Integer limit) {
         QueryConditional queryConditional = QueryConditional.sortBeginsWith(k -> k.partitionValue(REGISTRATION).sortValue(REGISTRATION));
-        SdkIterable<Page<Registration>> registrations = registrationTable.query(queryConditional);
-        List<Registration> registrationsList = new ArrayList<>();
-        registrations.forEach(page -> registrationsList.addAll(page.items()));
+        Expression expression = Expression.builder().expression("active = :active").putExpressionValue(":active", AttributeValue.fromBool(true)).build();
+        QueryEnhancedRequest limitedQuery = QueryEnhancedRequest.builder()
+                .queryConditional(queryConditional)
+                .filterExpression(expression)
+                .limit(limit)
+                .build();
+        SdkIterable<Page<Registration>> registrations = registrationTable.query(limitedQuery);
+        List<Registration> registrationsList = new ArrayList<>(registrations.stream().toList().get(page).items());
         return registrationsList.stream().filter(Registration::getActive).map(registration -> {
             PersonPublicDto student = null;
             CoursePublicDto course = null;
@@ -63,8 +73,8 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     @Override
-    public RegistrationPublicDto getById(String id) throws PersonNotFoundException, CourseNotFoundException {
-        Registration registration = registrationTable.getItem(Key.builder().partitionValue(REGISTRATION).sortValue(id).build());
+    public RegistrationPublicDto getById(String id) throws PersonNotFoundException, CourseNotFoundException, RegistrationNotFoundException {
+        Registration registration = findById(id);
         String personId = registration.getPersonId();
         String courseId = registration.getCourseId();
         PersonPublicDto student = personService.getById(personId);
@@ -117,6 +127,14 @@ public class RegistrationServiceImpl implements RegistrationService {
         Registration registration = registrationTable.getItem(Key.builder().partitionValue(REGISTRATION).sortValue(id).build());
         registration.setActive(false);
         registrationTable.updateItem(registration);
+    }
+
+    public Registration findById(String id) throws RegistrationNotFoundException {
+        Registration registration =  registrationTable.getItem(Key.builder().partitionValue(REGISTRATION).sortValue(id).build());
+        if(registration == null) {
+            throw new RegistrationNotFoundException(REGISTRATION_NOT_FOUND + id);
+        }
+        return registration;
     }
 
     private boolean checkIfRegistrationIsDuplicate(Registration registration) {
