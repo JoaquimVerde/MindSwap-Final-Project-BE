@@ -159,4 +159,14 @@ public class RegistrationServiceImpl implements RegistrationService {
         }).toList();
     }
 
+    @Override
+    public RegistrationPublicDto updateStatus(String id, String status) throws PersonNotFoundException, CourseNotFoundException {
+        Registration registration = registrationTable.getItem(Key.builder().partitionValue(REGISTRATION).sortValue(id).build());
+        registration.setStatus(status);
+        registrationTable.updateItem(registration);
+        PersonPublicDto student = personService.getById(registration.getPersonId());
+        CoursePublicDto course = courseService.getById(registration.getCourseId());
+        return RegistrationConverter.fromEntityToPublicDto(registration, student, course);
+    }
+
 }

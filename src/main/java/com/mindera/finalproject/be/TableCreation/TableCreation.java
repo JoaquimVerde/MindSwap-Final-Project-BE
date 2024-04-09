@@ -1,5 +1,6 @@
+/*
 
-/* package com.mindera.finalproject.be.TableCreation;
+package com.mindera.finalproject.be.TableCreation;
 
 
 import com.mindera.finalproject.be.entity.Course;
@@ -31,5 +32,6 @@ public class TableCreation {
             System.out.println("Table already exists");
         }
     }
-} */
+}
 
+*/

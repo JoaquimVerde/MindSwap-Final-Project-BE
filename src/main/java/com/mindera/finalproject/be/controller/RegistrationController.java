@@ -83,4 +83,11 @@ public class RegistrationController {
     public Response getByCourseId(@PathParam("courseId") String courseId) {
         return Response.ok(registrationService.getRegistrationsByCourse(courseId)).build();
     }
+
+    @PUT
+    @Path("{id}/{status}")
+    public Response updateStatus(@PathParam("id") String id, @PathParam("status") String status, @Valid @RequestBody RegistrationCreateDto registrationCreateDto)
+            throws PersonNotFoundException, CourseNotFoundException {
+        return Response.ok(registrationService.updateStatus(id, status)).build();
+    }
 }

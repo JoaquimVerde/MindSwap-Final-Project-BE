@@ -24,4 +24,6 @@ public interface RegistrationService {
     List<RegistrationPublicDto> getRegistrationsByPerson(String personId);
 
     List<RegistrationPublicDto> getRegistrationsByCourse(String courseId);
+
+    RegistrationPublicDto updateStatus(String id, String status) throws PersonNotFoundException, CourseNotFoundException;
 }

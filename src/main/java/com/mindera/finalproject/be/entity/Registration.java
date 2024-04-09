@@ -16,7 +16,7 @@ public class Registration {
     private String personId;
     private String courseId;
     private String status;
-    private String finalGrade;
+    private Integer finalGrade;
     private Boolean active;
     private String aboutYou;
     private Boolean prevKnowledge;
@@ -25,7 +25,7 @@ public class Registration {
     public Registration() {
     }
 
-    public Registration(String personId, String courseId, String status, String finalGrade, String aboutYou, Boolean prevKnowledge, Boolean prevExperience) {
+    public Registration(String personId, String courseId, String status, Integer finalGrade, String aboutYou, Boolean prevKnowledge, Boolean prevExperience) {
         this.personId = personId;
         this.courseId = courseId;
         this.status = status;
@@ -80,11 +80,11 @@ public class Registration {
         this.status = status;
     }
 
-    public String getFinalGrade() {
+    public Integer getFinalGrade() {
         return finalGrade;
     }
 
-    public void setFinalGrade(String finalGrade) {
+    public void setFinalGrade(Integer finalGrade) {
         this.finalGrade = finalGrade;
     }
 
