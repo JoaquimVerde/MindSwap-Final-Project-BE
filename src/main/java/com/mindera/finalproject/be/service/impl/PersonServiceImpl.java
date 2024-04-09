@@ -69,7 +69,7 @@ public class PersonServiceImpl implements PersonService {
         SdkIterable<Page<Person>> persons = personIndex.query(queryConditional);
         List<Person> personList = new ArrayList<>();
         persons.forEach(page -> personList.addAll(page.items()));
-        return personList.stream().filter(Person::isActive).map(PersonConverter::fromEntityToPublicDto).findFirst().get();
+        return personList.stream().filter(Person::isActive).map(PersonConverter::fromEntityToPublicDto).findFirst().orElse(null);
     }
 
     @Override
