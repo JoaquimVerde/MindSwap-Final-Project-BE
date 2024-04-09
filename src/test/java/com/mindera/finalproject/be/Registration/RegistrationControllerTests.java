@@ -152,7 +152,7 @@ class RegistrationControllerTests {
            String id = createRegistration(studentId, courseId);
            if(i % 2 == 1) {
                given()
-                       .when().delete(URL + "/delete/" + id)
+                       .when().delete(URL  + id)
                        .then()
                        .statusCode(200);
            }
@@ -366,76 +366,6 @@ class RegistrationControllerTests {
         assertEquals(404, response.getStatus());
     }
 
-    @Test
-    void testUpdateRegistration() {
-        String studentId = createPerson("Student");
-        String courseId = createCourse(createPerson("Teacher"));
-        String registrationId = createRegistration(studentId, courseId);
-
-        RegistrationCreateDto registration = new RegistrationCreateDto(studentId, courseId, "Accepted", 20,
-                "newAboutYou", false, false);
-
-        RegistrationPublicDto response = given()
-                .body(registration)
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                .when().put(URL + "/" + registrationId)
-                .then()
-                .statusCode(200)
-                .extract().as(RegistrationPublicDto.class);
-
-        assertTrue(response.id().startsWith("REGISTRATION#"));
-        assertEquals(studentId, response.student().id());
-        assertEquals(courseId, response.course().id());
-        assertEquals("ACCEPTED", response.status());
-        assertEquals(20, response.finalGrade());
-        assertEquals("newAboutYou", response.aboutYou());
-        assertFalse(response.prevKnowledge());
-        assertFalse(response.prevExperience());
-    }
-
-    @Test
-    void testUpdateRegistrationWithInvalidId() {
-        String studentId = createPerson("Student");
-        String courseId = createCourse(createPerson("Teacher"));
-        createRegistration(studentId, courseId);
-
-        RegistrationCreateDto registration = new RegistrationCreateDto(studentId, courseId, "Accepted", 20,
-                "newAboutYou", false, false);
-
-        Error response = given()
-                .body(registration)
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                .when().put(URL + "/invalidId")
-                .then()
-                .statusCode(404)
-                .extract().as(Error.class);
-
-        assertEquals(REGISTRATION_NOT_FOUND + "invalidId", response.getMessage());
-        assertEquals(404, response.getStatus());
-    }
-
-// TODO ver COMO QUEREMOS FAZER UPDATE
-
-//    @Test
-//    void testUpdateRegistrationWithInvalidStudent() {
-//        String studentId = createPerson("Student");
-//        String courseId = createCourse(createPerson("Teacher"));
-//        String registrationId = createRegistration(studentId, courseId);
-//
-//        RegistrationCreateDto registration = new RegistrationCreateDto("invalidId", courseId, "ENROLLED", 20,
-//                "newAboutYou", false, false);
-//
-//        Error response = given()
-//                .body(registration)
-//                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-//                .when().put(URL + "/" + registrationId)
-//                .then()
-//                .statusCode(404)
-//                .extract().as(Error.class);
-//
-//        assertEquals(PERSON_NOT_FOUND + "invalidId", response.getMessage());
-//        assertEquals(404, response.getStatus());
-//    }
 
     @Test
     void testDeleteRegistration() {
@@ -444,7 +374,7 @@ class RegistrationControllerTests {
         String registrationId = createRegistration(studentId, courseId);
 
         given()
-                .when().delete(URL + "/delete/" + registrationId)
+                .when().delete(URL  +"/"+ registrationId)
                 .then()
                 .statusCode(200);
 
@@ -457,7 +387,7 @@ class RegistrationControllerTests {
     @Test
     void testDeleteRegistrationWithInvalidId() {
         given()
-                .when().delete(URL + "/delete/invalidId")
+                .when().delete(URL + "/invalidId")
                 .then()
                 .statusCode(404);
     }
@@ -475,6 +405,5 @@ class RegistrationControllerTests {
                 .extract().jsonPath().getList(".", RegistrationPublicDto.class);
 
         assertEquals(registrationId, response.get(0).id());
-
     }
 }

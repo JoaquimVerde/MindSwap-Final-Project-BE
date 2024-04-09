@@ -68,7 +68,7 @@ public class RegistrationController {
             @APIResponse(responseCode = "404", description = "Registration not found")
     })
     @DELETE
-    @Path("/delete/{id}")
+    @Path("/{id}")
     public Response deleteRegistration(@PathParam("id") String id) {
         registrationService.delete(id);
         return Response.ok().build();
