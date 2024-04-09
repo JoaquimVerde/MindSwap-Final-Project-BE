@@ -72,4 +72,15 @@ public class RegistrationController {
         registrationService.delete(id);
         return Response.ok().build();
     }
+    @GET
+    @Path("/student/{personId}")
+    public Response getByPersonId(@PathParam("personId") String personId) {
+        return Response.ok(registrationService.getRegistrationsByPerson(personId)).build();
+    }
+
+    @GET
+    @Path("course/{courseId}")
+    public Response getByCourseId(@PathParam("courseId") String courseId) {
+        return Response.ok(registrationService.getRegistrationsByCourse(courseId)).build();
+    }
 }
