@@ -163,4 +163,11 @@ public class CourseServiceImpl implements CourseService {
         courses.forEach(page -> coursesList.addAll(page.items()));
         return !coursesList.isEmpty();
     }
+
+    void updateEnrolledStudents(String id) throws CourseNotFoundException {
+        Course course = findById(id);
+        course.setEnrolledStudents(course.getEnrolledStudents() + 1);
+        System.out.println(course.getEnrolledStudents());
+        courseTable.updateItem(course);
+    }
 }

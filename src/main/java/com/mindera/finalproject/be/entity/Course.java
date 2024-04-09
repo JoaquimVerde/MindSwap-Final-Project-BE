@@ -37,6 +37,7 @@ public class Course {
         this.duration = duration;
         this.location = location;
         this.active = true;
+        this.enrolledStudents = 0;
     }
 
     @DynamoDbPartitionKey

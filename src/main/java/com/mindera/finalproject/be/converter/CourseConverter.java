@@ -23,6 +23,7 @@ public class CourseConverter {
                     course.getPrice(),
                     course.getDuration(),
                     course.getLocation(),
+                    course.getEnrolledStudents(),
                     course.getMaxStudents()
             );
         }
@@ -37,6 +38,7 @@ public class CourseConverter {
                 course.getPrice(),
                 course.getDuration(),
                 course.getLocation(),
+                course.getEnrolledStudents(),
                 course.getMaxStudents()
         );
     }
