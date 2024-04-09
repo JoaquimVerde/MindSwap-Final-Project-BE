@@ -170,7 +170,6 @@ public class CourseServiceImpl implements CourseService {
             throw new MaxNumberOfStudentsException(MAX_NUMBER_OF_STUDENTS_REACHED);
         }
         course.setEnrolledStudents(course.getEnrolledStudents() + 1);
-        System.out.println(course.getEnrolledStudents());
         courseTable.updateItem(course);
     }
 }
