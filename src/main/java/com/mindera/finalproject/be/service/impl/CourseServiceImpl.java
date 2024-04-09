@@ -33,6 +33,7 @@ public class CourseServiceImpl implements CourseService {
     private final String COURSE = "COURSE#";
     private final String GSIPK1 = "GSIPK1";
     private final String GSIPK2 = "GSIPK2";
+    private final Integer MAX_STUDENTS = 20;
 
     @Inject
     private PersonService personService;
@@ -92,6 +93,7 @@ public class CourseServiceImpl implements CourseService {
         }
         course.setPK(COURSE);
         course.setSK(COURSE + UUID.randomUUID());
+        course.setMaxStudents(MAX_STUDENTS);
         course.setLocation(courseCreateDto.location().toUpperCase());
         courseTable.putItem(course);
         return course.getTeacherId() == null ? CourseConverter.fromEntityToPublicDto(course, null) : CourseConverter.fromEntityToPublicDto(course, personService.getById(course.getTeacherId()));
