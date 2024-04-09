@@ -187,9 +187,16 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     @Override
-    public RegistrationPublicDto updateStatus(String id, RegistrationUpdateStatusDto registrationUpdate) throws PersonNotFoundException, CourseNotFoundException, RegistrationNotFoundException {
+    public RegistrationPublicDto updateStatus(String id, RegistrationUpdateStatusDto registrationUpdate) throws PersonNotFoundException, CourseNotFoundException, RegistrationNotFoundException, MaxNumberOfStudentsException {
         Registration registration = findById(id);
+        String oldStatus = registration.getStatus();
+
         registration.setStatus(registrationUpdate.status());
+
+        if (!oldStatus.equals(ENROLLED) && registration.getStatus().equals(ENROLLED)) {
+            courseService.updateEnrolledStudents(registration.getCourseId());
+        }
+
         registrationTable.updateItem(registration);
         PersonPublicDto student = personService.getById(registration.getPersonId());
         CoursePublicDto course = courseService.getById(registration.getCourseId());
@@ -205,5 +212,4 @@ public class RegistrationServiceImpl implements RegistrationService {
         CoursePublicDto course = courseService.getById(registration.getCourseId());
         return RegistrationConverter.fromEntityToPublicDto(registration, student, course);
     }
-
 }
