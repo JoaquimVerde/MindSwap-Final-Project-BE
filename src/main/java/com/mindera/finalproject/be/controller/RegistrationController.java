@@ -41,7 +41,7 @@ public class RegistrationController {
     })
     @GET
     @Path("/{id}")
-    public Response getById(@PathParam("id") String id) throws PersonNotFoundException, CourseNotFoundException {
+    public Response getById(@PathParam("id") String id) throws PersonNotFoundException, CourseNotFoundException, RegistrationNotFoundException {
         return Response.ok(registrationService.getById(id)).build();
     }
 
@@ -76,18 +76,34 @@ public class RegistrationController {
         registrationService.delete(id);
         return Response.ok().build();
     }
+
+    @Operation(summary = "Find all registrations by person id")
+    @APIResponses(value = {
+            @APIResponse(responseCode = "200", description = "List of all registrations by person id"),
+            @APIResponse(responseCode = "404", description = "Person not found")
+    })
     @GET
     @Path("/student/{personId}")
-    public Response getByPersonId(@PathParam("personId") String personId) {
-        return Response.ok(registrationService.getRegistrationsByPerson(personId)).build();
+    public Response getByPersonId(@PathParam("personId") String personId, @QueryParam("page") @DefaultValue("0") Integer page, @QueryParam("limit") @DefaultValue("100") Integer limit){
+        return Response.ok(registrationService.getRegistrationsByPerson(personId, page, limit)).build();
     }
 
+    @Operation(summary = "Find all registrations by course id")
+    @APIResponses(value = {
+            @APIResponse(responseCode = "200", description = "List of all registrations by course id"),
+            @APIResponse(responseCode = "404", description = "Course not found")
+    })
     @GET
     @Path("course/{courseId}")
-    public Response getByCourseId(@PathParam("courseId") String courseId) {
-        return Response.ok(registrationService.getRegistrationsByCourse(courseId)).build();
+    public Response getByCourseId(@PathParam("courseId") String courseId, @QueryParam("page") @DefaultValue("0") Integer page, @QueryParam("limit") @DefaultValue("100") Integer limit){
+        return Response.ok(registrationService.getRegistrationsByCourse(courseId, page, limit)).build();
     }
 
+    @Operation(summary = "Update registration status")
+    @APIResponses(value = {
+            @APIResponse(responseCode = "200", description = "Registration status updated"),
+            @APIResponse(responseCode = "404", description = "Registration not found")
+    })
     @PUT
     @Path("/status/{id}")
     public Response updateStatus(@PathParam("id") String id, @RequestBody @Valid RegistrationUpdateStatusDto registrationUpdate)
@@ -95,6 +111,11 @@ public class RegistrationController {
         return Response.ok(registrationService.updateStatus(id, registrationUpdate)).build();
     }
 
+    @Operation(summary = "Update registration grade")
+    @APIResponses(value = {
+            @APIResponse(responseCode = "200", description = "Registration grade updated"),
+            @APIResponse(responseCode = "404", description = "Registration not found")
+    })
     @PUT
     @Path("/grade/{id}")
     public Response updateGrade(@PathParam("id") String id, @RequestBody @Valid RegistrationUpdateGradeDto registrationUpdate)

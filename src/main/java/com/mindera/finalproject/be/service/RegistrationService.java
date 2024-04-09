@@ -25,9 +25,9 @@ public interface RegistrationService {
 
     void delete(String id);
 
-    List<RegistrationPublicDto> getRegistrationsByPerson(String personId);
+    List<RegistrationPublicDto> getRegistrationsByPerson(String personId, Integer page, Integer limit);
 
-    List<RegistrationPublicDto> getRegistrationsByCourse(String courseId);
+    List<RegistrationPublicDto> getRegistrationsByCourse(String courseId, Integer page, Integer limit);
 
     RegistrationPublicDto updateStatus(String id, RegistrationUpdateStatusDto registrationUpdate) throws PersonNotFoundException, CourseNotFoundException, RegistrationNotFoundException;
 
