@@ -97,7 +97,7 @@ public class RegistrationController {
     @PUT
     @Path("/grade/{id}")
     public Response updateGrade(@PathParam("id") String id, @RequestBody @Valid RegistrationUpdateGradeDto registrationUpdate)
-            throws PersonNotFoundException, CourseNotFoundException {
+            throws PersonNotFoundException, CourseNotFoundException, RegistrationNotFoundException {
         return Response.ok(registrationService.updateGrade(id, registrationUpdate)).build();
     }
 }
