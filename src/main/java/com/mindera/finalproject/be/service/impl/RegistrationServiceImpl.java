@@ -7,7 +7,6 @@ import com.mindera.finalproject.be.dto.registration.RegistrationCreateDto;
 import com.mindera.finalproject.be.dto.registration.RegistrationPublicDto;
 import com.mindera.finalproject.be.dto.registration.RegistrationUpdateGradeDto;
 import com.mindera.finalproject.be.dto.registration.RegistrationUpdateStatusDto;
-import com.mindera.finalproject.be.entity.Course;
 import com.mindera.finalproject.be.entity.Registration;
 import com.mindera.finalproject.be.exception.course.CourseNotFoundException;
 import com.mindera.finalproject.be.exception.course.MaxNumberOfStudentsException;
@@ -100,31 +99,6 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     @Override
-    public RegistrationPublicDto update(String id, RegistrationCreateDto registrationCreateDto) throws PersonNotFoundException, CourseNotFoundException, MaxNumberOfStudentsException {
-        Registration oldRegistration = registrationTable.getItem(Key.builder().partitionValue(REGISTRATION).sortValue(id).build());
-        String oldStatus = oldRegistration.getStatus();
-
-        oldRegistration.setPK(oldRegistration.getPK());
-        oldRegistration.setSK(oldRegistration.getSK());
-        oldRegistration.setStatus(registrationCreateDto.status().replace(" ", "_").toUpperCase());
-        oldRegistration.setFinalGrade(registrationCreateDto.finalGrade());
-        oldRegistration.setAboutYou(registrationCreateDto.aboutYou());
-        oldRegistration.setPrevKnowledge(registrationCreateDto.prevKnowledge());
-        oldRegistration.setPrevExperience(registrationCreateDto.prevExperience());
-
-        PersonPublicDto student = personService.getById(oldRegistration.getPersonId());
-        CoursePublicDto course = courseService.getById(oldRegistration.getCourseId());
-
-        if (!oldStatus.equals(ENROLLED) && oldRegistration.getStatus().equals(ENROLLED)) {
-            courseService.updateEnrolledStudents(oldRegistration.getCourseId());
-        }
-
-        registrationTable.putItem(oldRegistration);
-
-        return RegistrationConverter.fromEntityToPublicDto(oldRegistration, student, course);
-    }
-
-    @Override
     public void delete(String id) {
         Registration registration = registrationTable.getItem(Key.builder().partitionValue(REGISTRATION).sortValue(id).build());
         registration.setActive(false);
@@ -187,9 +161,16 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     @Override
-    public RegistrationPublicDto updateStatus(String id, RegistrationUpdateStatusDto registrationUpdate) throws PersonNotFoundException, CourseNotFoundException, RegistrationNotFoundException {
+    public RegistrationPublicDto updateStatus(String id, RegistrationUpdateStatusDto registrationUpdate) throws PersonNotFoundException, CourseNotFoundException, RegistrationNotFoundException, MaxNumberOfStudentsException {
         Registration registration = findById(id);
+        String oldStatus = registration.getStatus();
+
         registration.setStatus(registrationUpdate.status());
+
+        if (!oldStatus.equals(ENROLLED) && registration.getStatus().equals(ENROLLED)) {
+            courseService.updateEnrolledStudents(registration.getCourseId());
+        }
+
         registrationTable.updateItem(registration);
         PersonPublicDto student = personService.getById(registration.getPersonId());
         CoursePublicDto course = courseService.getById(registration.getCourseId());
@@ -205,5 +186,4 @@ public class RegistrationServiceImpl implements RegistrationService {
         CoursePublicDto course = courseService.getById(registration.getCourseId());
         return RegistrationConverter.fromEntityToPublicDto(registration, student, course);
     }
-
 }

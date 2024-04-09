@@ -41,7 +41,7 @@ public class RegistrationController {
     })
     @GET
     @Path("/{id}")
-    public Response getById(@PathParam("id") String id) throws PersonNotFoundException, CourseNotFoundException {
+    public Response getById(@PathParam("id") String id) throws PersonNotFoundException, CourseNotFoundException, RegistrationNotFoundException {
         return Response.ok(registrationService.getById(id)).build();
     }
 
@@ -53,25 +53,13 @@ public class RegistrationController {
         return Response.ok(registrationService.create(registrationCreateDto)).status(Response.Status.CREATED).build();
     }
 
-    @Operation(summary = "Update a registration")
-    @APIResponses(value = {
-            @APIResponse(responseCode = "200", description = "Registration updated"),
-            @APIResponse(responseCode = "404", description = "Registration not found")
-    })
-    @PUT
-    @Path("/{id}")
-    public Response update(@PathParam("id") String id, @Valid @RequestBody RegistrationCreateDto registrationCreateDto)
-            throws PersonNotFoundException, CourseNotFoundException, MaxNumberOfStudentsException {
-        return Response.ok(registrationService.update(id, registrationCreateDto)).build();
-    }
-
     @Operation(summary = "Delete a registration")
     @APIResponses(value = {
             @APIResponse(responseCode = "200", description = "Registration deleted"),
             @APIResponse(responseCode = "404", description = "Registration not found")
     })
     @DELETE
-    @Path("/delete/{id}")
+    @Path("/{id}")
     public Response deleteRegistration(@PathParam("id") String id) {
         registrationService.delete(id);
         return Response.ok().build();
@@ -83,7 +71,7 @@ public class RegistrationController {
     }
 
     @GET
-    @Path("course/{courseId}")
+    @Path("/course/{courseId}")
     public Response getByCourseId(@PathParam("courseId") String courseId) {
         return Response.ok(registrationService.getRegistrationsByCourse(courseId)).build();
     }
@@ -91,7 +79,7 @@ public class RegistrationController {
     @PUT
     @Path("/status/{id}")
     public Response updateStatus(@PathParam("id") String id, @RequestBody @Valid RegistrationUpdateStatusDto registrationUpdate)
-            throws PersonNotFoundException, CourseNotFoundException, RegistrationNotFoundException {
+            throws PersonNotFoundException, CourseNotFoundException, RegistrationNotFoundException, MaxNumberOfStudentsException {
         return Response.ok(registrationService.updateStatus(id, registrationUpdate)).build();
     }
 
