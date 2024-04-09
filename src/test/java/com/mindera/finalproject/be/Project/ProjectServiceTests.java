@@ -96,7 +96,9 @@ public class ProjectServiceTests {
                 "TestSchedule",
                 new BigDecimal("100"),
                 30,
-                "LOCATION"
+                "LOCATION",
+                0,
+                20
 
         );
     }
