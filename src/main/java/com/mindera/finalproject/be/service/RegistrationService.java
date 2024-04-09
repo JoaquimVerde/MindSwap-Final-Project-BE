@@ -2,6 +2,8 @@ package com.mindera.finalproject.be.service;
 
 import com.mindera.finalproject.be.dto.registration.RegistrationCreateDto;
 import com.mindera.finalproject.be.dto.registration.RegistrationPublicDto;
+import com.mindera.finalproject.be.dto.registration.RegistrationUpdateGradeDto;
+import com.mindera.finalproject.be.dto.registration.RegistrationUpdateStatusDto;
 import com.mindera.finalproject.be.exception.registration.RegistrationAlreadyExistsException;
 import com.mindera.finalproject.be.exception.course.CourseNotFoundException;
 import com.mindera.finalproject.be.exception.registration.RegistrationNotFoundException;
@@ -26,9 +28,9 @@ public interface RegistrationService {
 
     List<RegistrationPublicDto> getRegistrationsByCourse(String courseId);
 
-    RegistrationPublicDto updateStatus(String id, String status) throws PersonNotFoundException, CourseNotFoundException;
+    RegistrationPublicDto updateStatus(String id, RegistrationUpdateStatusDto registrationUpdate) throws PersonNotFoundException, CourseNotFoundException, RegistrationNotFoundException;
 
-    RegistrationPublicDto updateGrade(String id, Integer grade) throws PersonNotFoundException, CourseNotFoundException;
+    RegistrationPublicDto updateGrade(String id, RegistrationUpdateGradeDto registrationUpdate) throws PersonNotFoundException, CourseNotFoundException;
 
 
 }
