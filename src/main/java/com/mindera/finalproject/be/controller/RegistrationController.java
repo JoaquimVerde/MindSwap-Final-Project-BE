@@ -89,14 +89,14 @@ public class RegistrationController {
     }
 
     @PUT
-    @Path("/status/{id}/{status}")
+    @Path("/status/{id}")
     public Response updateStatus(@PathParam("id") String id, @RequestBody @Valid RegistrationUpdateStatusDto registrationUpdate)
             throws PersonNotFoundException, CourseNotFoundException, RegistrationNotFoundException {
         return Response.ok(registrationService.updateStatus(id, registrationUpdate)).build();
     }
 
     @PUT
-    @Path("/grade/{id}/{grade}")
+    @Path("/grade/{id}")
     public Response updateGrade(@PathParam("id") String id, @RequestBody @Valid RegistrationUpdateGradeDto registrationUpdate)
             throws PersonNotFoundException, CourseNotFoundException {
         return Response.ok(registrationService.updateGrade(id, registrationUpdate)).build();
