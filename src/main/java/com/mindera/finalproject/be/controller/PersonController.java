@@ -51,6 +51,17 @@ public class PersonController {
         return Response.ok(personService.getByRole(role)).build();
     }
 
+    @Operation(summary = "Find Person by email")
+    @APIResponses(value = {
+            @APIResponse(responseCode = "200", description = "Person found"),
+            @APIResponse(responseCode = "404", description = "Person not found")
+    })
+    @GET
+    @Path("/email/{email}")
+    public Response getByEmail(@PathParam("email") String email) {
+        return Response.ok(personService.getByEmail(email)).build();
+    }
+
     @Operation(summary = "Create a person")
     @APIResponses(value = {
             @APIResponse(responseCode = "201", description = "Person created")
