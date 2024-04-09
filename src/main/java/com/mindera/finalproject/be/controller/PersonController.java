@@ -58,7 +58,7 @@ public class PersonController {
     })
     @GET
     @Path("/email/{email}")
-    public Response getByEmail(@PathParam("email") String email) {
+    public Response getByEmail(@PathParam("email") String email) throws PersonNotFoundException {
         return Response.ok(personService.getByEmail(email)).build();
     }
 

@@ -63,13 +63,13 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public PersonPublicDto getByEmail(String email) {
+    public PersonPublicDto getByEmail(String email) throws PersonNotFoundException {
         QueryConditional queryConditional = QueryConditional.keyEqualTo(k -> k.partitionValue(email));
         DynamoDbIndex<Person> personIndex = personTable.index(GSIPK2);
         SdkIterable<Page<Person>> persons = personIndex.query(queryConditional);
         List<Person> personList = new ArrayList<>();
         persons.forEach(page -> personList.addAll(page.items()));
-        return personList.stream().filter(Person::isActive).map(PersonConverter::fromEntityToPublicDto).findFirst().orElse(null);
+        return personList.stream().filter(Person::isActive).map(PersonConverter::fromEntityToPublicDto).findFirst().orElseThrow(() -> new PersonNotFoundException("email"));
     }
 
     @Override
