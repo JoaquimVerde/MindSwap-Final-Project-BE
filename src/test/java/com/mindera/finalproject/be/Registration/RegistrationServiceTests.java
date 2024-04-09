@@ -2,12 +2,14 @@ package com.mindera.finalproject.be.Registration;
 
 import com.mindera.finalproject.be.aspect.Error;
 import com.mindera.finalproject.be.dto.course.CourseCreateDto;
+import com.mindera.finalproject.be.dto.course.CoursePublicDto;
 import com.mindera.finalproject.be.dto.person.PersonCreateDto;
 import com.mindera.finalproject.be.dto.registration.RegistrationCreateDto;
 import com.mindera.finalproject.be.dto.registration.RegistrationPublicDto;
 import com.mindera.finalproject.be.entity.Course;
 import com.mindera.finalproject.be.entity.Person;
 import com.mindera.finalproject.be.entity.Registration;
+import com.mindera.finalproject.be.enums.RoleStatus;
 
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
