@@ -2,6 +2,7 @@ package com.mindera.finalproject.be.controller;
 
 import com.mindera.finalproject.be.dto.registration.RegistrationCreateDto;
 import com.mindera.finalproject.be.exception.course.CourseNotFoundException;
+import com.mindera.finalproject.be.exception.course.MaxNumberOfStudentsException;
 import com.mindera.finalproject.be.exception.registration.RegistrationAlreadyExistsException;
 import com.mindera.finalproject.be.exception.student.PersonNotFoundException;
 import com.mindera.finalproject.be.service.RegistrationService;
@@ -57,7 +58,7 @@ public class RegistrationController {
     @PUT
     @Path("/{id}")
     public Response update(@PathParam("id") String id, @Valid @RequestBody RegistrationCreateDto registrationCreateDto)
-            throws PersonNotFoundException, CourseNotFoundException {
+            throws PersonNotFoundException, CourseNotFoundException, MaxNumberOfStudentsException {
         return Response.ok(registrationService.update(id, registrationCreateDto)).build();
     }
 
