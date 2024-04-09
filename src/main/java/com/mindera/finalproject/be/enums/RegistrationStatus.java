@@ -7,3 +7,4 @@ public enum RegistrationStatus {
     AUTOMATICALLY_ACCEPTED,
     ENROLLED
 }
+

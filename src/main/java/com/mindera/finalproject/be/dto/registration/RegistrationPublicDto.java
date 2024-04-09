@@ -8,7 +8,7 @@ public record RegistrationPublicDto(
         PersonPublicDto student,
         CoursePublicDto course,
         String status,
-        String finalGrade,
+        Integer finalGrade,
         Boolean active,
         String aboutYou,
         Boolean prevKnowledge,

@@ -18,7 +18,7 @@ public record RegistrationCreateDto(
         @EnumValidator(enumClass = RegistrationStatus.class, message = INVALID_REGISTRATION_STATUS)
         String status,
 
-        String finalGrade,
+        Integer finalGrade,
 
         @NotEmpty(message = NON_EMPTY_ABOUT_YOU)
         String aboutYou,
