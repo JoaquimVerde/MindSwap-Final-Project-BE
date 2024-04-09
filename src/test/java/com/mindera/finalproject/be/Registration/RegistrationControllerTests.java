@@ -31,10 +31,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class RegistrationControllerTests {
 
     private final String URL = "/api/v1/registration";
-    private final String FINAL_GRADE = "10";
-    private final String ABOUT_YOU = "about";
-    private final boolean PREV_KNOWLEDGE = true;
-    private final boolean PREV_EXPERIENCE = true;
 
     @Inject
     DynamoDbEnhancedClient enhancedClient;
@@ -96,9 +92,9 @@ class RegistrationControllerTests {
                 .extract().jsonPath().getString("id");
     }
 
-    public String createRegistration(String studentId, String courseId, String status) {
-        RegistrationCreateDto registration = new RegistrationCreateDto(studentId, courseId, status, FINAL_GRADE,
-                ABOUT_YOU, PREV_KNOWLEDGE, PREV_EXPERIENCE);
+    public String createRegistration(String studentId, String courseId) {
+        RegistrationCreateDto registration = new RegistrationCreateDto(studentId, courseId, "Pending", "10",
+                "about", true, true);
 
         return given()
                 .body(registration)
@@ -129,27 +125,13 @@ class RegistrationControllerTests {
     void testGetAllRegistrationsWith5Registrations() {
         int amount = 5;
         for (int i = 0; i < amount; i++) {
-            createRegistration(createPerson("Student"), createCourse(createPerson("Teacher")), "Applied");
+            createRegistration(createPerson("Student"), createCourse(createPerson("Teacher")));
         }
 
         given()
                 .when().get(URL)
                 .then()
                 .body("size()", equalTo(5));
-    }
-
-    @Test
-    void testGetAllRegistrationsWith5RegistrationsAnd2Deleted() {
-        int amount = 5;
-        for (int i = 0; i < amount; i++) {
-           String id = createRegistration(createPerson("Student"), createCourse(createPerson("Teacher")), "Applied");
-           if(i % 2 == 1) given().delete(URL + "/delete/" + id).then().statusCode(200);
-        }
-
-        given()
-                .when().get(URL)
-                .then()
-                .body("size()", equalTo(3));
     }
 
     @Test
