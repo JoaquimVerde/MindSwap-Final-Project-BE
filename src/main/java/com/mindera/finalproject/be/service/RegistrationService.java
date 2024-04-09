@@ -20,4 +20,8 @@ public interface RegistrationService {
             throws PersonNotFoundException, CourseNotFoundException;
 
     void delete(String id);
+
+    List<RegistrationPublicDto> getRegistrationsByPerson(String personId);
+
+    List<RegistrationPublicDto> getRegistrationsByCourse(String courseId);
 }
