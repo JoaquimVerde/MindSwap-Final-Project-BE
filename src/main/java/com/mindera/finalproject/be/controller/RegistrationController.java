@@ -26,8 +26,8 @@ public class RegistrationController {
     @Operation(summary = "Find all registrations")
     @APIResponse(responseCode = "200", description = "List of all registrations")
     @GET
-    public Response getAll() {
-        return Response.ok(registrationService.getAll()).build();
+    public Response getAll(@QueryParam("page") @DefaultValue("0") Integer page, @QueryParam("limit") @DefaultValue("100") Integer limit) {
+        return Response.ok(registrationService.getAll(page, limit)).build();
     }
 
     @Operation(summary = "Find registration by id")
@@ -85,7 +85,7 @@ public class RegistrationController {
     }
 
     @PUT
-    @Path("{id}/{status}")
+    @Path("/status/{id}/{status}")
     public Response updateStatus(@PathParam("id") String id, @PathParam("status") String status)
             throws PersonNotFoundException, CourseNotFoundException {
         return Response.ok(registrationService.updateStatus(id, status)).build();
