@@ -134,10 +134,6 @@ public class ProjectControllerTests {
     }
 
     @Test
-    void contextLoads() {
-    }
-
-    @Test
     public void testGetAllProjects() {
         given()
                 .when().get("/api/v1/projects")

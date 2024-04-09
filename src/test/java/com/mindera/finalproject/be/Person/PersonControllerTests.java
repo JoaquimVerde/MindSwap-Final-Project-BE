@@ -58,9 +58,6 @@ public class PersonControllerTests {
                     .extract().jsonPath().getString("id");
     }
     @Test
-    void contextLoads() {
-    }
-    @Test
     public void testGetAllPersons() {
         given()
                 .when().get("/api/v1/persons")
