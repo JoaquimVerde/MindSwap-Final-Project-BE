@@ -19,8 +19,9 @@ import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
-import static com.mindera.finalproject.be.messages.Messages.INVALID_NAME;
+import static com.mindera.finalproject.be.messages.Messages.*;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.*;
@@ -75,7 +76,7 @@ class CourseControllerTest {
         personTable.deleteTable();
     }
 
-    public String createCourse(String location, int edition) {
+    public String createCourse(String location, int edition, String teacherId) {
         CourseCreateDto exampleCourse = new CourseCreateDto(courseName, edition, teacherId, courseSyllabus, courseProgram, courseSchedule, coursePrice, courseDuration, location);
 
         return given()
@@ -113,7 +114,7 @@ class CourseControllerTest {
 
     @Test
     void testCreateCourseWithInvalidData() {
-        CourseCreateDto exampleCourse = new CourseCreateDto("123123", -1, "asdasd", "", "", "", new BigDecimal("-100"), -1, "");
+        CourseCreateDto exampleCourse = new CourseCreateDto("1231232#%", -1, "asdasd", "", "", "", new BigDecimal("-100"), -1, "");
 
         Error response = given()
                 .body(exampleCourse)
@@ -123,25 +124,96 @@ class CourseControllerTest {
                 .statusCode(400)
                 .extract().as(Error.class);
 
-        // TODO verificar todas as mensagens de validação
-        assertTrue(response.getMessage().contains(INVALID_NAME));
         assertEquals(400, response.getStatus());
+        assertTrue(response.getMessage().contains(INVALID_NAME));
+        assertTrue(response.getMessage().contains(INVALID_EDITION));
+        assertTrue(response.getMessage().contains(NON_EMPTY_SYLLABUS));
+        assertTrue(response.getMessage().contains(NON_EMPTY_PROGRAM));
+        assertTrue(response.getMessage().contains(NON_EMPTY_SCHEDULE));
+        assertTrue(response.getMessage().contains(NON_NEGATIVE_PRICE));
+        assertTrue(response.getMessage().contains(NON_NEGATIVE_DURATION));
+        assertTrue(response.getMessage().contains(NON_EMPTY_LOCATION));
+    }
+
+    @Test
+    void testCreateCourseWithEmptyData() {
+        CourseCreateDto exampleCourse = new CourseCreateDto("", 0, "", "", "", "", null, null, "");
+
+        Error response = given()
+                .body(exampleCourse)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .when().post(API_PATH)
+                .then()
+                .statusCode(400)
+                .extract().as(Error.class);
+
+        assertEquals(400, response.getStatus());
+        assertTrue(response.getMessage().contains(NON_EMPTY_NAME));
+        assertTrue(response.getMessage().contains(INVALID_EDITION));
+        assertTrue(response.getMessage().contains(NON_EMPTY_SYLLABUS));
+        assertTrue(response.getMessage().contains(NON_EMPTY_PROGRAM));
+        assertTrue(response.getMessage().contains(NON_EMPTY_SCHEDULE));
+        assertTrue(response.getMessage().contains(NON_EMPTY_PRICE));
+        assertTrue(response.getMessage().contains(NON_EMPTY_DURATION));
+        assertTrue(response.getMessage().contains(NON_EMPTY_LOCATION));
+    }
+
+    @Test
+    void testCreateCourseWithDuplicateCourse() {
+        createCourse(courseLocation, courseEdition, teacherId);
+
+        CourseCreateDto exampleCourse = new CourseCreateDto(courseName, courseEdition, teacherId, courseSyllabus, courseProgram, courseSchedule, coursePrice, courseDuration, courseLocation);
+
+        Error response = given()
+                .body(exampleCourse)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .when().post(API_PATH)
+                .then()
+                .statusCode(409)
+                .extract().as(Error.class);
+
+        assertEquals(409, response.getStatus());
+        assertEquals(COURSE_ALREADY_EXISTS, response.getMessage());
     }
 
     @Test
     void testCreateCourseWithInvalidTeacher() {
         CourseCreateDto exampleCourse = new CourseCreateDto(courseName, courseEdition, "PERSON#1", courseSyllabus, courseProgram, courseSchedule, coursePrice, courseDuration, courseLocation);
 
-        String id = given()
+        CoursePublicDto response = given()
                 .body(exampleCourse)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .when().post(API_PATH)
                 .then()
                 .statusCode(201)
-                .extract().jsonPath().getString("id");
+                .extract().as(CoursePublicDto.class);
+
+        assertNull(response.teacher());
 
         given()
-                .when().get(API_PATH + "/" + id)
+                .when().get(API_PATH + "/" + response.id())
+                .then()
+                .statusCode(200)
+                .and()
+                .body("teacher", equalTo(null));
+    }
+
+    @Test
+    void testCreateCourseWithNullTeacher() {
+        CourseCreateDto exampleCourse = new CourseCreateDto(courseName, courseEdition, null, courseSyllabus, courseProgram, courseSchedule, coursePrice, courseDuration, courseLocation);
+
+        CoursePublicDto response = given()
+                .body(exampleCourse)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .when().post(API_PATH)
+                .then()
+                .statusCode(201)
+                .extract().as(CoursePublicDto.class);
+
+        assertNull(response.teacher());
+
+        given()
+                .when().get(API_PATH + "/" + response.id())
                 .then()
                 .statusCode(200)
                 .and()
@@ -162,7 +234,7 @@ class CourseControllerTest {
     void testGetAllCoursesWith5Courses() {
         int amount = 5;
         for (int i = 0; i < amount; i++) {
-            createCourse(courseLocation, i + 1);
+            createCourse(courseLocation, i + 1, teacherId);
         }
 
         given()
@@ -174,8 +246,71 @@ class CourseControllerTest {
     }
 
     @Test
+    void testGetAllCoursesWith5and2Deleted() {
+        int amount = 5;
+        for (int i = 0; i < amount; i++) {
+            String courseId = createCourse(courseLocation, i + 1, teacherId);
+            if (i % 2 == 1) {
+                given()
+                        .when().delete(API_PATH + "/" + courseId)
+                        .then()
+                        .statusCode(200);
+            }
+        }
+
+        given()
+                .when().get(API_PATH)
+                .then()
+                .statusCode(200)
+                .and()
+                .body("size()", equalTo(3));
+    }
+
+    @Test
+    void testGetAllCoursesWithNullTeachers() {
+        int amount = 5;
+        for (int i = 0; i < amount; i++) {
+            createCourse(courseLocation, i + 1, null);
+        }
+
+        List<CoursePublicDto> response = given()
+                .when().get(API_PATH)
+                .then()
+                .statusCode(200)
+                .extract().jsonPath().getList(".", CoursePublicDto.class);
+
+        for (CoursePublicDto course : response) {
+            assertNotNull(course.id());
+            assertNull(course.teacher());
+        }
+    }
+
+    @Test
+    void testGetAllPagedCourses() {
+        int amount = 9;
+        for (int i = 0; i < amount; i++) {
+            createCourse(courseLocation, i + 1, teacherId);
+        }
+
+        given()
+                .when().get(API_PATH + "?page=0&limit=5")
+                .then()
+                .statusCode(200)
+                .and()
+                .body("size()", equalTo(5));
+        given()
+                .when().get(API_PATH + "?page=1&limit=5")
+                .then()
+                .statusCode(200)
+                .and()
+                .body("size()", equalTo(4));
+
+    }
+
+
+    @Test
     void testGetCourseById() {
-        String courseId = createCourse(courseLocation, courseEdition);
+        String courseId = createCourse(courseLocation, courseEdition, teacherId);
 
         CoursePublicDto response = given()
                 .when().get(API_PATH + "/" + courseId)
@@ -197,7 +332,6 @@ class CourseControllerTest {
 
     @Test
     void testGetByIdWithNonExistentCourse() {
-        // TODO Adicionar ao serviço a verificação se o curso existe
         given()
                 .when().get(API_PATH + "/123")
                 .then()
@@ -205,13 +339,61 @@ class CourseControllerTest {
     }
 
     @Test
+    void testGetByIdWithDeletedCourse() {
+        String courseId = createCourse(courseLocation, courseEdition, teacherId);
+
+        given()
+                .when().delete(API_PATH + "/" + courseId)
+                .then()
+                .statusCode(200);
+
+        given()
+                .when().get(API_PATH + "/" + courseId)
+                .then()
+                .statusCode(200);
+    }
+
+    @Test
+    void testGetByIdWithNullTeacher() {
+        String courseId = createCourse(courseLocation, courseEdition, null);
+
+        CoursePublicDto response = given()
+                .when().get(API_PATH + "/" + courseId)
+                .then()
+                .statusCode(200)
+                .extract().as(CoursePublicDto.class);
+
+        assertNotNull(response.id());
+        assertNull(response.teacher());
+    }
+
+    @Test
+    void testGetByIdWithDeletedTeacher() {
+        String courseId = createCourse(courseLocation, courseEdition, teacherId);
+
+        given()
+                .when().delete("/api/v1/persons/" + teacherId)
+                .then()
+                .statusCode(200);
+
+        CoursePublicDto response = given()
+                .when().get(API_PATH + "/" + courseId)
+                .then()
+                .statusCode(200)
+                .extract().as(CoursePublicDto.class);
+
+        assertNotNull(response.id());
+        assertNull(response.teacher());
+    }
+
+    @Test
     void testGetByLocation() {
         int amount = 3;
         for (int i = 0; i < amount; i++) {
-            createCourse(courseLocation, i + 1);
+            createCourse(courseLocation, i + 1, teacherId);
         }
         for (int i = 0; i < 2; i++) {
-            createCourse("NonExistentLocation", i + amount + 1);
+            createCourse("NonExistentLocation", i + amount + 1, teacherId);
         }
 
         given()
@@ -224,7 +406,7 @@ class CourseControllerTest {
 
     @Test
     void testGetByLocationWithNonExistentLocation() {
-        createCourse(courseLocation, courseEdition);
+        createCourse(courseLocation, courseEdition, teacherId);
 
         given()
                 .when().get(API_PATH + "/location/NonExistentLocation")
@@ -235,8 +417,51 @@ class CourseControllerTest {
     }
 
     @Test
+    void testGetByLocationWithDeletedCourses() {
+        int amount = 3;
+        for (int i = 0; i < amount; i++) {
+            String courseId = createCourse(courseLocation, i + 1, teacherId);
+            if (i % 2 == 1) {
+                given()
+                        .when().delete(API_PATH + "/" + courseId)
+                        .then()
+                        .statusCode(200);
+            }
+        }
+        createCourse("NonExistentLocation", amount + 1, teacherId);
+
+        given()
+                .when().get(API_PATH + "/location/" + courseLocation)
+                .then()
+                .statusCode(200)
+                .and()
+                .body("size()", equalTo(2));
+    }
+
+    @Test
+    void testGetByLocationPaged() {
+        int amount = 9;
+        for (int i = 0; i < amount; i++) {
+            createCourse(courseLocation, i + 1, teacherId);
+        }
+
+        given()
+                .when().get(API_PATH + "/location/" + courseLocation + "?page=0&limit=5")
+                .then()
+                .statusCode(200)
+                .and()
+                .body("size()", equalTo(5));
+        given()
+                .when().get(API_PATH + "/location/" + courseLocation + "?page=1&limit=5")
+                .then()
+                .statusCode(200)
+                .and()
+                .body("size()", equalTo(4));
+    }
+
+    @Test
     void testUpdateCourse() {
-        String courseId = createCourse(courseLocation, courseEdition);
+        String courseId = createCourse(courseLocation, courseEdition, teacherId);
 
         CourseCreateDto updatedCourse = new CourseCreateDto("Backend", 2, teacherId, "Java, Spring", "Backend", "Tuesday 10-18", new BigDecimal("1000.13"), 60, "Lisbon");
 
@@ -274,9 +499,9 @@ class CourseControllerTest {
 
     @Test
     void testUpdateCourseWithEmptyData() {
-        String courseId = createCourse(courseLocation, courseEdition);
+        String courseId = createCourse(courseLocation, courseEdition, teacherId);
 
-        CourseCreateDto updatedCourse = new CourseCreateDto("", 0, "", "", "", "", new BigDecimal("0"), 0, "");
+        CourseCreateDto updatedCourse = new CourseCreateDto("", null, "", "", "", "", null, null, "");
 
         Error response = given()
                 .body(updatedCourse)
@@ -285,13 +510,22 @@ class CourseControllerTest {
                 .then()
                 .statusCode(400)
                 .extract().as(Error.class);
-        //TODO check other erros messages
-        assertTrue(response.getMessage().contains(INVALID_NAME));
+
+        assertEquals(400, response.getStatus());
+        assertTrue(response.getMessage().contains(NON_EMPTY_NAME));
+        assertTrue(response.getMessage().contains(NON_EMPTY_EDITION));
+        assertTrue(response.getMessage().contains(NON_EMPTY_SYLLABUS));
+        assertTrue(response.getMessage().contains(NON_EMPTY_PROGRAM));
+        assertTrue(response.getMessage().contains(NON_EMPTY_SCHEDULE));
+        assertTrue(response.getMessage().contains(NON_EMPTY_PRICE));
+        assertTrue(response.getMessage().contains(NON_EMPTY_DURATION));
+        assertTrue(response.getMessage().contains(NON_EMPTY_LOCATION));
+
     }
 
     @Test
     void testUpdateWithInvalidTeacher() {
-        String courseId = createCourse(courseLocation, courseEdition);
+        String courseId = createCourse(courseLocation, courseEdition, teacherId);
 
         CourseCreateDto updatedCourse = new CourseCreateDto("Backend", 2, "PERSON#1", "Java, Spring", "Backend", "Tuesday 10-18", new BigDecimal("1000.13"), 60, "Lisbon");
 
@@ -308,7 +542,7 @@ class CourseControllerTest {
 
     @Test
     void testDeleteCourse() {
-        String courseId = createCourse(courseLocation, courseEdition);
+        String courseId = createCourse(courseLocation, courseEdition, teacherId);
 
         given()
                 .when().delete(API_PATH + "/" + courseId)

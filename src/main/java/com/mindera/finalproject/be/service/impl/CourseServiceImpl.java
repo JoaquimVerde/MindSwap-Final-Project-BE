@@ -56,7 +56,7 @@ public class CourseServiceImpl implements CourseService {
         List<Course> coursesList = new ArrayList<>(courses.stream().toList().get(page).items());
         return coursesList.stream().map(this::mapCourseList).toList();
     }
-
+    
     private CoursePublicDto mapCourseList(Course course) {
         try {
             if (course.getTeacherId() == null || !personService.findById(course.getTeacherId()).isActive()) {
