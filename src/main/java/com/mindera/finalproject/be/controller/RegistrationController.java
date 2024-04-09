@@ -60,7 +60,7 @@ public class RegistrationController {
     })
     @DELETE
     @Path("/{id}")
-    public Response deleteRegistration(@PathParam("id") String id) {
+    public Response deleteRegistration(@PathParam("id") String id) throws RegistrationNotFoundException {
         registrationService.delete(id);
         return Response.ok().build();
     }
@@ -72,7 +72,7 @@ public class RegistrationController {
     })
     @GET
     @Path("/student/{personId}")
-    public Response getByPersonId(@PathParam("personId") String personId, @QueryParam("page") @DefaultValue("0") Integer page, @QueryParam("limit") @DefaultValue("100") Integer limit){
+    public Response getByPersonId(@PathParam("personId") String personId, @QueryParam("page") @DefaultValue("0") Integer page, @QueryParam("limit") @DefaultValue("100") Integer limit) {
         return Response.ok(registrationService.getRegistrationsByPerson(personId, page, limit)).build();
     }
 
@@ -82,8 +82,8 @@ public class RegistrationController {
             @APIResponse(responseCode = "404", description = "Course not found")
     })
     @GET
-    @Path("course/{courseId}")
-    public Response getByCourseId(@PathParam("courseId") String courseId, @QueryParam("page") @DefaultValue("0") Integer page, @QueryParam("limit") @DefaultValue("100") Integer limit){
+    @Path("/course/{courseId}")
+    public Response getByCourseId(@PathParam("courseId") String courseId, @QueryParam("page") @DefaultValue("0") Integer page, @QueryParam("limit") @DefaultValue("100") Integer limit) {
         return Response.ok(registrationService.getRegistrationsByCourse(courseId, page, limit)).build();
     }
 

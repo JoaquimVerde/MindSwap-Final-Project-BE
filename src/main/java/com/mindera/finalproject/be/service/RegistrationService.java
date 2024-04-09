@@ -20,7 +20,7 @@ public interface RegistrationService {
     RegistrationPublicDto create(RegistrationCreateDto registrationCreateDto)
             throws PersonNotFoundException, CourseNotFoundException, RegistrationAlreadyExistsException;
 
-    void delete(String id);
+    void delete(String id) throws RegistrationNotFoundException;
 
     List<RegistrationPublicDto> getRegistrationsByPerson(String personId, Integer page, Integer limit);
 

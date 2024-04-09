@@ -59,7 +59,7 @@ public class RegistrationServiceImpl implements RegistrationService {
                 .limit(limit)
                 .build();
         SdkIterable<Page<Registration>> registrations = registrationTable.query(limitedQuery);
-        if(page >= registrations.stream().count()){
+        if (page >= registrations.stream().count()) {
             page = Math.toIntExact(registrations.stream().count() - 1);
         }
         List<Registration> registrationsList = new ArrayList<>(registrations.stream().toList().get(page).items());
@@ -102,15 +102,15 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     @Override
-    public void delete(String id) {
-        Registration registration = registrationTable.getItem(Key.builder().partitionValue(REGISTRATION).sortValue(id).build());
+    public void delete(String id) throws RegistrationNotFoundException {
+        Registration registration = findById(id);
         registration.setActive(false);
         registrationTable.updateItem(registration);
     }
 
     public Registration findById(String id) throws RegistrationNotFoundException {
-        Registration registration =  registrationTable.getItem(Key.builder().partitionValue(REGISTRATION).sortValue(id).build());
-        if(registration == null) {
+        Registration registration = registrationTable.getItem(Key.builder().partitionValue(REGISTRATION).sortValue(id).build());
+        if (registration == null) {
             throw new RegistrationNotFoundException(REGISTRATION_NOT_FOUND + id);
         }
         return registration;
@@ -191,8 +191,8 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     @Override
-    public RegistrationPublicDto updateGrade(String id, RegistrationUpdateGradeDto registrationUpdate) throws PersonNotFoundException, CourseNotFoundException {
-        Registration registration = registrationTable.getItem(Key.builder().partitionValue(REGISTRATION).sortValue(id).build());
+    public RegistrationPublicDto updateGrade(String id, RegistrationUpdateGradeDto registrationUpdate) throws PersonNotFoundException, CourseNotFoundException, RegistrationNotFoundException {
+        Registration registration = findById(id);
         registration.setFinalGrade(registrationUpdate.grade());
         registrationTable.updateItem(registration);
         PersonPublicDto student = personService.getById(registration.getPersonId());
