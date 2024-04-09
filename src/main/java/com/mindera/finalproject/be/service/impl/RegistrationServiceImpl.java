@@ -120,4 +120,42 @@ public class RegistrationServiceImpl implements RegistrationService {
         return registrationsList.size() > 0;
     }
 
+    @Override
+    public List<RegistrationPublicDto> getRegistrationsByPerson(String personId) {
+        QueryConditional queryConditional = QueryConditional.sortBeginsWith(k -> k.partitionValue(REGISTRATION).sortValue(REGISTRATION));
+        SdkIterable<Page<Registration>> registrations = registrationTable.query(queryConditional);
+        List<Registration> registrationsList = new ArrayList<>();
+        registrations.forEach(page -> registrationsList.addAll(page.items()));
+        return registrationsList.stream().filter(registration -> registration.getPersonId().equals(personId) && registration.getActive()).map(registration -> {
+            PersonPublicDto student = null;
+            CoursePublicDto course = null;
+            try {
+                student = personService.getById(registration.getPersonId());
+                course = courseService.getById(registration.getCourseId());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            return RegistrationConverter.fromEntityToPublicDto(registration, student, course);
+        }).toList();
+    }
+
+    @Override
+    public List<RegistrationPublicDto> getRegistrationsByCourse(String courseId) {
+        QueryConditional queryConditional = QueryConditional.sortBeginsWith(k -> k.partitionValue(REGISTRATION).sortValue(REGISTRATION));
+        SdkIterable<Page<Registration>> registrations = registrationTable.query(queryConditional);
+        List<Registration> registrationsList = new ArrayList<>();
+        registrations.forEach(page -> registrationsList.addAll(page.items()));
+        return registrationsList.stream().filter(registration -> registration.getCourseId().equals(courseId) && registration.getActive()).map(registration -> {
+            PersonPublicDto student = null;
+            CoursePublicDto course = null;
+            try {
+                student = personService.getById(registration.getPersonId());
+                course = courseService.getById(registration.getCourseId());
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+            return RegistrationConverter.fromEntityToPublicDto(registration, student, course);
+        }).toList();
+    }
+
 }
