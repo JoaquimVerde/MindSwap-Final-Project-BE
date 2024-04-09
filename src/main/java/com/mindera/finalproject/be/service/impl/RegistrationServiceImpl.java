@@ -59,8 +59,11 @@ public class RegistrationServiceImpl implements RegistrationService {
                 .limit(limit)
                 .build();
         SdkIterable<Page<Registration>> registrations = registrationTable.query(limitedQuery);
+        if(page >= registrations.stream().count()){
+            page = Math.toIntExact(registrations.stream().count() - 1);
+        }
         List<Registration> registrationsList = new ArrayList<>(registrations.stream().toList().get(page).items());
-        return registrationsList.stream().filter(Registration::getActive).map(registration -> {
+        return registrationsList.stream().map(registration -> {
             PersonPublicDto student = null;
             CoursePublicDto course = null;
             try {
@@ -123,11 +126,16 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     @Override
-    public List<RegistrationPublicDto> getRegistrationsByPerson(String personId) {
+    public List<RegistrationPublicDto> getRegistrationsByPerson(String personId, Integer page, Integer limit) {
         QueryConditional queryConditional = QueryConditional.sortBeginsWith(k -> k.partitionValue(REGISTRATION).sortValue(REGISTRATION));
-        SdkIterable<Page<Registration>> registrations = registrationTable.query(queryConditional);
-        List<Registration> registrationsList = new ArrayList<>();
-        registrations.forEach(page -> registrationsList.addAll(page.items()));
+        Expression expression = Expression.builder().expression("active = :active").putExpressionValue(":active", AttributeValue.fromBool(true)).build();
+        QueryEnhancedRequest limitedQuery = QueryEnhancedRequest.builder()
+                .queryConditional(queryConditional)
+                .filterExpression(expression)
+                .limit(limit)
+                .build();
+        SdkIterable<Page<Registration>> registrations = registrationTable.query(limitedQuery);
+        List<Registration> registrationsList = new ArrayList<>(registrations.stream().toList().get(page).items());
         return registrationsList.stream().filter(registration -> registration.getPersonId().equals(personId) && registration.getActive()).map(registration -> {
             PersonPublicDto student = null;
             CoursePublicDto course = null;
@@ -142,11 +150,16 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     @Override
-    public List<RegistrationPublicDto> getRegistrationsByCourse(String courseId) {
+    public List<RegistrationPublicDto> getRegistrationsByCourse(String courseId, Integer page, Integer limit) {
         QueryConditional queryConditional = QueryConditional.sortBeginsWith(k -> k.partitionValue(REGISTRATION).sortValue(REGISTRATION));
-        SdkIterable<Page<Registration>> registrations = registrationTable.query(queryConditional);
-        List<Registration> registrationsList = new ArrayList<>();
-        registrations.forEach(page -> registrationsList.addAll(page.items()));
+        Expression expression = Expression.builder().expression("active = :active").putExpressionValue(":active", AttributeValue.fromBool(true)).build();
+        QueryEnhancedRequest limitedQuery = QueryEnhancedRequest.builder()
+                .queryConditional(queryConditional)
+                .filterExpression(expression)
+                .limit(limit)
+                .build();
+        SdkIterable<Page<Registration>> registrations = registrationTable.query(limitedQuery);
+        List<Registration> registrationsList = new ArrayList<>(registrations.stream().toList().get(page).items());
         return registrationsList.stream().filter(registration -> registration.getCourseId().equals(courseId) && registration.getActive()).map(registration -> {
             PersonPublicDto student = null;
             CoursePublicDto course = null;
