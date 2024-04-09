@@ -56,8 +56,8 @@ class CourseServiceTest {
         course.setDuration(1);
         course.setLocation("LOCATION");
         course.setActive(true);
-        course.setNumberOfApplications(0);
-        course.setMaxNumberOfApplications(10);
+        course.setEnrolledStudents(0);
+        course.setMaxStudents(20);
         return course;
     }
 

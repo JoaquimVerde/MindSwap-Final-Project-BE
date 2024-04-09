@@ -7,6 +7,7 @@ import com.mindera.finalproject.be.dto.registration.RegistrationCreateDto;
 import com.mindera.finalproject.be.dto.registration.RegistrationPublicDto;
 import com.mindera.finalproject.be.entity.Registration;
 import com.mindera.finalproject.be.exception.course.CourseNotFoundException;
+import com.mindera.finalproject.be.exception.course.MaxNumberOfStudentsException;
 import com.mindera.finalproject.be.exception.registration.RegistrationAlreadyExistsException;
 import com.mindera.finalproject.be.exception.student.PersonNotFoundException;
 import com.mindera.finalproject.be.service.RegistrationService;
@@ -29,6 +30,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final String TABLE_NAME = "Registration";
     private final String REGISTRATION = "REGISTRATION#";
     private final String GSIPK1 = "GSIPK1";
+    private final String ENROLLED = "ENROLLED";
 
     @Inject
     PersonServiceImpl personService;
@@ -86,8 +88,9 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     @Override
-    public RegistrationPublicDto update(String id, RegistrationCreateDto registrationCreateDto) throws PersonNotFoundException, CourseNotFoundException {
-        Registration oldRegistration = registrationTable.getItem(Key.builder().partitionValue(id).sortValue(id).build());
+    public RegistrationPublicDto update(String id, RegistrationCreateDto registrationCreateDto) throws PersonNotFoundException, CourseNotFoundException, MaxNumberOfStudentsException {
+        Registration oldRegistration = registrationTable.getItem(Key.builder().partitionValue(REGISTRATION).sortValue(id).build());
+        String oldStatus = oldRegistration.getStatus();
 
         oldRegistration.setPK(oldRegistration.getPK());
         oldRegistration.setSK(oldRegistration.getSK());
@@ -99,6 +102,10 @@ public class RegistrationServiceImpl implements RegistrationService {
 
         PersonPublicDto student = personService.getById(oldRegistration.getPersonId());
         CoursePublicDto course = courseService.getById(oldRegistration.getCourseId());
+
+        if (!oldStatus.equals(ENROLLED) && oldRegistration.getStatus().equals(ENROLLED)) {
+            courseService.updateEnrolledStudents(oldRegistration.getCourseId());
+        }
 
         registrationTable.putItem(oldRegistration);
 

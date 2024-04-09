@@ -20,8 +20,8 @@ public class Course {
     private Integer duration;
     private String location;
     private Boolean active;
-    private Integer numberOfApplications;
-    private Integer maxNumberOfApplications;
+    private Integer enrolledStudents;
+    private Integer maxStudents;
 
     public Course() {
     }
@@ -37,6 +37,7 @@ public class Course {
         this.duration = duration;
         this.location = location;
         this.active = true;
+        this.enrolledStudents = 0;
     }
 
     @DynamoDbPartitionKey
@@ -154,21 +155,21 @@ public class Course {
     }
 
     @DynamoDbAttribute("NumberOfApplications")
-    public Integer getNumberOfApplications() {
-        return numberOfApplications;
+    public Integer getEnrolledStudents() {
+        return enrolledStudents;
     }
 
-    public void setNumberOfApplications(Integer numberOfApplications) {
-        this.numberOfApplications = numberOfApplications;
+    public void setEnrolledStudents(Integer enrolledStudents) {
+        this.enrolledStudents = enrolledStudents;
     }
 
     @DynamoDbAttribute("MaxNumberOfApplications")
-    public Integer getMaxNumberOfApplications() {
-        return maxNumberOfApplications;
+    public Integer getMaxStudents() {
+        return maxStudents;
     }
 
-    public void setMaxNumberOfApplications(Integer maxNumberOfApplications) {
-        this.maxNumberOfApplications = maxNumberOfApplications;
+    public void setMaxStudents(Integer maxStudents) {
+        this.maxStudents = maxStudents;
     }
 
     @Override
@@ -176,12 +177,12 @@ public class Course {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Course course = (Course) o;
-        return Objects.equals(PK, course.PK) && Objects.equals(SK, course.SK) && Objects.equals(name, course.name) && Objects.equals(edition, course.edition) && Objects.equals(teacherId, course.teacherId) && Objects.equals(syllabus, course.syllabus) && Objects.equals(program, course.program) && Objects.equals(schedule, course.schedule) && Objects.equals(price, course.price) && Objects.equals(duration, course.duration) && Objects.equals(location, course.location) && Objects.equals(active, course.active) && Objects.equals(numberOfApplications, course.numberOfApplications) && Objects.equals(maxNumberOfApplications, course.maxNumberOfApplications);
+        return Objects.equals(PK, course.PK) && Objects.equals(SK, course.SK) && Objects.equals(name, course.name) && Objects.equals(edition, course.edition) && Objects.equals(teacherId, course.teacherId) && Objects.equals(syllabus, course.syllabus) && Objects.equals(program, course.program) && Objects.equals(schedule, course.schedule) && Objects.equals(price, course.price) && Objects.equals(duration, course.duration) && Objects.equals(location, course.location) && Objects.equals(active, course.active) && Objects.equals(enrolledStudents, course.enrolledStudents) && Objects.equals(maxStudents, course.maxStudents);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(PK, SK, name, edition, teacherId, syllabus, program, schedule, price, duration, location, active, numberOfApplications, maxNumberOfApplications);
+        return Objects.hash(PK, SK, name, edition, teacherId, syllabus, program, schedule, price, duration, location, active, enrolledStudents, maxStudents);
     }
 
     @Override
@@ -199,8 +200,8 @@ public class Course {
                 ", duration=" + duration +
                 ", location='" + location + '\'' +
                 ", active=" + active +
-                ", numberOfApplications=" + numberOfApplications +
-                ", maxNumberOfApplications=" + maxNumberOfApplications +
+                ", numberOfApplications=" + enrolledStudents +
+                ", maxNumberOfApplications=" + maxStudents +
                 '}';
     }
 }

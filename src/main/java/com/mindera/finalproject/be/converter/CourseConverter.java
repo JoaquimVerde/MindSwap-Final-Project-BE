@@ -22,7 +22,9 @@ public class CourseConverter {
                     course.getSchedule(),
                     course.getPrice(),
                     course.getDuration(),
-                    course.getLocation()
+                    course.getLocation(),
+                    course.getEnrolledStudents(),
+                    course.getMaxStudents()
             );
         }
         return new CoursePublicDto(
@@ -35,7 +37,9 @@ public class CourseConverter {
                 course.getSchedule(),
                 course.getPrice(),
                 course.getDuration(),
-                course.getLocation()
+                course.getLocation(),
+                course.getEnrolledStudents(),
+                course.getMaxStudents()
         );
     }
 

@@ -25,6 +25,10 @@ public record CoursePublicDto(
         @Schema(description = "The course duration", example = "30")
         Integer duration,
         @Schema(description = "The course location", example = "Porto")
-        String location
+        String location,
+        @Schema(description = "The current number of students enrolled in the course", example = "10")
+        Integer enrolledStudents,
+        @Schema(description = "The maximum number of students that can be in a course", example = "20")
+        Integer maxStudents
 ) {
 }

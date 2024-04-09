@@ -39,4 +39,5 @@ public class Messages {
     public static final String REGISTRATION_NOT_FOUND = "Registration not found with id: ";
     public static final String REGISTRATION_ALREADY_EXISTS = "Registration already exists";
     public static final String INVALID_REGISTRATION_STATUS = "Invalid registration status";
+    public static final String MAX_NUMBER_OF_STUDENTS_REACHED = "Max number of students reached";
 }

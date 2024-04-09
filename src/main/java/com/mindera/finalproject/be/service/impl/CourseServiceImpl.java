@@ -7,6 +7,7 @@ import com.mindera.finalproject.be.dto.course.CoursePublicDto;
 import com.mindera.finalproject.be.entity.Course;
 import com.mindera.finalproject.be.exception.course.CourseAlreadyExistsException;
 import com.mindera.finalproject.be.exception.course.CourseNotFoundException;
+import com.mindera.finalproject.be.exception.course.MaxNumberOfStudentsException;
 import com.mindera.finalproject.be.exception.student.PersonNotFoundException;
 import com.mindera.finalproject.be.service.CourseService;
 import com.mindera.finalproject.be.service.PersonService;
@@ -23,8 +24,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static com.mindera.finalproject.be.messages.Messages.COURSE_ALREADY_EXISTS;
-import static com.mindera.finalproject.be.messages.Messages.COURSE_NOT_FOUND;
+import static com.mindera.finalproject.be.messages.Messages.*;
 
 @ApplicationScoped
 public class CourseServiceImpl implements CourseService {
@@ -33,6 +33,7 @@ public class CourseServiceImpl implements CourseService {
     private final String COURSE = "COURSE#";
     private final String GSIPK1 = "GSIPK1";
     private final String GSIPK2 = "GSIPK2";
+    private final Integer MAX_STUDENTS = 20;
 
     @Inject
     private PersonService personService;
@@ -92,6 +93,7 @@ public class CourseServiceImpl implements CourseService {
         }
         course.setPK(COURSE);
         course.setSK(COURSE + UUID.randomUUID());
+        course.setMaxStudents(MAX_STUDENTS);
         course.setLocation(courseCreateDto.location().toUpperCase());
         courseTable.putItem(course);
         return course.getTeacherId() == null ? CourseConverter.fromEntityToPublicDto(course, null) : CourseConverter.fromEntityToPublicDto(course, personService.getById(course.getTeacherId()));
@@ -160,5 +162,15 @@ public class CourseServiceImpl implements CourseService {
         List<Course> coursesList = new ArrayList<>();
         courses.forEach(page -> coursesList.addAll(page.items()));
         return !coursesList.isEmpty();
+    }
+
+    void updateEnrolledStudents(String id) throws CourseNotFoundException, MaxNumberOfStudentsException {
+        Course course = findById(id);
+        if (course.getEnrolledStudents() >= course.getMaxStudents()) {
+            throw new MaxNumberOfStudentsException(MAX_NUMBER_OF_STUDENTS_REACHED);
+        }
+        course.setEnrolledStudents(course.getEnrolledStudents() + 1);
+        System.out.println(course.getEnrolledStudents());
+        courseTable.updateItem(course);
     }
 }
