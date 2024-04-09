@@ -31,6 +31,11 @@ import static org.junit.jupiter.api.Assertions.*;
 class RegistrationControllerTests {
 
     private final String URL = "/api/v1/registration";
+    private final String status = "Applied";
+    private final String finalGrade = "10";
+    private final String aboutYou = "about";
+    private final boolean prevKnowledge = true;
+    private final boolean prevExperience = true;
 
     @Inject
     DynamoDbEnhancedClient enhancedClient;
@@ -135,11 +140,29 @@ class RegistrationControllerTests {
     }
 
     @Test
+    void testGetAllRegistrationsWith5Registrations2Deleted() {
+        for (int i = 0; i < 5; i++) {
+           String id = createRegistration(createPerson("Student"), createCourse(createPerson("Teacher")));
+           if(i % 2 == 1) {
+               given()
+                       .when().delete(URL + "/delete/" + id)
+                       .then()
+                       .statusCode(200);
+           }
+        }
+
+        given()
+                .when().get(URL)
+                .then()
+                .body("size()", equalTo(3));
+    }
+
+    @Test
     void testCreateRegistration() {
         String studentId = createPerson("Student");
         String courseId = createCourse(createPerson("Teacher"));
 
-        RegistrationCreateDto registration = new RegistrationCreateDto(studentId, courseId, "Pending", "10",
+        RegistrationCreateDto registration = new RegistrationCreateDto(studentId, courseId, "Applied", "10",
                 "about", true, true);
 
         RegistrationPublicDto response = given()
