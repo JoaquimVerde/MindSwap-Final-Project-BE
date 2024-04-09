@@ -1,9 +1,12 @@
 package com.mindera.finalproject.be.controller;
 
 import com.mindera.finalproject.be.dto.registration.RegistrationCreateDto;
+import com.mindera.finalproject.be.dto.registration.RegistrationUpdateGradeDto;
+import com.mindera.finalproject.be.dto.registration.RegistrationUpdateStatusDto;
 import com.mindera.finalproject.be.exception.course.CourseNotFoundException;
 import com.mindera.finalproject.be.exception.course.MaxNumberOfStudentsException;
 import com.mindera.finalproject.be.exception.registration.RegistrationAlreadyExistsException;
+import com.mindera.finalproject.be.exception.registration.RegistrationNotFoundException;
 import com.mindera.finalproject.be.exception.student.PersonNotFoundException;
 import com.mindera.finalproject.be.service.RegistrationService;
 import jakarta.inject.Inject;
@@ -27,8 +30,8 @@ public class RegistrationController {
     @Operation(summary = "Find all registrations")
     @APIResponse(responseCode = "200", description = "List of all registrations")
     @GET
-    public Response getAll() {
-        return Response.ok(registrationService.getAll()).build();
+    public Response getAll(@QueryParam("page") @DefaultValue("0") Integer page, @QueryParam("limit") @DefaultValue("100") Integer limit) {
+        return Response.ok(registrationService.getAll(page, limit)).build();
     }
 
     @Operation(summary = "Find registration by id")
@@ -86,16 +89,16 @@ public class RegistrationController {
     }
 
     @PUT
-    @Path("{id}/{status}")
-    public Response updateStatus(@PathParam("id") String id, @PathParam("status") String status)
-            throws PersonNotFoundException, CourseNotFoundException {
-        return Response.ok(registrationService.updateStatus(id, status)).build();
+    @Path("/status/{id}")
+    public Response updateStatus(@PathParam("id") String id, @RequestBody @Valid RegistrationUpdateStatusDto registrationUpdate)
+            throws PersonNotFoundException, CourseNotFoundException, RegistrationNotFoundException {
+        return Response.ok(registrationService.updateStatus(id, registrationUpdate)).build();
     }
 
     @PUT
-    @Path("/grade/{id}/{grade}")
-    public Response updateGrade(@PathParam("id") String id, @PathParam("grade") Integer grade)
-            throws PersonNotFoundException, CourseNotFoundException {
-        return Response.ok(registrationService.updateGrade(id, grade)).build();
+    @Path("/grade/{id}")
+    public Response updateGrade(@PathParam("id") String id, @RequestBody @Valid RegistrationUpdateGradeDto registrationUpdate)
+            throws PersonNotFoundException, CourseNotFoundException, RegistrationNotFoundException {
+        return Response.ok(registrationService.updateGrade(id, registrationUpdate)).build();
     }
 }
