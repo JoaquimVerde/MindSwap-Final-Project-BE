@@ -23,6 +23,8 @@ import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import static com.mindera.finalproject.be.messages.Messages.COURSE_NOT_FOUND;
+import static com.mindera.finalproject.be.messages.Messages.PERSON_NOT_FOUND;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.equalTo;
 import static org.junit.jupiter.api.Assertions.*;
@@ -32,7 +34,7 @@ class RegistrationControllerTests {
 
     private final String URL = "/api/v1/registration";
     private final String status = "Applied";
-    private final String finalGrade = "10";
+    private final Integer finalGrade = 10;
     private final String aboutYou = "about";
     private final boolean prevKnowledge = true;
     private final boolean prevExperience = true;
@@ -98,8 +100,8 @@ class RegistrationControllerTests {
     }
 
     public String createRegistration(String studentId, String courseId) {
-        RegistrationCreateDto registration = new RegistrationCreateDto(studentId, courseId, "Pending", "10",
-                "about", true, true);
+        RegistrationCreateDto registration = new RegistrationCreateDto(studentId, courseId, status, finalGrade,
+                aboutYou, prevKnowledge, prevExperience);
 
         return given()
                 .body(registration)
@@ -128,9 +130,11 @@ class RegistrationControllerTests {
 
     @Test
     void testGetAllRegistrationsWith5Registrations() {
+        String courseId = createCourse(createPerson("Teacher"));
         int amount = 5;
         for (int i = 0; i < amount; i++) {
-            createRegistration(createPerson("Student"), createCourse(createPerson("Teacher")));
+            String studentId = createPerson("Student");
+            createRegistration(studentId, courseId);
         }
 
         given()
@@ -141,8 +145,11 @@ class RegistrationControllerTests {
 
     @Test
     void testGetAllRegistrationsWith5Registrations2Deleted() {
-        for (int i = 0; i < 5; i++) {
-           String id = createRegistration(createPerson("Student"), createCourse(createPerson("Teacher")));
+        String courseId = createCourse(createPerson("Teacher"));
+        int amount = 5;
+        for (int i = 0; i < amount; i++) {
+            String studentId = createPerson("Student");
+           String id = createRegistration(studentId, courseId);
            if(i % 2 == 1) {
                given()
                        .when().delete(URL + "/delete/" + id)
@@ -157,13 +164,37 @@ class RegistrationControllerTests {
                 .body("size()", equalTo(3));
     }
 
+//    @Test
+//    void testGetAllRegistrationsPaged() {
+//        String courseId = createCourse(createPerson("Teacher"));
+//        int amount = 9;
+//        for (int i = 0; i < amount; i++) {
+//            String studentId = createPerson("Student");
+//            createRegistration(studentId, courseId);
+//        }
+//
+//        given()
+//                .queryParam("page", 0)
+//                .queryParam("limit", 5)
+//                .when().get(URL)
+//                .then()
+//                .body("size()", equalTo(5));
+//
+//        given()
+//                .queryParam("page", 1)
+//                .queryParam("limit", 5)
+//                .when().get(URL)
+//                .then()
+//                .body("size()", equalTo(4));
+//    }
+
     @Test
     void testCreateRegistration() {
         String studentId = createPerson("Student");
         String courseId = createCourse(createPerson("Teacher"));
 
-        RegistrationCreateDto registration = new RegistrationCreateDto(studentId, courseId, "Applied", "10",
-                "about", true, true);
+        RegistrationCreateDto registration = new RegistrationCreateDto(studentId, courseId, status, finalGrade,
+                aboutYou, prevKnowledge, prevExperience);
 
         RegistrationPublicDto response = given()
                 .body(registration)
@@ -176,7 +207,7 @@ class RegistrationControllerTests {
         assertNotNull(response.id());
         assertEquals(registration.personId(), response.student().id());
         assertEquals(registration.courseId(), response.course().id());
-        assertEquals(registration.status(), response.status());
+        assertEquals(registration.status().toUpperCase(), response.status());
         assertEquals(registration.finalGrade(), response.finalGrade());
         assertEquals(registration.aboutYou(), response.aboutYou());
         assertEquals(registration.prevKnowledge(), response.prevKnowledge());
@@ -189,19 +220,19 @@ class RegistrationControllerTests {
 
         String courseId = createCourse(createPerson("Teacher"));
         RegistrationCreateDto registration = new RegistrationCreateDto("invalidId",
-                courseId, "Pending", "10",
-                "about", true, true);
+                courseId, status, finalGrade,
+                aboutYou, prevKnowledge, prevExperience);
 
         Error response = given()
                 .body(registration)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .when().post(URL)
                 .then()
-                .statusCode(400)
+                .statusCode(404)
                 .extract().as(Error.class);
 
-        assertEquals("Person not found", response.getMessage());
-        assertEquals(400, response.getStatus());
+        assertEquals(PERSON_NOT_FOUND + "invalidId", response.getMessage());
+        assertEquals(404, response.getStatus());
     }
 
     @Test
@@ -209,19 +240,19 @@ class RegistrationControllerTests {
 
         String studentId = createPerson("Student");
         RegistrationCreateDto registration = new RegistrationCreateDto(studentId,
-                "invalidId", "Pending", "10",
-                "about", true, true);
+                "invalidId", status, finalGrade,
+                aboutYou, prevKnowledge, prevExperience);
 
         Error response = given()
                 .body(registration)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .when().post(URL)
                 .then()
-                .statusCode(400)
+                .statusCode(404)
                 .extract().as(Error.class);
 
-        assertEquals("course not found", response.getMessage());
-        assertEquals(400, response.getStatus());
+        assertEquals(COURSE_NOT_FOUND + "invalidId", response.getMessage());
+        assertEquals(404, response.getStatus());
     }
 
     @Test
