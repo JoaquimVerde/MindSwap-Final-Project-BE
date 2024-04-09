@@ -60,8 +60,11 @@ public class RegistrationServiceImpl implements RegistrationService {
                 .limit(limit)
                 .build();
         SdkIterable<Page<Registration>> registrations = registrationTable.query(limitedQuery);
+        if(page >= registrations.stream().count()){
+            page = Math.toIntExact(registrations.stream().count() - 1);
+        }
         List<Registration> registrationsList = new ArrayList<>(registrations.stream().toList().get(page).items());
-        return registrationsList.stream().filter(Registration::getActive).map(registration -> {
+        return registrationsList.stream().map(registration -> {
             PersonPublicDto student = null;
             CoursePublicDto course = null;
             try {
