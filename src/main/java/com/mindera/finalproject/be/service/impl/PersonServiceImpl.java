@@ -77,6 +77,7 @@ public class PersonServiceImpl implements PersonService {
         Person person = PersonConverter.fromCreateDtoToEntity(personCreateDto);
         person.setPK(PERSON);
         person.setSK(PERSON + UUID.randomUUID());
+        person.setRole(personCreateDto.role().toUpperCase());
         personTable.putItem(person);
         return PersonConverter.fromEntityToPublicDto(person);
     }
@@ -91,7 +92,7 @@ public class PersonServiceImpl implements PersonService {
         person.setFirstName(personCreateDto.firstName());
         person.setLastName(personCreateDto.lastName());
         person.setUsername(personCreateDto.username());
-        person.setRole(personCreateDto.role());
+        person.setRole(personCreateDto.role().toUpperCase());
         person.setDateOfBirth(personCreateDto.dateOfBirth());
         person.setAddress(personCreateDto.address());
         person.setCurriculum(personCreateDto.cv());

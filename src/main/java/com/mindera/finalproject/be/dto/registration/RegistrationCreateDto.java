@@ -1,6 +1,8 @@
 package com.mindera.finalproject.be.dto.registration;
 
 
+import com.mindera.finalproject.be.enums.RegistrationStatus;
+import com.mindera.finalproject.be.validator.EnumValidator;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 
@@ -13,7 +15,7 @@ public record RegistrationCreateDto(
         @NotEmpty(message = NON_EMPTY_COURSEID)
         String courseId,
 
-        @NotEmpty(message = NON_EMPTY_STATUS)
+        @EnumValidator(enumClass = RegistrationStatus.class, message = INVALID_REGISTRATION_STATUS)
         String status,
 
         String finalGrade,

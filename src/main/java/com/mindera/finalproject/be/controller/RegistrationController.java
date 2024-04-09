@@ -44,7 +44,7 @@ public class RegistrationController {
     @Operation(summary = "Create a registration")
     @APIResponse(responseCode = "201", description = "Registration created")
     @POST
-    public Response create(RegistrationCreateDto registrationCreateDto)
+    public Response create(@Valid @RequestBody RegistrationCreateDto registrationCreateDto)
             throws PersonNotFoundException, CourseNotFoundException, RegistrationAlreadyExistsException {
         return Response.ok(registrationService.create(registrationCreateDto)).status(Response.Status.CREATED).build();
     }

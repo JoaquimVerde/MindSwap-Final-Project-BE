@@ -78,6 +78,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         }
         registration.setPK(REGISTRATION);
         registration.setSK(REGISTRATION + UUID.randomUUID());
+        registration.setStatus(registrationCreateDto.status().replace(" ", "_").toUpperCase());
         PersonPublicDto student = personService.getById(registration.getPersonId());
         CoursePublicDto course = courseService.getById(registration.getCourseId());
         registrationTable.putItem(registration);
@@ -90,7 +91,7 @@ public class RegistrationServiceImpl implements RegistrationService {
 
         oldRegistration.setPK(oldRegistration.getPK());
         oldRegistration.setSK(oldRegistration.getSK());
-        oldRegistration.setStatus(registrationCreateDto.status());
+        oldRegistration.setStatus(registrationCreateDto.status().replace(" ", "_").toUpperCase());
         oldRegistration.setFinalGrade(registrationCreateDto.finalGrade());
         oldRegistration.setAboutYou(registrationCreateDto.aboutYou());
         oldRegistration.setPrevKnowledge(registrationCreateDto.prevKnowledge());
