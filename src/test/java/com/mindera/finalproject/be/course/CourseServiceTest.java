@@ -4,6 +4,7 @@ import com.mindera.finalproject.be.dto.course.CoursePublicDto;
 import com.mindera.finalproject.be.dto.person.PersonPublicDto;
 import com.mindera.finalproject.be.entity.Course;
 import com.mindera.finalproject.be.entity.Person;
+import com.mindera.finalproject.be.exception.course.CourseNotFoundException;
 import com.mindera.finalproject.be.exception.student.PersonNotFoundException;
 import com.mindera.finalproject.be.service.PersonService;
 import com.mindera.finalproject.be.service.impl.CourseServiceImpl;
@@ -117,6 +118,25 @@ class CourseServiceTest {
     }
 
     @Test
+    void testGetByIdTeacherDeleted() throws PersonNotFoundException, CourseNotFoundException {
+        Course course = getCourse();
+        Person teacher = getPerson();
+        teacher.setActive(false);
+
+        when(courseTable.getItem(any(Key.class))).thenReturn(course);
+        when(personService.findById(anyString())).thenReturn(teacher);
+
+        CoursePublicDto result = courseService.getById(id);
+
+        verify(courseTable, times(1)).getItem(any(Key.class));
+        verify(personService, times(0)).getById(anyString());
+        verify(personService, times(1)).findById(anyString());
+
+        assertNotNull(result);
+        assertNull(result.teacher());
+    }
+
+    @Test
     void testGetAll() throws PersonNotFoundException {
         List<Course> course = new ArrayList<>();
         for (int i = 0; i < 101; i++) {
@@ -159,6 +179,58 @@ class CourseServiceTest {
 
         verify(courseTable, times(1)).query(any(QueryEnhancedRequest.class));
         verify(personService, times(100)).findById(anyString());
+        assertEquals(100, result.size());
+        for (int i = 0; i < 100; i++) {
+            assertNull(result.get(i).teacher());
+        }
+    }
+
+    @Test
+    void testGetAllTeacherDeleted() throws PersonNotFoundException {
+        List<Course> course = new ArrayList<>();
+        Person teacher = getPerson();
+        teacher.setActive(false);
+        for (int i = 0; i < 100; i++) {
+            course.add(getCourse());
+        }
+        Page<Course> page1 = Page.create(course.subList(0, 100));
+
+        SdkIterable<Page<Course>> courses = () -> List.of(page1).iterator();
+
+        PageIterable<Course> pageIterable = PageIterable.create(courses);
+
+        when(courseTable.query(any(QueryEnhancedRequest.class))).thenReturn(pageIterable);
+        when(personService.findById(anyString())).thenReturn(teacher);
+
+        List<CoursePublicDto> result = courseService.getAll(0, 100);
+
+        verify(courseTable, times(1)).query(any(QueryEnhancedRequest.class));
+        verify(personService, times(100)).findById(anyString());
+        assertEquals(100, result.size());
+        for (int i = 0; i < 100; i++) {
+            assertNull(result.get(i).teacher());
+        }
+    }
+
+    @Test
+    void testGetAllNullTeacherId() throws PersonNotFoundException {
+        List<Course> course = new ArrayList<>();
+        for (int i = 0; i < 100; i++) {
+            Course c = getCourse();
+            c.setTeacherId(null);
+            course.add(c);
+        }
+        Page<Course> page1 = Page.create(course.subList(0, 100));
+
+        SdkIterable<Page<Course>> courses = () -> List.of(page1).iterator();
+
+        PageIterable<Course> pageIterable = PageIterable.create(courses);
+
+        when(courseTable.query(any(QueryEnhancedRequest.class))).thenReturn(pageIterable);
+
+        List<CoursePublicDto> result = courseService.getAll(0, 100);
+
+        verify(courseTable, times(1)).query(any(QueryEnhancedRequest.class));
         assertEquals(100, result.size());
         for (int i = 0; i < 100; i++) {
             assertNull(result.get(i).teacher());
