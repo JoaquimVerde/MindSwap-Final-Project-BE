@@ -3,6 +3,7 @@ package com.mindera.finalproject.be.controller;
 import com.mindera.finalproject.be.dto.course.CourseCreateDto;
 import com.mindera.finalproject.be.exception.course.CourseAlreadyExistsException;
 import com.mindera.finalproject.be.exception.course.CourseNotFoundException;
+import com.mindera.finalproject.be.exception.student.PersonNotATeacherException;
 import com.mindera.finalproject.be.exception.student.PersonNotFoundException;
 import com.mindera.finalproject.be.service.CourseService;
 import jakarta.inject.Inject;
@@ -49,7 +50,7 @@ public class CourseController {
             @APIResponse(responseCode = "201", description = "Course created")
     })
     @POST
-    public Response create(@Valid @RequestBody CourseCreateDto courseCreateDto) throws PersonNotFoundException, CourseAlreadyExistsException {
+    public Response create(@Valid @RequestBody CourseCreateDto courseCreateDto) throws PersonNotFoundException, CourseAlreadyExistsException, PersonNotATeacherException {
         return Response.ok(courseService.create(courseCreateDto)).status(Response.Status.CREATED).build();
     }
 
@@ -76,7 +77,7 @@ public class CourseController {
     })
     @PUT
     @Path("/{id}")
-    public Response update(@PathParam("id") String id, @Valid @RequestBody CourseCreateDto courseCreateDto) throws PersonNotFoundException, CourseNotFoundException {
+    public Response update(@PathParam("id") String id, @Valid @RequestBody CourseCreateDto courseCreateDto) throws PersonNotFoundException, CourseNotFoundException, PersonNotATeacherException {
         return Response.ok(courseService.update(id, courseCreateDto)).build();
     }
 

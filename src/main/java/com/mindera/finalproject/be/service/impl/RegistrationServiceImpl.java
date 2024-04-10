@@ -181,7 +181,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         Registration registration = findById(id);
         String oldStatus = registration.getStatus();
 
-        registration.setStatus(registrationUpdate.status());
+        registration.setStatus(registrationUpdate.status().replace(" ", "_").toUpperCase());
 
         if (!oldStatus.equals(ENROLLED) && registration.getStatus().equals(ENROLLED)) {
             courseService.updateEnrolledStudents(registration.getCourseId());
