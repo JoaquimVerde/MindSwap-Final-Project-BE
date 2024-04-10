@@ -8,6 +8,7 @@ import com.mindera.finalproject.be.entity.Course;
 import com.mindera.finalproject.be.exception.course.CourseAlreadyExistsException;
 import com.mindera.finalproject.be.exception.course.CourseNotFoundException;
 import com.mindera.finalproject.be.exception.course.MaxNumberOfStudentsException;
+import com.mindera.finalproject.be.exception.student.PersonNotATeacherException;
 import com.mindera.finalproject.be.exception.student.PersonNotFoundException;
 import com.mindera.finalproject.be.service.CourseService;
 import com.mindera.finalproject.be.service.PersonService;
@@ -33,6 +34,7 @@ public class CourseServiceImpl implements CourseService {
     private final String COURSE = "COURSE#";
     private final String GSIPK1 = "GSIPK1";
     private final String GSIPK2 = "GSIPK2";
+    private final String TEACHER = "TEACHER";
     private final Integer MAX_STUDENTS = 20;
 
     @Inject
@@ -79,7 +81,7 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public CoursePublicDto create(CourseCreateDto courseCreateDto) throws PersonNotFoundException, CourseAlreadyExistsException {
+    public CoursePublicDto create(CourseCreateDto courseCreateDto) throws PersonNotFoundException, CourseAlreadyExistsException, PersonNotATeacherException {
         Course course = CourseConverter.fromCreateDtoToEntity(courseCreateDto);
         if (checkIfCourseIsDuplicate(course)) {
             throw new CourseAlreadyExistsException(COURSE_ALREADY_EXISTS);
@@ -88,11 +90,7 @@ public class CourseServiceImpl implements CourseService {
             if (courseCreateDto.teacherId().isEmpty()) {
                 course.setTeacherId(null);
             } else {
-                try {
-                    personService.findById(courseCreateDto.teacherId());
-                } catch (PersonNotFoundException e) {
-                    course.setTeacherId(null);
-                }
+                checkIfPersonIsValid(courseCreateDto.teacherId());
             }
         }
         course.setPK(COURSE);
@@ -101,6 +99,15 @@ public class CourseServiceImpl implements CourseService {
         course.setLocation(courseCreateDto.location().toUpperCase());
         courseTable.putItem(course);
         return course.getTeacherId() == null ? CourseConverter.fromEntityToPublicDto(course, null) : CourseConverter.fromEntityToPublicDto(course, personService.getById(course.getTeacherId()));
+    }
+
+    private void checkIfPersonIsValid(String personId) throws PersonNotFoundException, PersonNotATeacherException {
+        if (personService.findById(personId) == null) {
+            throw new PersonNotFoundException(PERSON_NOT_FOUND + personId);
+        }
+        if (!personService.findById(personId).getRole().equals(TEACHER)){
+            throw new PersonNotATeacherException(PERSON_NOT_A_TEACHER);
+        }
     }
 
     @Override
@@ -119,13 +126,15 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
-    public CoursePublicDto update(String id, CourseCreateDto courseCreateDto) throws PersonNotFoundException, CourseNotFoundException {
+    public CoursePublicDto update(String id, CourseCreateDto courseCreateDto) throws PersonNotFoundException, CourseNotFoundException, PersonNotATeacherException {
         Course course = findById(id);
         course.setTeacherId(courseCreateDto.teacherId());
-        try {
-            personService.findById(courseCreateDto.teacherId());
-        } catch (PersonNotFoundException e) {
-            course.setTeacherId(null);
+        if (courseCreateDto.teacherId() != null) {
+            if (courseCreateDto.teacherId().isEmpty()) {
+                course.setTeacherId(null);
+            } else {
+                checkIfPersonIsValid(courseCreateDto.teacherId());
+            }
         }
         course.setName(courseCreateDto.name());
         course.setEdition(courseCreateDto.edition());
