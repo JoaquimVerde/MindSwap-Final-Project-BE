@@ -59,17 +59,6 @@ public class CourseServiceImpl implements CourseService {
         List<Course> coursesList = new ArrayList<>(courses.stream().toList().get(page).items());
         return coursesList.stream().map(this::mapCourseList).toList();
     }
-    
-    private CoursePublicDto mapCourseList(Course course) {
-        try {
-            if (course.getTeacherId() == null || !personService.findById(course.getTeacherId()).isActive()) {
-                return CourseConverter.fromEntityToPublicDto(course, null);
-            }
-            return CourseConverter.fromEntityToPublicDto(course, personService.getById(course.getTeacherId()));
-        } catch (PersonNotFoundException e) {
-            return CourseConverter.fromEntityToPublicDto(course, null);
-        }
-    }
 
     @Override
     public CoursePublicDto getById(String id) throws PersonNotFoundException, CourseNotFoundException {
@@ -99,15 +88,6 @@ public class CourseServiceImpl implements CourseService {
         course.setLocation(courseCreateDto.location().toUpperCase());
         courseTable.putItem(course);
         return course.getTeacherId() == null ? CourseConverter.fromEntityToPublicDto(course, null) : CourseConverter.fromEntityToPublicDto(course, personService.getById(course.getTeacherId()));
-    }
-
-    private void checkIfPersonIsValid(String personId) throws PersonNotFoundException, PersonNotATeacherException {
-        if (personService.findById(personId) == null) {
-            throw new PersonNotFoundException(PERSON_NOT_FOUND + personId);
-        }
-        if (!personService.findById(personId).getRole().equals(TEACHER)){
-            throw new PersonNotATeacherException(PERSON_NOT_A_TEACHER);
-        }
     }
 
     @Override
@@ -168,6 +148,17 @@ public class CourseServiceImpl implements CourseService {
         return course;
     }
 
+    private CoursePublicDto mapCourseList(Course course) {
+        try {
+            if (course.getTeacherId() == null || !personService.findById(course.getTeacherId()).isActive()) {
+                return CourseConverter.fromEntityToPublicDto(course, null);
+            }
+            return CourseConverter.fromEntityToPublicDto(course, personService.getById(course.getTeacherId()));
+        } catch (PersonNotFoundException e) {
+            return CourseConverter.fromEntityToPublicDto(course, null);
+        }
+    }
+
     private boolean checkIfCourseIsDuplicate(Course course) {
         QueryConditional queryConditional = QueryConditional.keyEqualTo(k -> k.partitionValue(course.getName()).sortValue(course.getEdition()));
         DynamoDbIndex<Course> index = courseTable.index(GSIPK2);
@@ -175,6 +166,15 @@ public class CourseServiceImpl implements CourseService {
         List<Course> coursesList = new ArrayList<>();
         courses.forEach(page -> coursesList.addAll(page.items()));
         return !coursesList.isEmpty();
+    }
+
+    private void checkIfPersonIsValid(String personId) throws PersonNotFoundException, PersonNotATeacherException {
+        if (personService.findById(personId) == null) {
+            throw new PersonNotFoundException(PERSON_NOT_FOUND + personId);
+        }
+        if (!personService.findById(personId).getRole().equals(TEACHER)){
+            throw new PersonNotATeacherException(PERSON_NOT_A_TEACHER);
+        }
     }
 
     void updateEnrolledStudents(String id) throws CourseNotFoundException, MaxNumberOfStudentsException {
