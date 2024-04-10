@@ -2,6 +2,7 @@ package com.mindera.finalproject.be.dto.person;
 
 import com.mindera.finalproject.be.enums.RoleStatus;
 import com.mindera.finalproject.be.validator.EnumValidator;
+import io.quarkus.runtime.annotations.RegisterForReflection;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Past;
@@ -13,6 +14,7 @@ import java.time.LocalDate;
 
 import static com.mindera.finalproject.be.messages.Messages.*;
 
+@RegisterForReflection
 public record PersonCreateDto(
         @NotBlank(message = INVALID_EMAIL)
         @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", message = INVALID_EMAIL)

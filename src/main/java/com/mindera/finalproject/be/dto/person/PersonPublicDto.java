@@ -1,9 +1,11 @@
 package com.mindera.finalproject.be.dto.person;
 
+import io.quarkus.runtime.annotations.RegisterForReflection;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import java.time.LocalDate;
 
+@RegisterForReflection
 public record PersonPublicDto(
         @Schema(description = "The person id", example = "PERSON#asdf-1234-1235")
         String id,
