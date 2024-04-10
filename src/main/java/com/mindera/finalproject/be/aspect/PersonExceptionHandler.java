@@ -2,6 +2,7 @@ package com.mindera.finalproject.be.aspect;
 
 import com.mindera.finalproject.be.exception.student.PersonAlreadyExistsException;
 import com.mindera.finalproject.be.exception.student.PersonException;
+import com.mindera.finalproject.be.exception.student.PersonNotATeacherException;
 import com.mindera.finalproject.be.exception.student.PersonNotFoundException;
 import jakarta.ws.rs.core.Response;
 import jakarta.ws.rs.ext.ExceptionMapper;
@@ -30,6 +31,14 @@ public class PersonExceptionHandler implements ExceptionMapper<PersonException> 
                     .timestamp(new Date())
                     .build();
             return Response.status(Response.Status.CONFLICT).entity(error).build();
+        }
+        if (e instanceof PersonNotATeacherException) {
+            Error error = new Error.Builder()
+                    .message(e.getMessage())
+                    .status(Response.Status.BAD_REQUEST.getStatusCode())
+                    .timestamp(new Date())
+                    .build();
+            return Response.status(Response.Status.BAD_REQUEST).entity(error).build();
         }
         return Response.status(Response.Status.INTERNAL_SERVER_ERROR).entity(UNEXPECTED_ERROR).build();
     }
