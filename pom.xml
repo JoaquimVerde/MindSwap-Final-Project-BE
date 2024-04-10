@@ -89,6 +89,11 @@
             <artifactId>html2pdf</artifactId>
             <version>3.0.4</version>
         </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-amazon-lambda-rest-archetype</artifactId>
+            <version>3.9.2</version>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
