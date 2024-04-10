@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Conclusion Certificate</title>
+    <style>
+        @page {
+            size: landscape;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #fff;
+            color: #000;
+            margin: 0;
+            padding: 0;
+        }
+
+        .certificate {
+            width: 80%;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .certificate-header {
+            background-color: #000;
+            color: #fff;
+            padding: 10px;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+            text-align: center;
+        }
+
+        .certificate-content {
+            text-align: center;
+        }
+
+        .certificate-name {
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+
+        .certificate-details {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .certificate-signature {
+            font-size: 18px;
+            font-style: italic;
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+
+<div class="certificate">
+    <div class="certificate-header">
+        <h2>Conclusion Certificate</h2>
+    </div>
+    <div class="certificate-content">
+        <p class="certificate-name">Certificate of Completion</p>
+        <p class="certificate-details">This is to certify that</p>
+        <p class="certificate-details"><strong>{{studentName}}</strong></p>
+        <p class="certificate-details">has successfully completed the course</p>
+        <p class="certificate-details"><strong>{{courseName}}</strong></p>
+        <p class="certificate-details">Date of Completion: {{finalDate}}</p>
+    </div>
+    <div class="certificate-signature">
+        <p>Signature: </p>
+    </div>
+</div>
+
+</body>
+</html>

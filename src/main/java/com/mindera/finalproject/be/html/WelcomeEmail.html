@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Welcome to Our Course Platform!</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            color: #333;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center; /* Center the text */
+        }
+        h1 {
+            color: #007bff;
+        }
+        p {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .btn {
+            display: inline-block;
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+        .list {
+            text-align: left;
+            margin-left: 40px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Welcome to Our Course Platform!</h1>
+    <p>Hello {{firstName}},</p>
+    <p>We're thrilled to have you join our community! You're now part of an exciting journey of learning and growth.</p>
+    <p>Here are a few things you can do:</p>
+    <ul class="list">
+        <li>Explore our courses and find the perfect one for you.</li>
+        <li>Start learning and unlock new opportunities!</li>
+    </ul>
+    <p>Ready to get started? Click the button below to log in to your account:</p>
+    <p><a class="btn" href="{{loginUrl}}">Log In</a></p>
+    <p>If you have any questions or need assistance, feel free to reach out to our support team. We're here to help!</p>
+    <p>Happy learning!</p>
+    <p>The Courses Platform Team</p>
+</div>
+</body>
+</html>
