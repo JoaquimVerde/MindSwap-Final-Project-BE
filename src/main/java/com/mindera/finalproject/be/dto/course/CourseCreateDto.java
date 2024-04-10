@@ -1,5 +1,6 @@
 package com.mindera.finalproject.be.dto.course;
 
+import io.quarkus.runtime.annotations.RegisterForReflection;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
@@ -10,6 +11,7 @@ import java.math.BigDecimal;
 
 import static com.mindera.finalproject.be.messages.Messages.*;
 
+@RegisterForReflection
 public record CourseCreateDto(
 
         @NotEmpty(message = NON_EMPTY_NAME)
