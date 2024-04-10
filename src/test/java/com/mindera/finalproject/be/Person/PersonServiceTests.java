@@ -10,14 +10,20 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import software.amazon.awssdk.core.pagination.sync.SdkIterable;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 import software.amazon.awssdk.enhanced.dynamodb.Key;
+import software.amazon.awssdk.enhanced.dynamodb.model.Page;
+import software.amazon.awssdk.enhanced.dynamodb.model.PageIterable;
+import software.amazon.awssdk.enhanced.dynamodb.model.QueryConditional;
+import software.amazon.awssdk.enhanced.dynamodb.model.QueryEnhancedRequest;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -32,10 +38,36 @@ class PersonServiceTests {
     private final String cv = "www.example.com";
     private final String PERSON = "PERSON#";
     @Mock
-    private DynamoDbTable<Person> mockPersonTable;
+    private DynamoDbTable<Person> personTable;
 
     @InjectMocks
     private PersonServiceImpl personService;
+
+
+    @Test
+    void testGetAll() {
+        Person person1 = new Person();
+        person1.setActive(true);
+        Person person2 = new Person();
+        person2.setActive(false);
+
+
+        List<Person> mockPersons = new ArrayList<>();
+        mockPersons.add(person1);
+        mockPersons.add(person2);
+        Page<Person> page1 = Page.create(mockPersons);
+        SdkIterable<Page<Person>> persons = () -> List.of(page1).iterator();
+
+        PageIterable<Person> pageIterable = PageIterable.create(persons);
+
+        QueryConditional queryConditional = QueryConditional.sortBeginsWith(k -> k.partitionValue(PERSON).sortValue(PERSON));
+        when(personTable.query(queryConditional)).thenReturn(pageIterable);
+
+        List<PersonPublicDto> result = personService.getAll();
+
+
+        assertEquals(1, result.size());
+    }
 
     @Test
     void testGetById() throws PersonNotFoundException {
@@ -45,7 +77,7 @@ class PersonServiceTests {
         person.setSK(id);
         Key key = Key.builder().partitionValue(PERSON).sortValue(id).build();
 
-        when(mockPersonTable.getItem(key)).thenReturn(person);
+        when(personTable.getItem(key)).thenReturn(person);
 
 
         PersonPublicDto result = personService.getById(id);
@@ -85,7 +117,7 @@ class PersonServiceTests {
         PersonCreateDto updateDto = new PersonCreateDto(email, firstName, lastName, role, username, dateOfBirth, address, cv);
 
 
-        when(mockPersonTable.getItem(key)).thenReturn(person);
+        when(personTable.getItem(key)).thenReturn(person);
 
 
         PersonPublicDto result = personService.update(id, updateDto);
@@ -109,10 +141,28 @@ class PersonServiceTests {
         person.setSK(id);
         Key key = Key.builder().partitionValue(PERSON).sortValue(id).build();
 
-        when(mockPersonTable.getItem(key)).thenReturn(person);
+        when(personTable.getItem(key)).thenReturn(person);
 
         personService.delete(id);
 
-        verify(mockPersonTable, times(1)).updateItem(person);
+        verify(personTable, times(1)).updateItem(person);
+    }
+
+    @Test
+    void testFindByIdNotFound() {
+        String id = PERSON + UUID.randomUUID();
+
+        when(personTable.getItem(any(Key.class))).thenReturn(null);
+
+        assertThrows(PersonNotFoundException.class, () -> personService.findById(id));
+    }
+
+    @Test
+    void testDeleteNotFound() {
+        String id = PERSON + UUID.randomUUID();
+
+        when(personTable.getItem(any(Key.class))).thenReturn(null);
+
+        assertThrows(PersonNotFoundException.class, () -> personService.delete(id));
     }
 }
