@@ -4,7 +4,6 @@ import com.itextpdf.html2pdf.HtmlConverter;
 import com.mindera.finalproject.be.entity.Course;
 import com.mindera.finalproject.be.entity.Person;
 import com.mindera.finalproject.be.exception.pdf.PdfCreateException;
-import com.mindera.finalproject.be.exception.pdf.PdfException;
 import jakarta.enterprise.context.ApplicationScoped;
 
 import java.io.ByteArrayOutputStream;
@@ -16,10 +15,8 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.Year;
 import java.time.format.DateTimeFormatter;
-import java.time.format.FormatStyle;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.Random;
 
 @ApplicationScoped
 public class Pdf {
