@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Invoice for Course Enrollment</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            color: #333;
+            padding: 20px;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        h1 {
+            color: #007bff;
+        }
+        p {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+        .btn {
+            display: inline-block;
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>Invoice for Course Enrollment</h1>
+    <p>Dear {{firstName}},</p>
+    <p>Congratulations! We are pleased to inform you that you have been accepted into the course "{{courseName}}".</p>
+    <p>As a part of your enrollment process, please find attached the invoice for the course fees. Kindly review the
+        details and proceed with the payment to secure your spot in the course.</p>
+    <p>If you have any queries regarding the invoice or need assistance with the payment process, feel free to contact
+        us. We're here to help!</p>
+    <p>Thank you for choosing our platform for your learning journey.</p>
+    <p>Best regards,</p>
+    <p>The Courses Platform Team</p>
+</div>
+</body>
+</html>
