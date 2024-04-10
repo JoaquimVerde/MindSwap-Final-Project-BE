@@ -91,8 +91,7 @@
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>
-            <artifactId>quarkus-amazon-lambda-rest-archetype</artifactId>
-            <version>3.9.2</version>
+            <artifactId>quarkus-amazon-lambda-rest</artifactId>
         </dependency>
     </dependencies>
     <build>

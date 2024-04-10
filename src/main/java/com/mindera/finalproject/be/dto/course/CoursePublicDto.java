@@ -1,10 +1,12 @@
 package com.mindera.finalproject.be.dto.course;
 
 import com.mindera.finalproject.be.dto.person.PersonPublicDto;
+import io.quarkus.runtime.annotations.RegisterForReflection;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import java.math.BigDecimal;
 
+@RegisterForReflection
 public record CoursePublicDto(
         @Schema(description = "The course id", example = "COURSE#asdf-1234-1235")
         String id,
