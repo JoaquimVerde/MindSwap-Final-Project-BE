@@ -85,10 +85,14 @@ public class CourseServiceImpl implements CourseService {
             throw new CourseAlreadyExistsException(COURSE_ALREADY_EXISTS);
         }
         if (courseCreateDto.teacherId() != null) {
-            try {
-                personService.findById(courseCreateDto.teacherId());
-            } catch (PersonNotFoundException e) {
+            if (courseCreateDto.teacherId().isEmpty()) {
                 course.setTeacherId(null);
+            } else {
+                try {
+                    personService.findById(courseCreateDto.teacherId());
+                } catch (PersonNotFoundException e) {
+                    course.setTeacherId(null);
+                }
             }
         }
         course.setPK(COURSE);
