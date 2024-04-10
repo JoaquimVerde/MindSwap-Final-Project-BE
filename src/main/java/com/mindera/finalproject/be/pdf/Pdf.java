@@ -14,21 +14,19 @@ import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.time.Year;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.Locale;
 import java.util.Objects;
+import java.util.Random;
 
 @ApplicationScoped
 public class Pdf {
 
-    private Integer invoiceCounter = 1;
-
-    private Integer certificateCounter = 1;
-
     public void generateInvoicePdf(Person person, Course course) throws PdfCreateException {
         String html = getTemplate("InvoiceTemplate.html");
-        html = html.replace("{{invoiceNumber}}", String.valueOf(invoiceCounter));
+        html = html.replace("{{invoiceNumber}}", String.valueOf(Year.now().getValue() + "/" + person.getSK().substring(7, 10) + "_" + course.getSK().substring(7, 10)));
         html = html.replace("{{studentName}}", person.getFirstName() + " " + person.getLastName());
         html = html.replace("{{courseName}}", course.getName());
         html = html.replace("{{coursePrice}}", String.valueOf(course.getPrice()));
@@ -36,9 +34,7 @@ public class Pdf {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         HtmlConverter.convertToPdf(html, outputStream);
         byte[] pdfBytes = outputStream.toByteArray();
-        int randomNumber = (int) (Math.random() * 1000);
-        String pdfFilePath = "/home/fguedes/Documents/GitHub/final-project-be/src/main/java/com/mindera/finalproject/be/pdf/inv" + LocalDate.now().format(DateTimeFormatter.ofPattern("MMyyyy", Locale.ENGLISH)) + person.getSK() + ".pdf";
-        invoiceCounter++;
+        String pdfFilePath = "/home/fguedes/Documents/GitHub/final-project-be/src/main/java/com/mindera/finalproject/be/pdf/inv" + LocalDate.now().format(DateTimeFormatter.ofPattern("MMyyyy", Locale.ENGLISH)) + "_" + person.getSK().substring(7, 10) + "_" + course.getSK().substring(7, 10) + ".pdf";
         createPdf(pdfFilePath, pdfBytes);
     }
 
@@ -46,12 +42,12 @@ public class Pdf {
         String html = getTemplate("CertificateTemplate.html");
         html = html.replace("{{studentName}}", person.getFirstName() + " " + person.getLastName());
         html = html.replace("{{courseName}}", course.getName());
-        html = html.replace("{{finalDate}}", LocalDate.now().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
+        html = html.replace("{{finalDate}}", LocalDate.now().format(DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH)));
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         HtmlConverter.convertToPdf(html, outputStream);
         byte[] pdfBytes = outputStream.toByteArray();
-        String pdfFilePath = "/home/fguedes/Documents/GitHub/final-project-be/src/main/java/com/mindera/finalproject/be/pdf/certificate-00" + certificateCounter + ".pdf";
-        certificateCounter++;
+        String pdfFilePath = "/home/fguedes/Documents/GitHub/final-project-be/src/main/java/com/mindera/finalproject/be/pdf/certificate" + LocalDate.now().format(DateTimeFormatter.ofPattern("MMyyyy", Locale.ENGLISH)) + "_" + person.getSK().substring(7, 10) + "_" + course.getSK().substring(7, 10) + ".pdf";
+        ;
         createPdf(pdfFilePath, pdfBytes);
     }
 
