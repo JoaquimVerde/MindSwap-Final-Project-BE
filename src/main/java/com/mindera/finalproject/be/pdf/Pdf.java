@@ -3,6 +3,7 @@ package com.mindera.finalproject.be.pdf;
 import com.itextpdf.html2pdf.HtmlConverter;
 import com.mindera.finalproject.be.entity.Course;
 import com.mindera.finalproject.be.entity.Person;
+import com.mindera.finalproject.be.exception.pdf.PdfCreateException;
 import com.mindera.finalproject.be.exception.pdf.PdfException;
 import jakarta.enterprise.context.ApplicationScoped;
 
@@ -25,7 +26,7 @@ public class Pdf {
 
     private Integer certificateCounter = 1;
 
-    public void generateInvoicePdf(Person person, Course course) throws PdfException {
+    public void generateInvoicePdf(Person person, Course course) throws PdfCreateException {
         String html = getTemplate("InvoiceTemplate.html");
         html = html.replace("{{invoiceNumber}}", String.valueOf(invoiceCounter));
         html = html.replace("{{studentName}}", person.getFirstName() + " " + person.getLastName());
@@ -35,19 +36,13 @@ public class Pdf {
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         HtmlConverter.convertToPdf(html, outputStream);
         byte[] pdfBytes = outputStream.toByteArray();
-        String pdfFilePath = "/home/fguedes/Documents/GitHub/final-project-be/src/main/java/com/mindera/finalproject/be/pdf/invoice-00" + invoiceCounter + ".pdf";
+        int randomNumber = (int) (Math.random() * 1000);
+        String pdfFilePath = "/home/fguedes/Documents/GitHub/final-project-be/src/main/java/com/mindera/finalproject/be/pdf/inv" + LocalDate.now().format(DateTimeFormatter.ofPattern("MMyyyy", Locale.ENGLISH)) + person.getSK() + ".pdf";
         invoiceCounter++;
-        try {
-            FileOutputStream fos = new FileOutputStream(pdfFilePath);
-            fos.write(pdfBytes);
-            fos.close();
-        } catch (IOException e) {
-            throw new PdfException("Error creating PDF file");
-        }
+        createPdf(pdfFilePath, pdfBytes);
     }
 
-
-    public void generateCertificatePdf(Person person, Course course) throws PdfException {
+    public void generateCertificatePdf(Person person, Course course) throws PdfCreateException {
         String html = getTemplate("CertificateTemplate.html");
         html = html.replace("{{studentName}}", person.getFirstName() + " " + person.getLastName());
         html = html.replace("{{courseName}}", course.getName());
@@ -57,24 +52,27 @@ public class Pdf {
         byte[] pdfBytes = outputStream.toByteArray();
         String pdfFilePath = "/home/fguedes/Documents/GitHub/final-project-be/src/main/java/com/mindera/finalproject/be/pdf/certificate-00" + certificateCounter + ".pdf";
         certificateCounter++;
-        try {
-            FileOutputStream fos = new FileOutputStream(pdfFilePath);
-            fos.write(pdfBytes);
-            fos.close();
-        } catch (IOException e) {
-            throw new PdfException("Error creating PDF file");
-        }
+        createPdf(pdfFilePath, pdfBytes);
     }
 
-
-    private String getTemplate(String template) throws PdfException {
+    private String getTemplate(String template) throws PdfCreateException {
         String templateFilePath = "com/mindera/finalproject/be/html/" + template;
         String html;
         try {
             html = new String(Files.readAllBytes(Paths.get(Objects.requireNonNull(getClass().getResource(templateFilePath)).toURI())));
         } catch (IOException | URISyntaxException e) {
-            throw new PdfException("Error reading HTML template file");
+            throw new PdfCreateException("Error reading HTML template file");
         }
         return html;
+    }
+
+    private void createPdf(String pdfFilePath, byte[] pdfBytes) throws PdfCreateException {
+        try {
+            FileOutputStream fos = new FileOutputStream(pdfFilePath);
+            fos.write(pdfBytes);
+            fos.close();
+        } catch (IOException e) {
+            throw new PdfCreateException("Error creating PDF file");
+        }
     }
 }
