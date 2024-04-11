@@ -26,3 +26,5 @@ Resources:
           Properties:
             Path: /{proxy+}
             Method: any
+            Cors: true
+
