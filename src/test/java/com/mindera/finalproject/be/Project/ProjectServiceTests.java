@@ -68,7 +68,8 @@ public class ProjectServiceTests {
                 "TestRole",
                 "TestUS",
                 LocalDate.now(),
-                "TestAddress"
+                "TestAddress",
+                "TestCV"
         );
     }
     private PersonPublicDto teacher() {
@@ -80,7 +81,8 @@ public class ProjectServiceTests {
                 "Teacher",
                 "TestUS",
                 LocalDate.now(),
-                "TestAddress"
+                "TestAddress",
+                "TestCV"
         );
     }
 

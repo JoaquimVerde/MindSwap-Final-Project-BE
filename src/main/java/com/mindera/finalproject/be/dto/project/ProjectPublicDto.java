@@ -2,10 +2,12 @@ package com.mindera.finalproject.be.dto.project;
 
 import com.mindera.finalproject.be.dto.course.CoursePublicDto;
 import com.mindera.finalproject.be.dto.person.PersonPublicDto;
+import io.quarkus.runtime.annotations.RegisterForReflection;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
 
 import java.util.List;
 
+@RegisterForReflection
 public record ProjectPublicDto(
 
         @Schema(description = "The project id", example = "PROJECT#asdf-1234-1235")
