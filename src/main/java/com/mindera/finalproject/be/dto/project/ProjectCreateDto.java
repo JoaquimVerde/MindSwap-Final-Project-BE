@@ -1,5 +1,6 @@
 package com.mindera.finalproject.be.dto.project;
 
+import io.quarkus.runtime.annotations.RegisterForReflection;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import org.eclipse.microprofile.openapi.annotations.media.Schema;
@@ -9,6 +10,7 @@ import java.util.List;
 
 import static com.mindera.finalproject.be.messages.Messages.*;
 
+@RegisterForReflection
 public record ProjectCreateDto(
 
         @NotEmpty(message = NON_EMPTY_NAME)

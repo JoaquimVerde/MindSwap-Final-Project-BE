@@ -17,7 +17,8 @@ public class PersonConverter {
                 person.getRole(),
                 person.getUsername(),
                 person.getDateOfBirth(),
-                person.getAddress()
+                person.getAddress(),
+                person.getCurriculum()
         );
     }
 
