@@ -22,11 +22,11 @@ public class Pdf {
 
     public byte[] generateInvoicePdf(Person person, Course course) throws PdfCreateException {
         String html = getTemplate("InvoiceTemplate.html");
-        html = html.replace("{{invoiceNumber}}", String.valueOf(Year.now().getValue() + "/" + person.getSK().substring(7, 10) + "_" + course.getSK().substring(7, 10)));
+        html = html.replace("{{invoiceNumber}}", Year.now().getValue() + "/" + person.getSK().substring(7, 10) + "_" + course.getSK().substring(7, 10));
+        html = html.replace("{{currentDate}}", LocalDate.now().format(DateTimeFormatter.ofPattern("dd MMMM yyyy", Locale.ENGLISH)));
         html = html.replace("{{studentName}}", person.getFirstName() + " " + person.getLastName());
         html = html.replace("{{courseName}}", course.getName());
         html = html.replace("{{coursePrice}}", String.valueOf(course.getPrice()));
-        html = html.replace("{{courseDate}}", LocalDate.now().format(DateTimeFormatter.ofPattern("dd MMMM yyyy", Locale.ENGLISH)));
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         HtmlConverter.convertToPdf(html, outputStream);
         return outputStream.toByteArray();

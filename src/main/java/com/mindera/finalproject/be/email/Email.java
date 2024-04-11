@@ -7,6 +7,7 @@ import com.mindera.finalproject.be.exception.email.EmailException;
 import com.mindera.finalproject.be.exception.email.EmailGetTemplateException;
 import com.mindera.finalproject.be.exception.pdf.PdfCreateException;
 import com.mindera.finalproject.be.exception.pdf.PdfException;
+import com.mindera.finalproject.be.pdf.Pdf;
 import com.mindera.finalproject.be.s3.S3SyncClientResource;
 import io.quarkus.mailer.Mail;
 import io.quarkus.mailer.Mailer;
@@ -32,6 +33,9 @@ public class Email {
     Mailer mailer;
 
     @Inject
+    Pdf pdf;
+
+    @Inject
     S3SyncClientResource s3SyncClientResource;
 
     public void sendWelcomeEmail(Person person) throws EmailGetTemplateException {
@@ -53,16 +57,19 @@ public class Email {
         String html = getTemplate("InvoiceEmail.html");
         html = html.replace("{{firstName}}", person.getFirstName());
         html = html.replace("{{courseName}}", course.getName());
-        File file = s3SyncClientResource.uploadInvoice(person, course);
-        mailer.send(Mail.withHtml(person.getEmail(), "Invoice for course Enrollment", html).addAttachment("invoice.pdf", file, "application/pdf"));
+        byte[] pdfBytes = pdf.generateInvoicePdf(person, course);
+        //File pdfBytes = s3SyncClientResource.uploadInvoice(person, course);
+        mailer.send(Mail.withHtml(person.getEmail(), "Invoice for course Enrollment", html).addAttachment("invoice" + course.getSK().substring(7, 11) + "_" + person.getSK().substring(7, 11) + ".pdf", pdfBytes, "application/pdf"));
     }
 
-    public void sendEmailWithCertificate(Person person, Course course) throws EmailGetTemplateException {
+    public void sendEmailWithCertificate(Person person, Course course) throws EmailGetTemplateException, PdfCreateException {
         String html = getTemplate("certificateEmail.html");
         html = html.replace("{{studentName}}", person.getFirstName() + " " + person.getLastName());
         html = html.replace("{{courseName}}", course.getName());
         html = html.replace("{{finalDate}}", LocalDate.now().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
-        mailer.send(Mail.withHtml(person.getEmail(), "Congratulations you have completed the course!", html).addAttachment("certificate.pdf", "certificate.pdf".getBytes(), "application/pdf"));
+        byte[] pdfBytes = pdf.generateCertificatePdf(person, course);
+        //File pdfBytes = s3SyncClientResource.uploadCertificate(person, course);
+        mailer.send(Mail.withHtml(person.getEmail(), "Congratulations you have completed the course!", html).addAttachment("certificate" + "_" + course.getName() + "_" + person.getSK().substring(7, 11) + ".pdf", pdfBytes, "application/pdf"));
     }
 
     private String getTemplate(String template) throws EmailGetTemplateException {

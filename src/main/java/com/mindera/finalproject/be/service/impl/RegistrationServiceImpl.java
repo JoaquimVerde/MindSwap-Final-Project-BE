@@ -84,13 +84,12 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     @Override
-    public RegistrationPublicDto getById(String id) throws PersonNotFoundException, CourseNotFoundException, RegistrationNotFoundException, EmailGetTemplateException, PdfCreateException {
+    public RegistrationPublicDto getById(String id) throws PersonNotFoundException, CourseNotFoundException, RegistrationNotFoundException {
         Registration registration = findById(id);
         String personId = registration.getPersonId();
         String courseId = registration.getCourseId();
         PersonPublicDto student = personService.getById(personId);
         CoursePublicDto course = courseService.getById(courseId);
-        email.sendCourseInvoice(personService.findById(personId), courseService.findById(courseId));
         return RegistrationConverter.fromEntityToPublicDto(registration, student, course);
     }
 
@@ -184,7 +183,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     @Override
-    public RegistrationPublicDto updateStatus(String id, RegistrationUpdateStatusDto registrationUpdate) throws PersonNotFoundException, CourseNotFoundException, RegistrationNotFoundException, MaxNumberOfStudentsException {
+    public RegistrationPublicDto updateStatus(String id, RegistrationUpdateStatusDto registrationUpdate) throws PersonNotFoundException, CourseNotFoundException, RegistrationNotFoundException, MaxNumberOfStudentsException, EmailGetTemplateException, PdfCreateException {
         Registration registration = findById(id);
         String oldStatus = registration.getStatus();
 
@@ -193,10 +192,13 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (!oldStatus.equals(ENROLLED) && registration.getStatus().equals(ENROLLED)) {
             courseService.updateEnrolledStudents(registration.getCourseId());
         }
-
         registrationTable.updateItem(registration);
         PersonPublicDto student = personService.getById(registration.getPersonId());
         CoursePublicDto course = courseService.getById(registration.getCourseId());
+        if (registration.getStatus().equals("ACCEPTED") || registration.getStatus().equals("AUTOMATICALLY_ACCEPTED")) {
+            email.sendCourseInvoice(personService.findById(registration.getPersonId()), courseService.findById(registration.getCourseId()));
+        }
+        email.sendCourseCandidatureStatusEmail(personService.findById(registration.getPersonId()), courseService.findById(registration.getCourseId()), registration);
         return RegistrationConverter.fromEntityToPublicDto(registration, student, course);
     }
 

@@ -43,7 +43,7 @@ public class RegistrationController {
     })
     @GET
     @Path("/{id}")
-    public Response getById(@PathParam("id") String id) throws PersonNotFoundException, CourseNotFoundException, RegistrationNotFoundException, EmailGetTemplateException, PdfCreateException {
+    public Response getById(@PathParam("id") String id) throws PersonNotFoundException, CourseNotFoundException, RegistrationNotFoundException {
         return Response.ok(registrationService.getById(id)).build();
     }
 
@@ -97,7 +97,7 @@ public class RegistrationController {
     @PUT
     @Path("/status/{id}")
     public Response updateStatus(@PathParam("id") String id, @RequestBody @Valid RegistrationUpdateStatusDto registrationUpdate)
-            throws PersonNotFoundException, CourseNotFoundException, RegistrationNotFoundException, MaxNumberOfStudentsException {
+            throws PersonNotFoundException, CourseNotFoundException, RegistrationNotFoundException, MaxNumberOfStudentsException, EmailGetTemplateException, PdfCreateException {
         return Response.ok(registrationService.updateStatus(id, registrationUpdate)).build();
     }
 

@@ -17,7 +17,7 @@ import java.util.List;
 public interface RegistrationService {
     List<RegistrationPublicDto> getAll(Integer page, Integer limit);
 
-    RegistrationPublicDto getById(String id) throws PersonNotFoundException, CourseNotFoundException, RegistrationNotFoundException, EmailGetTemplateException, PdfCreateException;
+    RegistrationPublicDto getById(String id) throws PersonNotFoundException, CourseNotFoundException, RegistrationNotFoundException;
 
     RegistrationPublicDto create(RegistrationCreateDto registrationCreateDto)
             throws PersonNotFoundException, CourseNotFoundException, RegistrationAlreadyExistsException;
@@ -28,7 +28,7 @@ public interface RegistrationService {
 
     List<RegistrationPublicDto> getRegistrationsByCourse(String courseId, Integer page, Integer limit);
 
-    RegistrationPublicDto updateStatus(String id, RegistrationUpdateStatusDto registrationUpdate) throws PersonNotFoundException, CourseNotFoundException, RegistrationNotFoundException, MaxNumberOfStudentsException;
+    RegistrationPublicDto updateStatus(String id, RegistrationUpdateStatusDto registrationUpdate) throws PersonNotFoundException, CourseNotFoundException, RegistrationNotFoundException, MaxNumberOfStudentsException, EmailGetTemplateException, PdfCreateException;
 
     RegistrationPublicDto updateGrade(String id, RegistrationUpdateGradeDto registrationUpdate) throws PersonNotFoundException, CourseNotFoundException, RegistrationNotFoundException;
 

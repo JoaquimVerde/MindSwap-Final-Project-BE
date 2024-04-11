@@ -30,6 +30,7 @@ public class S3SyncClientResource {
     public File uploadInvoice(Person person, Course course) throws PdfCreateException {
         byte[] pdfBytes = pdfGenerator.generateInvoicePdf(person, course);
         String invoiceObjectKey = constructInvoiceObjectKey(person.getSK(), course.getSK());
+        System.out.println(s3.listBuckets());
         PutObjectResponse putResponse = s3.putObject(buildPutRequest(invoiceObjectKey), RequestBody.fromBytes(pdfBytes));
         if (putResponse != null) {
             System.out.println("Invoice uploaded successfully");
