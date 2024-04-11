@@ -22,6 +22,8 @@ public record PersonPublicDto(
         @Schema(description = "The person date of birth", example = "1990-01-01")
         LocalDate dateOfBirth,
         @Schema(description = "The person address", example = "Rua das Andorinhas, 123")
-        String address
+        String address,
+        @Schema(description = "The person curriculum", example = "I'm_a_good_student.pdf")
+        String cv
 ) {
 }
