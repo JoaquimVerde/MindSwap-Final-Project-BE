@@ -67,6 +67,7 @@ public class ProjectControllerTests {
             courseTable.deleteTable();
             personTable.deleteTable();
             setUp();
+            return;
         }
         List<PersonCreateDto> students = Arrays.asList(
                 new PersonCreateDto("example@email.com", "John", "Doe",
@@ -139,7 +140,7 @@ public class ProjectControllerTests {
     }
 
     @Test
-    public void testGetAllProjects() {
+    void testGetAllProjects() {
         given()
                 .when().get("/api/v1/projects")
                 .then()
@@ -149,7 +150,7 @@ public class ProjectControllerTests {
     }
 
     @Test
-    public void testGetById() {
+    void testGetById() {
 
         String projectId = createProject();
 
@@ -168,7 +169,7 @@ public class ProjectControllerTests {
     }
 
     @Test
-    public void testGetByIdNotFound() {
+    void testGetByIdNotFound() {
 
         String projectId = "XXXXXXX"; //non-existing ID
 
@@ -180,7 +181,7 @@ public class ProjectControllerTests {
     }
 
     @Test
-    public void testCreate() {
+    void testCreate() {
         ProjectCreateDto newProject = new ProjectCreateDto("Project name", studentIds,
                 courseId, "https://github.com/user/repo");
         given()
@@ -192,7 +193,7 @@ public class ProjectControllerTests {
     }
 
     @Test
-    public void testUpdate() {
+    void testUpdate() {
         String projectId = createProject();
 
         ProjectCreateDto projectCreateDto = new ProjectCreateDto("Project name", studentIds,
@@ -208,7 +209,7 @@ public class ProjectControllerTests {
     }
 
     @Test
-    public void testUpdateNotFound() {
+    void testUpdateNotFound() {
 
         String projectId = "XXXXXXX"; //non-existing ID
         ProjectCreateDto projectCreateDto = new ProjectCreateDto("Project name", studentIds,
@@ -223,7 +224,7 @@ public class ProjectControllerTests {
     }
 
     @Test
-    public void testDelete() {
+    void testDelete() {
 
         String projectId = createProject();
         given()
