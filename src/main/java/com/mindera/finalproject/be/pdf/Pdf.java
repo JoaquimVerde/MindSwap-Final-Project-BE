@@ -45,7 +45,7 @@ public class Pdf {
     private String getTemplate(String template) throws PdfCreateException {
         StringBuilder contentBuilder = new StringBuilder();
         try {
-            BufferedReader in = new BufferedReader(new FileReader("/home/fguedes/Documents/GitHub/final-project-be/src/main/java/com/mindera/finalproject/be/html/" + template));
+            BufferedReader in = new BufferedReader(new FileReader("src/main/java/com/mindera/finalproject/be/html/" + template));
             String str;
             while ((str = in.readLine()) != null) {
                 contentBuilder.append(str);

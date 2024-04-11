@@ -2,6 +2,7 @@ package com.mindera.finalproject.be.Person;
 
 import com.mindera.finalproject.be.dto.person.PersonCreateDto;
 import com.mindera.finalproject.be.dto.person.PersonPublicDto;
+import com.mindera.finalproject.be.email.Email;
 import com.mindera.finalproject.be.entity.Person;
 import com.mindera.finalproject.be.exception.email.EmailGetTemplateException;
 import com.mindera.finalproject.be.exception.student.PersonNotFoundException;
@@ -40,6 +41,9 @@ class PersonServiceTests {
     private final String PERSON = "PERSON#";
     @Mock
     private DynamoDbTable<Person> personTable;
+
+    @Mock
+    private Email emailMock;
 
     @InjectMocks
     private PersonServiceImpl personService;

@@ -39,14 +39,14 @@ public class Email {
     S3SyncClientResource s3SyncClientResource;
 
     public void sendWelcomeEmail(Person person) throws EmailGetTemplateException {
-        String html = getTemplate("welcomeEmail.html");
+        String html = getTemplate("WelcomeEmail.html");
         html = html.replace("{{firstName}}", person.getFirstName());
         html = html.replace("{{loginUrl}}", "http://localhost:8080/login"); // TODO CHANGE URL TO PRODUCTION URL
         mailer.send(Mail.withHtml(person.getEmail(), "Welcome to Course Applications", html));
     }
 
     public void sendCourseCandidatureStatusEmail(Person person, Course course, Registration registration) throws EmailGetTemplateException {
-        String html = getTemplate("statusEmail.html");
+        String html = getTemplate("StatusEmail.html");
         html = html.replace("{{firstName}}", person.getFirstName());
         html = html.replace("{{courseName}}", course.getName());
         html = html.replace("{{status}}", registration.getStatus());
@@ -63,7 +63,7 @@ public class Email {
     }
 
     public void sendEmailWithCertificate(Person person, Course course) throws EmailGetTemplateException, PdfCreateException {
-        String html = getTemplate("certificateEmail.html");
+        String html = getTemplate("CertificateEmail.html");
         html = html.replace("{{studentName}}", person.getFirstName() + " " + person.getLastName());
         html = html.replace("{{courseName}}", course.getName());
         html = html.replace("{{finalDate}}", LocalDate.now().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
@@ -75,7 +75,7 @@ public class Email {
     private String getTemplate(String template) throws EmailGetTemplateException {
         StringBuilder contentBuilder = new StringBuilder();
         try {
-            BufferedReader in = new BufferedReader(new FileReader("/home/fguedes/Documents/GitHub/final-project-be/src/main/java/com/mindera/finalproject/be/html/" + template));
+            BufferedReader in = new BufferedReader(new FileReader("src/main/java/com/mindera/finalproject/be/html/" + template));
             String str;
             while ((str = in.readLine()) != null) {
                 contentBuilder.append(str);

@@ -1,4 +1,3 @@
-/*
 package com.mindera.finalproject.be.TableCreation;
 
 
@@ -34,4 +33,3 @@ public class TableCreation {
 }
 
 
-*/
