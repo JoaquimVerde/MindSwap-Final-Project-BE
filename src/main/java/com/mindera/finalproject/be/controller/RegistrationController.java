@@ -5,6 +5,8 @@ import com.mindera.finalproject.be.dto.registration.RegistrationUpdateGradeDto;
 import com.mindera.finalproject.be.dto.registration.RegistrationUpdateStatusDto;
 import com.mindera.finalproject.be.exception.course.CourseNotFoundException;
 import com.mindera.finalproject.be.exception.course.MaxNumberOfStudentsException;
+import com.mindera.finalproject.be.exception.email.EmailGetTemplateException;
+import com.mindera.finalproject.be.exception.pdf.PdfCreateException;
 import com.mindera.finalproject.be.exception.registration.RegistrationAlreadyExistsException;
 import com.mindera.finalproject.be.exception.registration.RegistrationNotFoundException;
 import com.mindera.finalproject.be.exception.student.PersonNotFoundException;
@@ -95,7 +97,7 @@ public class RegistrationController {
     @PUT
     @Path("/status/{id}")
     public Response updateStatus(@PathParam("id") String id, @RequestBody @Valid RegistrationUpdateStatusDto registrationUpdate)
-            throws PersonNotFoundException, CourseNotFoundException, RegistrationNotFoundException, MaxNumberOfStudentsException {
+            throws PersonNotFoundException, CourseNotFoundException, RegistrationNotFoundException, MaxNumberOfStudentsException, EmailGetTemplateException, PdfCreateException {
         return Response.ok(registrationService.updateStatus(id, registrationUpdate)).build();
     }
 

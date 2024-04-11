@@ -57,6 +57,7 @@ class CourseControllerTest {
             courseTable.deleteTable();
             personTable.deleteTable();
             setUp();
+            return;
         }
 
         PersonCreateDto teacher = new PersonCreateDto("example@email.com", "John", "Doe",

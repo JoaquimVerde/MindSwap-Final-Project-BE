@@ -1,6 +1,7 @@
 package com.mindera.finalproject.be.controller;
 
 import com.mindera.finalproject.be.dto.person.PersonCreateDto;
+import com.mindera.finalproject.be.exception.email.EmailGetTemplateException;
 import com.mindera.finalproject.be.exception.student.PersonNotFoundException;
 import com.mindera.finalproject.be.service.PersonService;
 import jakarta.inject.Inject;
@@ -67,7 +68,7 @@ public class PersonController {
             @APIResponse(responseCode = "201", description = "Person created")
     })
     @POST
-    public Response create(@Valid @RequestBody PersonCreateDto personCreateDto) {
+    public Response create(@Valid @RequestBody PersonCreateDto personCreateDto) throws EmailGetTemplateException {
         return Response.ok(personService.create(personCreateDto)).status(Response.Status.CREATED).build();
     }
 

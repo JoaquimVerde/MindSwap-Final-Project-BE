@@ -7,9 +7,12 @@ import com.mindera.finalproject.be.dto.registration.RegistrationCreateDto;
 import com.mindera.finalproject.be.dto.registration.RegistrationPublicDto;
 import com.mindera.finalproject.be.dto.registration.RegistrationUpdateGradeDto;
 import com.mindera.finalproject.be.dto.registration.RegistrationUpdateStatusDto;
+import com.mindera.finalproject.be.email.Email;
 import com.mindera.finalproject.be.entity.Registration;
 import com.mindera.finalproject.be.exception.course.CourseNotFoundException;
 import com.mindera.finalproject.be.exception.course.MaxNumberOfStudentsException;
+import com.mindera.finalproject.be.exception.email.EmailGetTemplateException;
+import com.mindera.finalproject.be.exception.pdf.PdfCreateException;
 import com.mindera.finalproject.be.exception.registration.RegistrationAlreadyExistsException;
 import com.mindera.finalproject.be.exception.registration.RegistrationNotFoundException;
 import com.mindera.finalproject.be.exception.student.PersonNotFoundException;
@@ -38,6 +41,9 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final String GSIPK1 = "GSIPK1";
     private final String GSIPK2 = "GSIPK2";
     private final String ENROLLED = "ENROLLED";
+
+    @Inject
+    Email email;
 
     @Inject
     PersonServiceImpl personService;
@@ -177,7 +183,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     @Override
-    public RegistrationPublicDto updateStatus(String id, RegistrationUpdateStatusDto registrationUpdate) throws PersonNotFoundException, CourseNotFoundException, RegistrationNotFoundException, MaxNumberOfStudentsException {
+    public RegistrationPublicDto updateStatus(String id, RegistrationUpdateStatusDto registrationUpdate) throws PersonNotFoundException, CourseNotFoundException, RegistrationNotFoundException, MaxNumberOfStudentsException, EmailGetTemplateException, PdfCreateException {
         Registration registration = findById(id);
         String oldStatus = registration.getStatus();
 
@@ -186,10 +192,13 @@ public class RegistrationServiceImpl implements RegistrationService {
         if (!oldStatus.equals(ENROLLED) && registration.getStatus().equals(ENROLLED)) {
             courseService.updateEnrolledStudents(registration.getCourseId());
         }
-
         registrationTable.updateItem(registration);
         PersonPublicDto student = personService.getById(registration.getPersonId());
         CoursePublicDto course = courseService.getById(registration.getCourseId());
+/*        if (registration.getStatus().equals("ACCEPTED") || registration.getStatus().equals("AUTOMATICALLY_ACCEPTED")) {
+            email.sendCourseInvoice(personService.findById(registration.getPersonId()), courseService.findById(registration.getCourseId()));
+        }
+        email.sendCourseCandidatureStatusEmail(personService.findById(registration.getPersonId()), courseService.findById(registration.getCourseId()), registration);*/
         return RegistrationConverter.fromEntityToPublicDto(registration, student, course);
     }
 

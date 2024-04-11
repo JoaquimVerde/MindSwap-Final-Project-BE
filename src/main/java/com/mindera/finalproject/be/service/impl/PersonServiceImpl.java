@@ -3,7 +3,9 @@ package com.mindera.finalproject.be.service.impl;
 import com.mindera.finalproject.be.converter.PersonConverter;
 import com.mindera.finalproject.be.dto.person.PersonCreateDto;
 import com.mindera.finalproject.be.dto.person.PersonPublicDto;
+import com.mindera.finalproject.be.email.Email;
 import com.mindera.finalproject.be.entity.Person;
+import com.mindera.finalproject.be.exception.email.EmailGetTemplateException;
 import com.mindera.finalproject.be.exception.student.PersonNotFoundException;
 import com.mindera.finalproject.be.service.PersonService;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -26,7 +28,8 @@ public class PersonServiceImpl implements PersonService {
     private final String PERSON = "PERSON#";
     private final String GSIPK1 = "GSIPK1";
     private final String GSIPK2 = "GSIPK2";
-
+    @Inject
+    Email email;
     private DynamoDbTable<Person> personTable;
 
     @Inject
@@ -73,12 +76,13 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public PersonPublicDto create(PersonCreateDto personCreateDto) {
+    public PersonPublicDto create(PersonCreateDto personCreateDto) throws EmailGetTemplateException {
         Person person = PersonConverter.fromCreateDtoToEntity(personCreateDto);
         person.setPK(PERSON);
         person.setSK(PERSON + UUID.randomUUID());
         person.setRole(personCreateDto.role().toUpperCase());
         personTable.putItem(person);
+        //email.sendWelcomeEmail(person);
         return PersonConverter.fromEntityToPublicDto(person);
     }
 
