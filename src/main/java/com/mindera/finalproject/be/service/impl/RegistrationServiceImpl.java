@@ -195,10 +195,10 @@ public class RegistrationServiceImpl implements RegistrationService {
         registrationTable.updateItem(registration);
         PersonPublicDto student = personService.getById(registration.getPersonId());
         CoursePublicDto course = courseService.getById(registration.getCourseId());
-        if (registration.getStatus().equals("ACCEPTED") || registration.getStatus().equals("AUTOMATICALLY_ACCEPTED")) {
+/*        if (registration.getStatus().equals("ACCEPTED") || registration.getStatus().equals("AUTOMATICALLY_ACCEPTED")) {
             email.sendCourseInvoice(personService.findById(registration.getPersonId()), courseService.findById(registration.getCourseId()));
         }
-        email.sendCourseCandidatureStatusEmail(personService.findById(registration.getPersonId()), courseService.findById(registration.getCourseId()), registration);
+        email.sendCourseCandidatureStatusEmail(personService.findById(registration.getPersonId()), courseService.findById(registration.getCourseId()), registration);*/
         return RegistrationConverter.fromEntityToPublicDto(registration, student, course);
     }
 
