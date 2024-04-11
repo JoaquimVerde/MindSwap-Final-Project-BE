@@ -3,6 +3,7 @@ package com.mindera.finalproject.be.Person;
 import com.mindera.finalproject.be.dto.person.PersonCreateDto;
 import com.mindera.finalproject.be.dto.person.PersonPublicDto;
 import com.mindera.finalproject.be.entity.Person;
+import com.mindera.finalproject.be.exception.email.EmailGetTemplateException;
 import com.mindera.finalproject.be.exception.student.PersonNotFoundException;
 import com.mindera.finalproject.be.service.impl.PersonServiceImpl;
 import org.junit.jupiter.api.Test;
@@ -88,7 +89,7 @@ class PersonServiceTests {
     }
 
     @Test
-    void testCreate() {
+    void testCreate() throws Exception {
 
         PersonCreateDto createDto = new PersonCreateDto(email, firstName, lastName, role, username, dateOfBirth, address, cv);
 
