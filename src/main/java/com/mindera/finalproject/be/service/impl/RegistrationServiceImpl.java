@@ -7,9 +7,12 @@ import com.mindera.finalproject.be.dto.registration.RegistrationCreateDto;
 import com.mindera.finalproject.be.dto.registration.RegistrationPublicDto;
 import com.mindera.finalproject.be.dto.registration.RegistrationUpdateGradeDto;
 import com.mindera.finalproject.be.dto.registration.RegistrationUpdateStatusDto;
+import com.mindera.finalproject.be.email.Email;
 import com.mindera.finalproject.be.entity.Registration;
 import com.mindera.finalproject.be.exception.course.CourseNotFoundException;
 import com.mindera.finalproject.be.exception.course.MaxNumberOfStudentsException;
+import com.mindera.finalproject.be.exception.email.EmailGetTemplateException;
+import com.mindera.finalproject.be.exception.pdf.PdfCreateException;
 import com.mindera.finalproject.be.exception.registration.RegistrationAlreadyExistsException;
 import com.mindera.finalproject.be.exception.registration.RegistrationNotFoundException;
 import com.mindera.finalproject.be.exception.student.PersonNotFoundException;
@@ -38,6 +41,9 @@ public class RegistrationServiceImpl implements RegistrationService {
     private final String GSIPK1 = "GSIPK1";
     private final String GSIPK2 = "GSIPK2";
     private final String ENROLLED = "ENROLLED";
+
+    @Inject
+    Email email;
 
     @Inject
     PersonServiceImpl personService;
@@ -78,12 +84,13 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     @Override
-    public RegistrationPublicDto getById(String id) throws PersonNotFoundException, CourseNotFoundException, RegistrationNotFoundException {
+    public RegistrationPublicDto getById(String id) throws PersonNotFoundException, CourseNotFoundException, RegistrationNotFoundException, EmailGetTemplateException, PdfCreateException {
         Registration registration = findById(id);
         String personId = registration.getPersonId();
         String courseId = registration.getCourseId();
         PersonPublicDto student = personService.getById(personId);
         CoursePublicDto course = courseService.getById(courseId);
+        email.sendCourseInvoice(personService.findById(personId), courseService.findById(courseId));
         return RegistrationConverter.fromEntityToPublicDto(registration, student, course);
     }
 

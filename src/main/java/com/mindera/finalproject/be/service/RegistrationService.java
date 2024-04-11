@@ -5,6 +5,8 @@ import com.mindera.finalproject.be.dto.registration.RegistrationPublicDto;
 import com.mindera.finalproject.be.dto.registration.RegistrationUpdateGradeDto;
 import com.mindera.finalproject.be.dto.registration.RegistrationUpdateStatusDto;
 import com.mindera.finalproject.be.exception.course.MaxNumberOfStudentsException;
+import com.mindera.finalproject.be.exception.email.EmailGetTemplateException;
+import com.mindera.finalproject.be.exception.pdf.PdfCreateException;
 import com.mindera.finalproject.be.exception.registration.RegistrationAlreadyExistsException;
 import com.mindera.finalproject.be.exception.course.CourseNotFoundException;
 import com.mindera.finalproject.be.exception.registration.RegistrationNotFoundException;
@@ -15,7 +17,7 @@ import java.util.List;
 public interface RegistrationService {
     List<RegistrationPublicDto> getAll(Integer page, Integer limit);
 
-    RegistrationPublicDto getById(String id) throws PersonNotFoundException, CourseNotFoundException, RegistrationNotFoundException;
+    RegistrationPublicDto getById(String id) throws PersonNotFoundException, CourseNotFoundException, RegistrationNotFoundException, EmailGetTemplateException, PdfCreateException;
 
     RegistrationPublicDto create(RegistrationCreateDto registrationCreateDto)
             throws PersonNotFoundException, CourseNotFoundException, RegistrationAlreadyExistsException;
@@ -28,7 +30,7 @@ public interface RegistrationService {
 
     RegistrationPublicDto updateStatus(String id, RegistrationUpdateStatusDto registrationUpdate) throws PersonNotFoundException, CourseNotFoundException, RegistrationNotFoundException, MaxNumberOfStudentsException;
 
-    RegistrationPublicDto updateGrade(String id, RegistrationUpdateGradeDto registrationUpdate) throws PersonNotFoundException, CourseNotFoundException,RegistrationNotFoundException;
+    RegistrationPublicDto updateGrade(String id, RegistrationUpdateGradeDto registrationUpdate) throws PersonNotFoundException, CourseNotFoundException, RegistrationNotFoundException;
 
 
 }
