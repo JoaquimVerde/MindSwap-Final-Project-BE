@@ -30,6 +30,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class CourseControllerTest {
 
     private static String teacherId;
+    private static String studentId;
     private final String API_PATH = "/api/v1/courses";
     private final String courseName = "Frontend";
     private final int courseEdition = 1;
@@ -61,8 +62,19 @@ class CourseControllerTest {
         PersonCreateDto teacher = new PersonCreateDto("example@email.com", "John", "Doe",
                 "Teacher", "Teste", LocalDate.of(1990, 1, 1), "Porto", "123456789");
 
+        PersonCreateDto student = new PersonCreateDto("example@email.com", "John", "Doe",
+                "Student", "Teste", LocalDate.of(1990, 1, 1), "Porto", "123456789");
+
         teacherId = given()
                 .body(teacher)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .when().post("/api/v1/persons")
+                .then()
+                .statusCode(201)
+                .extract().jsonPath().getString("id");
+
+        studentId = given()
+                .body(student)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .when().post("/api/v1/persons")
                 .then()
@@ -180,22 +192,32 @@ class CourseControllerTest {
     void testCreateCourseWithInvalidTeacher() {
         CourseCreateDto exampleCourse = new CourseCreateDto(courseName, courseEdition, "PERSON#1", courseSyllabus, courseProgram, courseSchedule, coursePrice, courseDuration, courseLocation);
 
-        CoursePublicDto response = given()
+        Error response = given()
                 .body(exampleCourse)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .when().post(API_PATH)
                 .then()
-                .statusCode(201)
-                .extract().as(CoursePublicDto.class);
+                .statusCode(404)
+                .extract().as(Error.class);
 
-        assertNull(response.teacher());
+        assertEquals(404, response.getStatus());
+        assertEquals(PERSON_NOT_FOUND + "PERSON#1", response.getMessage());
+    }
 
-        given()
-                .when().get(API_PATH + "/" + response.id())
+    @Test
+    void testCreateCourseWithStudentId() {
+        CourseCreateDto exampleCourse = new CourseCreateDto(courseName, courseEdition, studentId, courseSyllabus, courseProgram, courseSchedule, coursePrice, courseDuration, courseLocation);
+
+        Error response = given()
+                .body(exampleCourse)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .when().post(API_PATH)
                 .then()
-                .statusCode(200)
-                .and()
-                .body("teacher", equalTo(null));
+                .statusCode(400)
+                .extract().as(Error.class);
+
+        assertEquals(400, response.getStatus());
+        assertEquals(PERSON_NOT_A_TEACHER, response.getMessage());
     }
 
     @Test
@@ -529,15 +551,33 @@ class CourseControllerTest {
 
         CourseCreateDto updatedCourse = new CourseCreateDto("Backend", 2, "PERSON#1", "Java, Spring", "Backend", "Tuesday 10-18", new BigDecimal("1000.13"), 60, "Lisbon");
 
-        CoursePublicDto response = given()
+        Error response = given()
                 .body(updatedCourse)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .when().put(API_PATH + "/" + courseId)
                 .then()
-                .statusCode(200)
-                .extract().as(CoursePublicDto.class);
+                .statusCode(404)
+                .extract().as(Error.class);
 
-        assertNull(response.teacher());
+        assertEquals(404, response.getStatus());
+        assertEquals(PERSON_NOT_FOUND + "PERSON#1", response.getMessage());
+    }
+
+    @Test
+    void testUpdateCourseWithStudentId() {
+        String courseId = createCourse(courseLocation, courseEdition, teacherId);
+        CourseCreateDto updatedCourse = new CourseCreateDto("Backend", 2, studentId, "Java, Spring", "Backend", "Tuesday 10-18", new BigDecimal("1000.13"), 60, "Lisbon");
+
+        Error response = given()
+                .body(updatedCourse)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .when().put(API_PATH + "/" + courseId)
+                .then()
+                .statusCode(400)
+                .extract().as(Error.class);
+
+        assertEquals(400, response.getStatus());
+        assertEquals(PERSON_NOT_A_TEACHER, response.getMessage());
     }
 
     @Test

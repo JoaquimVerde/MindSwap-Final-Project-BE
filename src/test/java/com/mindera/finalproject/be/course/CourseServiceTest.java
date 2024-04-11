@@ -70,7 +70,8 @@ class CourseServiceTest {
                 "TestRole",
                 "TestUS",
                 LocalDate.now(),
-                "TestAddress"
+                "TestAddress",
+                "TestCV"
         );
     }
 
@@ -85,6 +86,7 @@ class CourseServiceTest {
         person.setUsername("TestUS");
         person.setDateOfBirth(LocalDate.now());
         person.setAddress("TestAddress");
+        person.setCurriculum("TestCV");
         person.setActive(true);
         return person;
     }

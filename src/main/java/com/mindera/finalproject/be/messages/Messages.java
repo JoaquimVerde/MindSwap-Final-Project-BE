@@ -41,4 +41,5 @@ public class Messages {
     public static final String INVALID_REGISTRATION_STATUS = "Invalid registration status";
     public static final String MAX_NUMBER_OF_STUDENTS_REACHED = "Max number of students reached";
     public static final String INVALID_GRADE = "Grade must be a number between 0 and 20";
+    public static final String PERSON_NOT_A_TEACHER = "The provided id does not belong to a teacher";
 }
