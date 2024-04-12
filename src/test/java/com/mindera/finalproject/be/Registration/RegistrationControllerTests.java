@@ -74,8 +74,8 @@ class RegistrationControllerTests {
         registrationTable.deleteTable();
     }
 
-    public String createPerson(String role) {
-        PersonCreateDto person = new PersonCreateDto("example@email.com", "firstName", "lastName", role, "password",
+    public String createPerson(String role, Integer id) {
+        PersonCreateDto person = new PersonCreateDto(String.valueOf(id), "example@email.com", "firstName", "lastName", role, "password",
                 LocalDate.of(1990, 1, 1), "city", "phone");
 
         return given()
@@ -132,10 +132,10 @@ class RegistrationControllerTests {
 
     @Test
     void testGetAllRegistrationsWith5Registrations() {
-        String courseId = createCourse(createPerson("Teacher"), 1);
+        String courseId = createCourse(createPerson("Teacher", 1), 1);
         int amount = 5;
         for (int i = 0; i < amount; i++) {
-            String studentId = createPerson("Student");
+            String studentId = createPerson("Student", i);
             createRegistration(studentId, courseId);
         }
 
@@ -147,10 +147,10 @@ class RegistrationControllerTests {
 
     @Test
     void testGetAllRegistrationsWith5Registrations2Deleted() {
-        String courseId = createCourse(createPerson("Teacher"), 1);
+        String courseId = createCourse(createPerson("Teacher", 1), 1);
         int amount = 5;
         for (int i = 0; i < amount; i++) {
-            String studentId = createPerson("Student");
+            String studentId = createPerson("Student", i);
             String id = createRegistration(studentId, courseId);
             if (i % 2 == 1) {
                 given()
@@ -168,10 +168,10 @@ class RegistrationControllerTests {
 
     @Test
     void testGetAllRegistrationsPaged() {
-        String courseId = createCourse(createPerson("Teacher"), 1);
+        String courseId = createCourse(createPerson("Teacher", 1), 1);
         int amount = 9;
         for (int i = 0; i < amount; i++) {
-            String studentId = createPerson("Student");
+            String studentId = createPerson("Student", i);
             createRegistration(studentId, courseId);
         }
 
@@ -192,8 +192,8 @@ class RegistrationControllerTests {
 
     @Test
     void testCreateRegistration() {
-        String studentId = createPerson("Student");
-        String courseId = createCourse(createPerson("Teacher"), 1);
+        String studentId = createPerson("Student", 1);
+        String courseId = createCourse(createPerson("Teacher", 1), 1);
 
         RegistrationCreateDto registration = new RegistrationCreateDto(studentId, courseId, status, finalGrade,
                 aboutYou, prevKnowledge, prevExperience);
@@ -220,7 +220,7 @@ class RegistrationControllerTests {
     @Test
     void testCreateRegistrationWithInvalidStudent() {
 
-        String courseId = createCourse(createPerson("Teacher"), 1);
+        String courseId = createCourse(createPerson("Teacher", 1), 1);
         RegistrationCreateDto registration = new RegistrationCreateDto("invalidId",
                 courseId, status, finalGrade,
                 aboutYou, prevKnowledge, prevExperience);
@@ -240,7 +240,7 @@ class RegistrationControllerTests {
     @Test
     void testCreateRegistrationWithInvalidCourse() {
 
-        String studentId = createPerson("Student");
+        String studentId = createPerson("Student", 1);
         RegistrationCreateDto registration = new RegistrationCreateDto(studentId,
                 "invalidId", status, finalGrade,
                 aboutYou, prevKnowledge, prevExperience);
@@ -280,8 +280,8 @@ class RegistrationControllerTests {
 
     @Test
     void testCreateRegistrationWithGradeOutOfRange() {
-        String studentId = createPerson("Student");
-        String courseId = createCourse(createPerson("Teacher"), 1);
+        String studentId = createPerson("Student", 1);
+        String courseId = createCourse(createPerson("Teacher", 1), 1);
         RegistrationCreateDto registration = new RegistrationCreateDto(studentId, courseId, status, 21, aboutYou, prevKnowledge, prevExperience);
         RegistrationCreateDto registration2 = new RegistrationCreateDto(studentId, courseId, status, -1, aboutYou, prevKnowledge, prevExperience);
 
@@ -309,8 +309,8 @@ class RegistrationControllerTests {
 
     @Test
     void testCreateRegistrationWithDuplicateRegistration() {
-        String studentId = createPerson("Student");
-        String courseId = createCourse(createPerson("Teacher"), 1);
+        String studentId = createPerson("Student", 1);
+        String courseId = createCourse(createPerson("Teacher", 1), 1);
         RegistrationCreateDto registration = new RegistrationCreateDto(studentId, courseId, status, finalGrade,
                 aboutYou, prevKnowledge, prevExperience);
 
@@ -335,8 +335,8 @@ class RegistrationControllerTests {
 
     @Test
     void testGetRegistrationById() {
-        String studentId = createPerson("Student");
-        String courseId = createCourse(createPerson("Teacher"), 1);
+        String studentId = createPerson("Student", 1);
+        String courseId = createCourse(createPerson("Teacher", 1), 1);
         String registrationId = createRegistration(studentId, courseId);
 
         RegistrationPublicDto response = given()
@@ -371,8 +371,8 @@ class RegistrationControllerTests {
 
     @Test
     void testDeleteRegistration() {
-        String studentId = createPerson("Student");
-        String courseId = createCourse(createPerson("Teacher"), 1);
+        String studentId = createPerson("Student", 1);
+        String courseId = createCourse(createPerson("Teacher", 1), 1);
         String registrationId = createRegistration(studentId, courseId);
 
         given()
@@ -396,8 +396,8 @@ class RegistrationControllerTests {
 
     @Test
     void testGetRegistrationByCourseId() {
-        String studentId = createPerson("Student");
-        String courseId = createCourse(createPerson("Teacher"), 1);
+        String studentId = createPerson("Student", 1);
+        String courseId = createCourse(createPerson("Teacher", 1), 1);
         String registrationId = createRegistration(studentId, courseId);
 
         List<RegistrationPublicDto> response = given()
@@ -411,16 +411,11 @@ class RegistrationControllerTests {
 
     @Test
     void testGetRegistrationByCourseIdPaged() {
-        String teacherId = createPerson("Teacher");
+        String teacherId = createPerson("Teacher", 1);
         String courseId = createCourse(teacherId, 1);
         for (int i = 0; i < 9; i++) {
-            String studentId = createPerson("Student");
+            String studentId = createPerson("Student", i);
             createRegistration(studentId, courseId);
-        }
-        String courseId2 = createCourse(teacherId, 10);
-        for (int i = 0; i < 5; i++) {
-            String studentId = createPerson("Student");
-            createRegistration(studentId, courseId2);
         }
 
         List<RegistrationPublicDto> response = given()
@@ -455,10 +450,10 @@ class RegistrationControllerTests {
 
     @Test
     void testGetRegistrationByCourseIdWithDeletedRegistrations() {
-        String teacherId = createPerson("Teacher");
+        String teacherId = createPerson("Teacher", 1);
         String courseId = createCourse(teacherId, 1);
         for (int i = 0; i < 9; i++) {
-            String studentId = createPerson("Student");
+            String studentId = createPerson("Student", i);
             String id = createRegistration(studentId, courseId);
             if (i % 2 == 1) {
                 given()
@@ -477,8 +472,8 @@ class RegistrationControllerTests {
 
     @Test
     void testGetRegistrationByPersonId() {
-        String studentId = createPerson("Student");
-        String courseId = createCourse(createPerson("Teacher"), 1);
+        String studentId = createPerson("Student", 1);
+        String courseId = createCourse(createPerson("Teacher", 1), 1);
         String registrationId = createRegistration(studentId, courseId);
 
         List<RegistrationPublicDto> response = given()
@@ -492,17 +487,13 @@ class RegistrationControllerTests {
 
     @Test
     void testGetRegistrationByPersonIdPaged() {
-        String studentId = createPerson("Student");
-        String teacherId = createPerson("Teacher");
+        String studentId = createPerson("Student", 1);
+        String teacherId = createPerson("Teacher", 1);
         for (int i = 0; i < 9; i++) {
             String courseId = createCourse(teacherId, i + 1);
             createRegistration(studentId, courseId);
         }
-        String courseId = createCourse(teacherId, 10);
-        for (int i = 0; i < 5; i++) {
-            String studentId2 = createPerson("Student");
-            createRegistration(studentId2, courseId);
-        }
+
 
         List<RegistrationPublicDto> response = given()
                 .queryParam("page", 0)
@@ -536,8 +527,8 @@ class RegistrationControllerTests {
 
     @Test
     void testGetRegistrationByPersonIdWithDeletedRegistrations() {
-        String studentId = createPerson("Student");
-        String teacherId = createPerson("Teacher");
+        String studentId = createPerson("Student", 1);
+        String teacherId = createPerson("Teacher", 1);
         for (int i = 0; i < 9; i++) {
             String courseId = createCourse(teacherId, i + 1);
             String id = createRegistration(studentId, courseId);
@@ -558,8 +549,8 @@ class RegistrationControllerTests {
 
     @Test
     void testUpdateStatus() {
-        String studentId = createPerson("Student");
-        String courseId = createCourse(createPerson("Teacher"), 1);
+        String studentId = createPerson("Student", 1);
+        String courseId = createCourse(createPerson("Teacher", 1), 1);
         String registrationId = createRegistration(studentId, courseId);
         RegistrationUpdateStatusDto update = new RegistrationUpdateStatusDto("ACCEPTED");
 
@@ -577,8 +568,8 @@ class RegistrationControllerTests {
 
     @Test
     void testUpdateStatusWithInvalidStatus() {
-        String studentId = createPerson("Student");
-        String courseId = createCourse(createPerson("Teacher"), 1);
+        String studentId = createPerson("Student", 1);
+        String courseId = createCourse(createPerson("Teacher", 1), 1);
         String registrationId = createRegistration(studentId, courseId);
         RegistrationUpdateStatusDto update = new RegistrationUpdateStatusDto("INVALID");
 
@@ -637,10 +628,10 @@ class RegistrationControllerTests {
 
     @Test
     void testUpdateStatusAndHitMaxStudents() {
-        String courseId = createCourse(createPerson("Teacher"), 1);
+        String courseId = createCourse(createPerson("Teacher", 1), 1);
         List<String> registrationIds = new ArrayList<>();
         for (int i = 0; i < 21; i++) {
-            registrationIds.add(createRegistration(createPerson("Student"), courseId));
+            registrationIds.add(createRegistration(createPerson("Student", i + 1), courseId));
         }
         RegistrationUpdateStatusDto update = new RegistrationUpdateStatusDto("ENROLLED");
         for (int i = 0; i < 20; i++) {
@@ -666,8 +657,8 @@ class RegistrationControllerTests {
 
     @Test
     void testUpdateGrade() {
-        String studentId = createPerson("Student");
-        String courseId = createCourse(createPerson("Teacher"), 1);
+        String studentId = createPerson("Student", 1);
+        String courseId = createCourse(createPerson("Teacher", 1), 1);
         String registrationId = createRegistration(studentId, courseId);
         RegistrationUpdateGradeDto update = new RegistrationUpdateGradeDto(15);
 
@@ -685,8 +676,8 @@ class RegistrationControllerTests {
 
     @Test
     void testUpdateGradeWithInvalidGrade() {
-        String studentId = createPerson("Student");
-        String courseId = createCourse(createPerson("Teacher"), 1);
+        String studentId = createPerson("Student", 1);
+        String courseId = createCourse(createPerson("Teacher", 1), 1);
         String registrationId = createRegistration(studentId, courseId);
         RegistrationUpdateGradeDto update = new RegistrationUpdateGradeDto(21);
 

@@ -70,10 +70,10 @@ public class ProjectControllerTests {
             return;
         }
         List<PersonCreateDto> students = Arrays.asList(
-                new PersonCreateDto("example@email.com", "John", "Doe",
+                new PersonCreateDto("123123", "example@email.com", "John", "Doe",
                         "Student", "Test", LocalDate.of(1990, 1, 1),
                         "Porto", "cv"),
-                new PersonCreateDto("example@email.com", "Jane", "Doe",
+                new PersonCreateDto("123123","example@email.com", "Jane", "Doe",
                         "Student", "Test", LocalDate.of(1991, 1, 1),
                         "Porto", "cv")
         );
@@ -88,7 +88,7 @@ public class ProjectControllerTests {
                 .collect(Collectors.toList());
 
 
-        PersonCreateDto teacher = new PersonCreateDto("example@email.com", "John", "Doe",
+        PersonCreateDto teacher = new PersonCreateDto("123123", "example@email.com", "John", "Doe",
                 "Teacher", "Test", LocalDate.of(1990, 1, 1), "Porto",
                 "123456789");
 
