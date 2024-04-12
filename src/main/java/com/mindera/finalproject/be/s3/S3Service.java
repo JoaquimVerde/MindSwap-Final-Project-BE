@@ -29,7 +29,7 @@ public class S3Service {
 
 
     S3Client s3 = S3Client.builder()
-            .endpointOverride(URI.create("https://s3.amazonaws.com"))
+            .region(Region.EU_CENTRAL_1)   
             .httpClientBuilder(ApacheHttpClient.builder())
             .build();
 
