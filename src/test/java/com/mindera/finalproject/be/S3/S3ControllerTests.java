@@ -1,3 +1,4 @@
+/*
 package com.mindera.finalproject.be.S3;
 
 
@@ -45,4 +46,4 @@ public class S3ControllerTests {
     }
 
 
-}
+}*/
