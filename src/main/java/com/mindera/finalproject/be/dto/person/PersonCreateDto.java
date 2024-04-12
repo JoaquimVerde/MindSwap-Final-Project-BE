@@ -16,6 +16,8 @@ import static com.mindera.finalproject.be.messages.Messages.*;
 
 @RegisterForReflection
 public record PersonCreateDto(
+        @NotBlank(message = INVALID_ID)
+        String id,
         @NotBlank(message = INVALID_EMAIL)
         @Pattern(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", message = INVALID_EMAIL)
         @Schema(description = "The person email", example = "example@example.com")

@@ -15,6 +15,7 @@ public class Messages {
     public static final String NON_EMPTY_DURATION = "Duration is mandatory";
     public static final String NON_NEGATIVE_DURATION = "Duration be bigger than 0";
     public static final String NON_EMPTY_LOCATION = "Location is mandatory";
+    public static final String INVALID_ID = "Invalid id";
     public static final String INVALID_EMAIL = "Invalid email";
     public static final String INVALID_FIRST_NAME = "Invalid first name";
     public static final String INVALID_LAST_NAME = "Invalid last name";
