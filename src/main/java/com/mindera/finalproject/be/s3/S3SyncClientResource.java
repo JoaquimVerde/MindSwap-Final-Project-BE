@@ -1,3 +1,4 @@
+/*
 package com.mindera.finalproject.be.s3;
 
 import com.mindera.finalproject.be.exception.pdf.PdfCreateException;
@@ -119,4 +120,4 @@ public class S3SyncClientResource {
                 .build();
     }
 
-}
+}*/

@@ -3,12 +3,10 @@ package com.mindera.finalproject.be.email;
 import com.mindera.finalproject.be.entity.Course;
 import com.mindera.finalproject.be.entity.Person;
 import com.mindera.finalproject.be.entity.Registration;
-import com.mindera.finalproject.be.exception.email.EmailException;
 import com.mindera.finalproject.be.exception.email.EmailGetTemplateException;
 import com.mindera.finalproject.be.exception.pdf.PdfCreateException;
-import com.mindera.finalproject.be.exception.pdf.PdfException;
 import com.mindera.finalproject.be.pdf.Pdf;
-import com.mindera.finalproject.be.s3.S3SyncClientResource;
+
 import io.quarkus.mailer.Mail;
 import io.quarkus.mailer.Mailer;
 import io.quarkus.mailer.MailerName;
@@ -16,14 +14,10 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 import java.io.*;
-import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.util.Objects;
 
 @ApplicationScoped
 public class Email {
@@ -35,8 +29,6 @@ public class Email {
     @Inject
     Pdf pdf;
 
-    @Inject
-    S3SyncClientResource s3SyncClientResource;
 
     public void sendWelcomeEmail(Person person) throws EmailGetTemplateException {
         String html = getTemplate("WelcomeEmail.html");
