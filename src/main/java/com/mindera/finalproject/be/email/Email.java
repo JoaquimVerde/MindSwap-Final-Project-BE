@@ -7,6 +7,7 @@ import com.mindera.finalproject.be.exception.email.EmailGetTemplateException;
 import com.mindera.finalproject.be.exception.pdf.PdfCreateException;
 import com.mindera.finalproject.be.pdf.Pdf;
 
+import com.mindera.finalproject.be.s3.S3Service;
 import io.quarkus.mailer.Mail;
 import io.quarkus.mailer.Mailer;
 import io.quarkus.mailer.MailerName;
@@ -25,6 +26,9 @@ public class Email {
     @Inject
     @MailerName("outlook")
     Mailer mailer;
+
+    @Inject
+    S3Service s3Service;
 
     @Inject
     Pdf pdf;
@@ -49,8 +53,7 @@ public class Email {
         String html = getTemplate("InvoiceEmail.html");
         html = html.replace("{{firstName}}", person.getFirstName());
         html = html.replace("{{courseName}}", course.getName());
-        byte[] pdfBytes = pdf.generateInvoicePdf(person, course);
-        //File pdfBytes = s3SyncClientResource.uploadInvoice(person, course);
+        byte[] pdfBytes = s3Service.uploadInvoice(person, course);
         mailer.send(Mail.withHtml(person.getEmail(), "Invoice for course Enrollment", html).addAttachment("invoice" + course.getSK().substring(7, 11) + "_" + person.getSK().substring(7, 11) + ".pdf", pdfBytes, "application/pdf"));
     }
 
@@ -59,8 +62,7 @@ public class Email {
         html = html.replace("{{studentName}}", person.getFirstName() + " " + person.getLastName());
         html = html.replace("{{courseName}}", course.getName());
         html = html.replace("{{finalDate}}", LocalDate.now().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
-        byte[] pdfBytes = pdf.generateCertificatePdf(person, course);
-        //File pdfBytes = s3SyncClientResource.uploadCertificate(person, course);
+        byte[] pdfBytes = s3Service.uploadCertificate(person, course);
         mailer.send(Mail.withHtml(person.getEmail(), "Congratulations you have completed the course!", html).addAttachment("certificate" + "_" + course.getName() + "_" + person.getSK().substring(7, 11) + ".pdf", pdfBytes, "application/pdf"));
     }
 

@@ -1,12 +1,10 @@
 package com.mindera.finalproject.be.s3;
 
-import com.mindera.finalproject.be.entity.Course;
-import io.vertx.ext.web.FileUpload;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.*;
-import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
-import org.jboss.resteasy.reactive.RestForm;
+import org.eclipse.microprofile.openapi.annotations.Operation;
+import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 
 import java.io.File;
 
@@ -16,6 +14,9 @@ public class S3Controller {
     @Inject
     private S3Service s3Service;
 
+
+    @Operation(summary = "Upload profile image")
+    @APIResponse(responseCode = "200", description = "Profile image uploaded")
     @POST
     @Path("/uploadProfileImage/{personId}")
     public Response uploadProfileImage(
@@ -24,29 +25,52 @@ public class S3Controller {
         return Response.ok(s3Service.uploadProfileImage(file, personId)).build();
     }
 
+    @Operation(summary = "Upload CV")
+    @APIResponse(responseCode = "200", description = "CV uploaded")
     @POST
     @Path("/uploadCV/{personId}")
-    @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public Response uploadCV(@RestForm("file") File file, @PathParam("personId") String personId) {
+    public Response uploadCV(
+            File file,
+            @PathParam("personId") String personId) {
         return Response.ok(s3Service.uploadCV(file, personId)).build();
     }
 
+
+    @Operation(summary = "Get profile image")
+    @APIResponse(responseCode = "200", description = "Profile image downloaded")
     @GET
     @Path("/getProfileImage/{personId}")
-    public Response getProfileImage(@PathParam("personId") String personId) {
+    public Response getProfileImage(
+            @PathParam("personId") String personId) {
         return Response.ok(s3Service.getProfileImage(personId)).build();
     }
 
+    @Operation(summary = "Get CV")
+    @APIResponse(responseCode = "200", description = "CV downloaded")
+    @GET
+    @Path("/getCV/{personId}")
+    public Response getCV(
+            @PathParam("personId") String personId) {
+        return Response.ok(s3Service.downloadCV(personId)).build();
+    }
+    
+    @Operation(summary = "Download invoice")
+    @APIResponse(responseCode = "200", description = "Invoice downloaded")
     @GET
     @Path("/invoice/{personId}/{courseId}")
-    public Response downloadInvoice(@PathParam("personId") String personId, @PathParam("courseId") String courseId) {
-        File file = s3Service.downloadInvoice(personId, courseId);
-        return Response.ok(file).build();
+    public Response downloadInvoice(
+            @PathParam("personId") String personId,
+            @PathParam("courseId") String courseId) {
+        return Response.ok(s3Service.downloadInvoice(personId, courseId)).build();
     }
 
+    @Operation(summary = "Download certificate")
+    @APIResponse(responseCode = "200", description = "Certificate downloaded")
     @GET
     @Path("/certificate/{personId}/{courseId}")
-    public Response downloadCertificate(@PathParam("personId") String personId, @PathParam("courseId") String courseId) {
+    public Response downloadCertificate(
+            @PathParam("personId") String personId,
+            @PathParam("courseId") String courseId) {
         return Response.ok(s3Service.downloadCertificate(personId, courseId)).build();
     }
 }

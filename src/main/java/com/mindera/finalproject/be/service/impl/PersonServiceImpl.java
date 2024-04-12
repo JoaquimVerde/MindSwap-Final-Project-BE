@@ -82,7 +82,7 @@ public class PersonServiceImpl implements PersonService {
         person.setSK(PERSON + UUID.randomUUID());
         person.setRole(personCreateDto.role().toUpperCase());
         personTable.putItem(person);
-/*        if(person.getRole().equals("STUDENT")){
+/*        if (person.getRole().equals("STUDENT")) {
             email.sendWelcomeEmail(person);
         }*/
         return PersonConverter.fromEntityToPublicDto(person);

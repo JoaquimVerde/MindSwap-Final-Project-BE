@@ -11,21 +11,25 @@ import jakarta.ws.rs.core.Response;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 import software.amazon.awssdk.core.ResponseBytes;
 import software.amazon.awssdk.core.sync.RequestBody;
+import software.amazon.awssdk.regions.Region;
 import software.amazon.awssdk.services.s3.S3Client;
 import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectResponse;
 
+
 import java.io.File;
+import java.net.URI;
 import java.nio.file.Files;
 
 @ApplicationScoped
 public class S3Service {
 
 
-    @Inject
-    S3Client s3;
+    S3Client s3 = S3Client.builder()
+            .endpointOverride(URI.create("https://s3.amazonaws.com"))
+            .build();
 
     @Inject
     Pdf pdfGenerator;
@@ -35,6 +39,9 @@ public class S3Service {
 
 
     public Response uploadProfileImage(File file, String personId) {
+        if (file == null) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
         String objectKey = constructProfilePictureObjectKey(personId);
         PutObjectResponse putResponse = s3.putObject(buildImgPutRequest(objectKey), RequestBody.fromFile(file));
         if (putResponse != null) {
@@ -45,6 +52,9 @@ public class S3Service {
     }
 
     public Response uploadCV(File file, String personId) {
+        if (file == null) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
         String objectKey = constructCVObjectKey(personId);
         PutObjectResponse putResponse = s3.putObject(buildPdfPutRequest(objectKey), RequestBody.fromFile(file));
         if (putResponse != null) {
@@ -54,13 +64,24 @@ public class S3Service {
         }
     }
 
-    public void uploadCertificate(Person person, Course course) throws PdfCreateException {
+    public byte[] uploadCertificate(Person person, Course course) throws PdfCreateException {
         byte[] pdfBytes = pdfGenerator.generateCertificatePdf(person, course);
         String ObjectKey = constructCertificateObjectKey(person.getSK(), course.getSK());
         PutObjectResponse putResponse = s3.putObject(buildPdfPutRequest(ObjectKey), RequestBody.fromBytes(pdfBytes));
         if (putResponse != null) {
             System.out.println("Certificate uploaded successfully");
         }
+        return pdfBytes;
+    }
+
+    public byte[] uploadInvoice(Person person, Course course) throws PdfCreateException {
+        byte[] pdfBytes = pdfGenerator.generateInvoicePdf(person, course);
+        String ObjectKey = constructInvoiceObjectKey(person.getSK(), course.getSK());
+        PutObjectResponse putResponse = s3.putObject(buildPdfPutRequest(ObjectKey), RequestBody.fromBytes(pdfBytes));
+        if (putResponse != null) {
+            System.out.println("Invoice uploaded successfully");
+        }
+        return pdfBytes;
     }
 
     public File downloadInvoice(String personId, String courseId) {
@@ -68,13 +89,18 @@ public class S3Service {
         return downloadPdfFile(certificateObjectKey);
     }
 
+    public File downloadCV(String personId) {
+        String certificateObjectKey = constructCVObjectKey(personId);
+        return downloadPdfFile(certificateObjectKey);
+    }
+
     public File downloadCertificate(String personId, String courseId) {
-        String certificateObjectKey = "certificates/" + personId + "_" + courseId;
+        String certificateObjectKey = "certificates-" + personId + "_" + courseId;
         return downloadPdfFile(certificateObjectKey);
     }
 
     public File getProfileImage(String personId) {
-        String certificateObjectKey = "profilePic/" + personId;
+        String certificateObjectKey = "profilePic-" + personId;
         return downloadImgFile(certificateObjectKey);
     }
 
