@@ -1,4 +1,4 @@
-package com.mindera.finalproject.be.TableCreation;
+/* package com.mindera.finalproject.be.TableCreation;
 
 
 import com.mindera.finalproject.be.entity.Course;
@@ -27,9 +27,10 @@ public class TableCreation {
             DynamoDbTable<Registration> registrationTable = dynamoEnhancedClient.table("Registration", TableSchema.fromBean(Registration.class));
             registrationTable.createTable();
         } catch (Exception e) {
-            System.out.println("Table already exists");
+            // System.out.println("Table already exists");
         }
     }
 }
 
 
+ */
