@@ -97,12 +97,12 @@ public class S3Service {
     }
 
     public File downloadCertificate(String personId, String courseId) {
-        String certificateObjectKey = "certificates-" + personId + "_" + courseId;
+        String certificateObjectKey = "certificates-" + personId + "_" + courseId + ".pdf";
         return downloadPdfFile(certificateObjectKey);
     }
 
     public File getProfileImage(String personId) {
-        String certificateObjectKey = "profilePic-" + personId;
+        String certificateObjectKey = "profilePic-" + personId + ".jpg";
         return downloadImgFile(certificateObjectKey);
     }
 
@@ -140,7 +140,7 @@ public class S3Service {
     }
 
     private String constructProfilePictureObjectKey(String personId) {
-        return "profilePic-" + personId;
+        return "profilePic-" + personId + ".jpg";
     }
 
     private String constructCVObjectKey(String personId) {

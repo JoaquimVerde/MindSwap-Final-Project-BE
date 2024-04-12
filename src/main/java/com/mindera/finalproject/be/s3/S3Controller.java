@@ -14,7 +14,6 @@ public class S3Controller {
     @Inject
     private S3Service s3Service;
 
-
     @Operation(summary = "Upload profile image")
     @APIResponse(responseCode = "200", description = "Profile image uploaded")
     @POST
@@ -22,7 +21,8 @@ public class S3Controller {
     public Response uploadProfileImage(
             File file,
             @PathParam("personId") String personId) {
-        return Response.ok(s3Service.uploadProfileImage(file, personId)).build();
+        s3Service.uploadProfileImage(file, personId);
+        return Response.ok().build();
     }
 
     @Operation(summary = "Upload CV")
@@ -34,7 +34,6 @@ public class S3Controller {
             @PathParam("personId") String personId) {
         return Response.ok(s3Service.uploadCV(file, personId)).build();
     }
-
 
     @Operation(summary = "Get profile image")
     @APIResponse(responseCode = "200", description = "Profile image downloaded")
@@ -53,7 +52,7 @@ public class S3Controller {
             @PathParam("personId") String personId) {
         return Response.ok(s3Service.downloadCV(personId)).build();
     }
-    
+
     @Operation(summary = "Download invoice")
     @APIResponse(responseCode = "200", description = "Invoice downloaded")
     @GET
