@@ -17,6 +17,7 @@ import software.amazon.awssdk.services.s3.model.GetObjectRequest;
 import software.amazon.awssdk.services.s3.model.GetObjectResponse;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.model.PutObjectResponse;
+import software.amazon.awssdk.http.apache.ApacheHttpClient;
 
 
 import java.io.File;
@@ -29,6 +30,7 @@ public class S3Service {
 
     S3Client s3 = S3Client.builder()
             .endpointOverride(URI.create("https://s3.amazonaws.com"))
+            .httpClientBuilder(ApacheHttpClient.builder())
             .build();
 
     @Inject
