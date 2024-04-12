@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0" name="viewport">
-    <title>Welcome to Our Course Platform!</title>
+    <title>Invoice for Course Enrollment</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -18,7 +18,7 @@
             padding: 40px;
             border-radius: 8px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            text-align: center; /* Center the text */
+            text-align: center;
         }
         h1 {
             color: #007bff;
@@ -39,26 +39,19 @@
         .btn:hover {
             background-color: #0056b3;
         }
-        .list {
-            text-align: left;
-            margin-left: 40px;
-        }
     </style>
 </head>
 <body>
 <div class="container">
-    <h1>Welcome to Acodemy Platform!</h1>
-    <p>Hello {{firstName}},</p>
-    <p>We're thrilled to have you join our community! You're now part of an exciting journey of learning and growth.</p>
-    <p>Here are a few things you can do:</p>
-    <ul class="list">
-        <li>Explore our courses and find the perfect one for you.</li>
-        <li>Start learning and unlock new opportunities!</li>
-    </ul>
-    <p>Ready to get started? Click the button below to log in to your account:</p>
-    <p><a class="btn" href="{{loginUrl}}">Log In</a></p>
-    <p>If you have any questions or need assistance, feel free to reach out to our support team. We're here to help!</p>
-    <p>Happy learning!</p>
+    <h1>Invoice for Course Enrollment</h1>
+    <p>Dear {{firstName}},</p>
+    <p>Congratulations! We are pleased to inform you that you have been accepted into the course "{{courseName}}".</p>
+    <p>As a part of your enrollment process, please find attached the invoice for the course fees. Kindly review the
+        details and proceed with the payment to secure your spot in the course.</p>
+    <p>If you have any queries regarding the invoice or need assistance with the payment process, feel free to contact
+        us. We're here to help!</p>
+    <p>Thank you for choosing our platform for your learning journey.</p>
+    <p>Best regards,</p>
     <p>The Acodemy Team</p>
 </div>
 </body>

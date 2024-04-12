@@ -19,6 +19,7 @@ import org.junit.jupiter.api.Test;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbEnhancedClient;
 import software.amazon.awssdk.enhanced.dynamodb.DynamoDbTable;
 import software.amazon.awssdk.enhanced.dynamodb.TableSchema;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Arrays;
@@ -61,29 +62,29 @@ public class ProjectControllerTests {
             courseTable.createTable();
             projectTable.createTable();
             Thread.sleep(100);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             projectTable.deleteTable();
             courseTable.deleteTable();
             personTable.deleteTable();
             setUp();
+            return;
         }
         List<PersonCreateDto> students = Arrays.asList(
                 new PersonCreateDto("example@email.com", "John", "Doe",
-                "Student", "Test", LocalDate.of(1990, 1, 1),
-                "Porto", "cv"),
+                        "Student", "Test", LocalDate.of(1990, 1, 1),
+                        "Porto", "cv"),
                 new PersonCreateDto("example@email.com", "Jane", "Doe",
                         "Student", "Test", LocalDate.of(1991, 1, 1),
                         "Porto", "cv")
         );
         studentIds = students.stream()
                 .map(student -> given()
-                .body(student)
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                .when().post("/api/v1/persons")
-                .then()
-                .statusCode(201)
-                .extract().jsonPath().getString("id"))
+                        .body(student)
+                        .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                        .when().post("/api/v1/persons")
+                        .then()
+                        .statusCode(201)
+                        .extract().jsonPath().getString("id"))
                 .collect(Collectors.toList());
 
 
@@ -101,15 +102,15 @@ public class ProjectControllerTests {
 
 
         CourseCreateDto exampleCourse = new CourseCreateDto(courseName, courseEdition, teacherId, courseSyllabus,
-                    courseProgram, courseSchedule, coursePrice, courseDuration, courseLocation);
+                courseProgram, courseSchedule, coursePrice, courseDuration, courseLocation);
 
         courseId = given()
-                    .body(exampleCourse)
-                    .header(org.apache.http.HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
-                    .when().post("/api/v1/courses")
-                    .then()
-                    .statusCode(201)
-                    .extract().jsonPath().getString("id");
+                .body(exampleCourse)
+                .header(org.apache.http.HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
+                .when().post("/api/v1/courses")
+                .then()
+                .statusCode(201)
+                .extract().jsonPath().getString("id");
     }
 
     @AfterEach
@@ -117,13 +118,18 @@ public class ProjectControllerTests {
         personTable.deleteTable();
         courseTable.deleteTable();
         projectTable.deleteTable();
+        try {
+            Thread.sleep(100);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
 
     public String createProject() {
 
         ProjectCreateDto newProject = new ProjectCreateDto("Project name", studentIds,
-                courseId,"https://github.com/user/repo");
+                courseId, "https://github.com/user/repo");
         return given()
                 .body(newProject)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
@@ -134,7 +140,7 @@ public class ProjectControllerTests {
     }
 
     @Test
-    public void testGetAllProjects() {
+    void testGetAllProjects() {
         given()
                 .when().get("/api/v1/projects")
                 .then()
@@ -144,7 +150,7 @@ public class ProjectControllerTests {
     }
 
     @Test
-    public void testGetById() {
+    void testGetById() {
 
         String projectId = createProject();
 
@@ -163,7 +169,7 @@ public class ProjectControllerTests {
     }
 
     @Test
-    public void testGetByIdNotFound() {
+    void testGetByIdNotFound() {
 
         String projectId = "XXXXXXX"; //non-existing ID
 
@@ -175,9 +181,9 @@ public class ProjectControllerTests {
     }
 
     @Test
-    public void testCreate() {
+    void testCreate() {
         ProjectCreateDto newProject = new ProjectCreateDto("Project name", studentIds,
-                courseId,"https://github.com/user/repo");
+                courseId, "https://github.com/user/repo");
         given()
                 .contentType(ContentType.JSON)
                 .body(newProject)
@@ -187,11 +193,11 @@ public class ProjectControllerTests {
     }
 
     @Test
-    public void testUpdate() {
+    void testUpdate() {
         String projectId = createProject();
 
         ProjectCreateDto projectCreateDto = new ProjectCreateDto("Project name", studentIds,
-                courseId,"https://github.com/user/repo");
+                courseId, "https://github.com/user/repo");
 
         given()
                 .pathParam("id", projectId)
@@ -203,11 +209,11 @@ public class ProjectControllerTests {
     }
 
     @Test
-    public void testUpdateNotFound() {
+    void testUpdateNotFound() {
 
         String projectId = "XXXXXXX"; //non-existing ID
         ProjectCreateDto projectCreateDto = new ProjectCreateDto("Project name", studentIds,
-                courseId,"https://github.com/user/repo");
+                courseId, "https://github.com/user/repo");
         given()
                 .pathParam("id", projectId)
                 .contentType(ContentType.JSON)
@@ -218,7 +224,7 @@ public class ProjectControllerTests {
     }
 
     @Test
-    public void testDelete() {
+    void testDelete() {
 
         String projectId = createProject();
         given()
