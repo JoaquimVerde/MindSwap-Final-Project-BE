@@ -3,12 +3,11 @@ package com.mindera.finalproject.be.email;
 import com.mindera.finalproject.be.entity.Course;
 import com.mindera.finalproject.be.entity.Person;
 import com.mindera.finalproject.be.entity.Registration;
-import com.mindera.finalproject.be.exception.email.EmailException;
 import com.mindera.finalproject.be.exception.email.EmailGetTemplateException;
 import com.mindera.finalproject.be.exception.pdf.PdfCreateException;
-import com.mindera.finalproject.be.exception.pdf.PdfException;
 import com.mindera.finalproject.be.pdf.Pdf;
-import com.mindera.finalproject.be.s3.S3SyncClientResource;
+
+import com.mindera.finalproject.be.s3.S3Service;
 import io.quarkus.mailer.Mail;
 import io.quarkus.mailer.Mailer;
 import io.quarkus.mailer.MailerName;
@@ -16,14 +15,10 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 
 import java.io.*;
-import java.net.URISyntaxException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
-import java.util.Objects;
 
 @ApplicationScoped
 public class Email {
@@ -33,10 +28,11 @@ public class Email {
     Mailer mailer;
 
     @Inject
-    Pdf pdf;
+    S3Service s3Service;
 
     @Inject
-    S3SyncClientResource s3SyncClientResource;
+    Pdf pdf;
+
 
     public void sendWelcomeEmail(Person person) throws EmailGetTemplateException {
         String html = getTemplate("WelcomeEmail.html");
@@ -57,8 +53,7 @@ public class Email {
         String html = getTemplate("InvoiceEmail.html");
         html = html.replace("{{firstName}}", person.getFirstName());
         html = html.replace("{{courseName}}", course.getName());
-        byte[] pdfBytes = pdf.generateInvoicePdf(person, course);
-        //File pdfBytes = s3SyncClientResource.uploadInvoice(person, course);
+        byte[] pdfBytes = s3Service.uploadInvoice(person, course);
         mailer.send(Mail.withHtml(person.getEmail(), "Invoice for course Enrollment", html).addAttachment("invoice" + course.getSK().substring(7, 11) + "_" + person.getSK().substring(7, 11) + ".pdf", pdfBytes, "application/pdf"));
     }
 
@@ -67,8 +62,7 @@ public class Email {
         html = html.replace("{{studentName}}", person.getFirstName() + " " + person.getLastName());
         html = html.replace("{{courseName}}", course.getName());
         html = html.replace("{{finalDate}}", LocalDate.now().format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)));
-        byte[] pdfBytes = pdf.generateCertificatePdf(person, course);
-        //File pdfBytes = s3SyncClientResource.uploadCertificate(person, course);
+        byte[] pdfBytes = s3Service.uploadCertificate(person, course);
         mailer.send(Mail.withHtml(person.getEmail(), "Congratulations you have completed the course!", html).addAttachment("certificate" + "_" + course.getName() + "_" + person.getSK().substring(7, 11) + ".pdf", pdfBytes, "application/pdf"));
     }
 
