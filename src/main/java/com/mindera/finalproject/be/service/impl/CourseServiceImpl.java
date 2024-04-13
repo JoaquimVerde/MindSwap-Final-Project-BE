@@ -34,6 +34,7 @@ public class CourseServiceImpl implements CourseService {
     private final String COURSE = "COURSE#";
     private final String GSIPK1 = "GSIPK1";
     private final String GSIPK2 = "GSIPK2";
+    private final String GSIPK3 = "GSIPK3";
     private final String TEACHER = "TEACHER";
     private final Integer MAX_STUDENTS = 20;
 
@@ -160,7 +161,7 @@ public class CourseServiceImpl implements CourseService {
     @Override
     public List<CoursePublicDto> findCoursesByTeacher(String id) throws PersonNotFoundException {
         QueryConditional queryConditional = QueryConditional.keyEqualTo(k -> k.partitionValue(id));
-        DynamoDbIndex<Course> index = courseTable.index(GSIPK2);
+        DynamoDbIndex<Course> index = courseTable.index(GSIPK3);
         SdkIterable<Page<Course>> courses = index.query(queryConditional);
         List<Course> coursesList = new ArrayList<>();
         courses.forEach(page -> coursesList.addAll(page.items()));
