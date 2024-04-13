@@ -91,6 +91,15 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    public List<CoursePublicDto> createSeveralCourses(List<CourseCreateDto> courseCreateDtos) throws PersonNotFoundException, CourseAlreadyExistsException, PersonNotATeacherException {
+        List<CoursePublicDto> courses = new ArrayList<>();
+        for (CourseCreateDto courseCreateDto : courseCreateDtos) {
+            courses.add(create(courseCreateDto));
+        }
+        return courses;
+    }
+
+    @Override
     public List<CoursePublicDto> getByLocation(String location, Integer page, Integer limit) {
         QueryConditional queryConditional = QueryConditional.keyEqualTo(k -> k.partitionValue(location.toUpperCase()));
         Expression expression = Expression.builder().expression("active = :active").putExpressionValue(":active", AttributeValue.fromBool(true)).build();
@@ -146,6 +155,16 @@ public class CourseServiceImpl implements CourseService {
             throw new CourseNotFoundException(COURSE_NOT_FOUND + id);
         }
         return course;
+    }
+
+    @Override
+    public List<CoursePublicDto> findCoursesByTeacher(String id) throws PersonNotFoundException {
+        QueryConditional queryConditional = QueryConditional.keyEqualTo(k -> k.partitionValue(id));
+        DynamoDbIndex<Course> index = courseTable.index(GSIPK2);
+        SdkIterable<Page<Course>> courses = index.query(queryConditional);
+        List<Course> coursesList = new ArrayList<>();
+        courses.forEach(page -> coursesList.addAll(page.items()));
+        return coursesList.stream().map(this::mapCourseList).toList();
     }
 
     private CoursePublicDto mapCourseList(Course course) {
