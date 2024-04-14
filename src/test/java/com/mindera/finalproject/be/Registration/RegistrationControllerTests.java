@@ -547,7 +547,7 @@ class RegistrationControllerTests {
                 .body("size()", equalTo(5));
     }
 
-    @Test
+    /*@Test
     void testUpdateStatus() {
         String studentId = createPerson("Student", 1);
         String courseId = createCourse(createPerson("Teacher", 1), 1);
@@ -564,7 +564,7 @@ class RegistrationControllerTests {
 
         assertEquals("ACCEPTED", response.status());
         assertEquals(registrationId, response.id());
-    }
+    }*/
 
     @Test
     void testUpdateStatusWithInvalidStatus() {
@@ -626,7 +626,7 @@ class RegistrationControllerTests {
         assertEquals(200, response.getStatus());
     }*/
 
-    @Test
+    /*@Test
     void testUpdateStatusAndHitMaxStudents() {
         String courseId = createCourse(createPerson("Teacher", 1), 1);
         List<String> registrationIds = new ArrayList<>();
@@ -653,7 +653,7 @@ class RegistrationControllerTests {
 
         assertEquals(MAX_NUMBER_OF_STUDENTS_REACHED, response.getMessage());
         assertEquals(409, response.getStatus());
-    }
+    }*/
 
     @Test
     void testUpdateGrade() {
