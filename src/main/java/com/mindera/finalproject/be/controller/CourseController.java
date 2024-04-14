@@ -16,6 +16,8 @@ import org.eclipse.microprofile.openapi.annotations.parameters.RequestBody;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponse;
 import org.eclipse.microprofile.openapi.annotations.responses.APIResponses;
 
+import java.util.List;
+
 @Path("/api/v1/courses")
 @Produces(MediaType.APPLICATION_JSON)
 @Consumes(MediaType.APPLICATION_JSON)
@@ -91,5 +93,17 @@ public class CourseController {
     public Response delete(@PathParam("id") String id) throws CourseNotFoundException {
         courseService.delete(id);
         return Response.ok().build();
+    }
+
+    @POST
+    @Path("/createSeveralCourses")
+    public Response createSeveralCourses(@Valid @RequestBody List<CourseCreateDto> courseCreateDtos) throws PersonNotFoundException, CourseAlreadyExistsException, PersonNotATeacherException {
+        return Response.ok(courseService.createSeveralCourses(courseCreateDtos)).status(Response.Status.CREATED).build();
+    }
+
+    @GET
+    @Path("/teacher/{id}")
+    public Response findCoursesByTeacher(@PathParam("id") String id) throws PersonNotFoundException {
+        return Response.ok(courseService.findCoursesByTeacher(id)).build();
     }
 }

@@ -21,9 +21,13 @@ public interface CourseService {
 
     CoursePublicDto create(CourseCreateDto courseCreateDto) throws PersonNotFoundException, CourseAlreadyExistsException, PersonNotATeacherException;
 
+    List<CoursePublicDto> createSeveralCourses(List<CourseCreateDto> courseCreateDtoList) throws PersonNotFoundException, CourseAlreadyExistsException, PersonNotATeacherException;
+
     CoursePublicDto update(String id, CourseCreateDto coursePublicDto) throws PersonNotFoundException, CourseNotFoundException, PersonNotATeacherException;
 
     void delete(String id) throws CourseNotFoundException;
 
     Course findById(String id) throws CourseNotFoundException;
+
+    List<CoursePublicDto> findCoursesByTeacher(String id) throws PersonNotFoundException;
 }
