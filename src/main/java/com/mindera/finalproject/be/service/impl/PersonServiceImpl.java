@@ -79,7 +79,7 @@ public class PersonServiceImpl implements PersonService {
     public PersonPublicDto create(PersonCreateDto personCreateDto) throws EmailGetTemplateException {
         Person person = PersonConverter.fromCreateDtoToEntity(personCreateDto);
         person.setPK(PERSON);
-        person.setSK(PERSON + UUID.randomUUID());
+        person.setSK(PERSON + personCreateDto.id());
         person.setRole(personCreateDto.role().toUpperCase());
         personTable.putItem(person);
 /*        if (person.getRole().equals("STUDENT")) {
@@ -109,7 +109,7 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public void delete(String id) throws PersonNotFoundException {
-        Person person = findById(id); //personTable.getItem(Key.builder().partitionValue(PERSON).sortValue(id).build());
+        Person person = findById(id);
         person.setActive(false);
         personTable.updateItem(person);
     }

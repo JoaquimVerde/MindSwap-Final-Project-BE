@@ -60,10 +60,10 @@ class CourseControllerTest {
             return;
         }
 
-        PersonCreateDto teacher = new PersonCreateDto("example@email.com", "John", "Doe",
+        PersonCreateDto teacher = new PersonCreateDto("TEACHER#123123", "example@email.com", "John", "Doe",
                 "Teacher", "Teste", LocalDate.of(1990, 1, 1), "Porto", "123456789");
 
-        PersonCreateDto student = new PersonCreateDto("example@email.com", "John", "Doe",
+        PersonCreateDto student = new PersonCreateDto("STUDENT#123123", "example@email.com", "John", "Doe",
                 "Student", "Teste", LocalDate.of(1990, 1, 1), "Porto", "123456789");
 
         teacherId = given()
