@@ -34,6 +34,7 @@ public class CourseServiceImpl implements CourseService {
     private final String COURSE = "COURSE#";
     private final String GSIPK1 = "GSIPK1";
     private final String GSIPK2 = "GSIPK2";
+    private final String GSIPK3 = "GSIPK3";
     private final String TEACHER = "TEACHER";
     private final Integer MAX_STUDENTS = 20;
 
@@ -88,6 +89,15 @@ public class CourseServiceImpl implements CourseService {
         course.setLocation(courseCreateDto.location().toUpperCase());
         courseTable.putItem(course);
         return course.getTeacherId() == null ? CourseConverter.fromEntityToPublicDto(course, null) : CourseConverter.fromEntityToPublicDto(course, personService.getById(course.getTeacherId()));
+    }
+
+    @Override
+    public List<CoursePublicDto> createSeveralCourses(List<CourseCreateDto> courseCreateDtos) throws PersonNotFoundException, CourseAlreadyExistsException, PersonNotATeacherException {
+        List<CoursePublicDto> courses = new ArrayList<>();
+        for (CourseCreateDto courseCreateDto : courseCreateDtos) {
+            courses.add(create(courseCreateDto));
+        }
+        return courses;
     }
 
     @Override
@@ -146,6 +156,16 @@ public class CourseServiceImpl implements CourseService {
             throw new CourseNotFoundException(COURSE_NOT_FOUND + id);
         }
         return course;
+    }
+
+    @Override
+    public List<CoursePublicDto> findCoursesByTeacher(String id) throws PersonNotFoundException {
+        QueryConditional queryConditional = QueryConditional.keyEqualTo(k -> k.partitionValue(id));
+        DynamoDbIndex<Course> index = courseTable.index(GSIPK3);
+        SdkIterable<Page<Course>> courses = index.query(queryConditional);
+        List<Course> coursesList = new ArrayList<>();
+        courses.forEach(page -> coursesList.addAll(page.items()));
+        return coursesList.stream().map(this::mapCourseList).toList();
     }
 
     private CoursePublicDto mapCourseList(Course course) {
