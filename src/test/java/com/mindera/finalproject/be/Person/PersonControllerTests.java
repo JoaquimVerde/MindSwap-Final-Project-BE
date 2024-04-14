@@ -45,7 +45,7 @@ public class PersonControllerTests {
         }
 
         public String createPerson() {
-            PersonCreateDto newPerson = new PersonCreateDto("peter@email.com",
+            PersonCreateDto newPerson = new PersonCreateDto("123123", "peter@email.com",
                     "joe", "doe", "student", "peter",
                     LocalDate.of(2001, 10, 10), "address", "cv");
 
@@ -98,7 +98,7 @@ public class PersonControllerTests {
 
     @Test
     public void testCreate() {
-        PersonCreateDto personCreateDto = new PersonCreateDto("peter@email.com", "peter", "doe", "admin", "peter", LocalDate.of(1999, 10, 10), "address", "cv");
+        PersonCreateDto personCreateDto = new PersonCreateDto("123123", "peter@email.com", "peter", "doe", "admin", "peter", LocalDate.of(1999, 10, 10), "address", "cv");
         given()
                 .contentType(ContentType.JSON)
                 .body(personCreateDto)
@@ -112,7 +112,7 @@ public class PersonControllerTests {
     public void testUpdate() {
         String personId = createPerson();
 
-        PersonCreateDto personCreateDto = new PersonCreateDto("peter@email.com", "peter", "doe", "admin", "peter", LocalDate.of(2000, 10, 10), "address", "cv");
+        PersonCreateDto personCreateDto = new PersonCreateDto("123123", "peter@email.com", "peter", "doe", "admin", "peter", LocalDate.of(2000, 10, 10), "address", "cv");
 
         given()
                 .pathParam("id", personId)
@@ -127,7 +127,7 @@ public class PersonControllerTests {
     public void testUpdateNotFound() {
 
         String id = "XXXXXXXXX"; //non-existing ID
-        PersonCreateDto personCreateDto = new PersonCreateDto("peter@email.com", "joe", "doe", "admin", "peter", LocalDate.of(2000, 10, 10), "address", "cv");
+        PersonCreateDto personCreateDto = new PersonCreateDto("123123", "peter@email.com", "joe", "doe", "admin", "peter", LocalDate.of(2000, 10, 10), "address", "cv");
         given()
                 .pathParam("id", id)
                 .contentType(ContentType.JSON)

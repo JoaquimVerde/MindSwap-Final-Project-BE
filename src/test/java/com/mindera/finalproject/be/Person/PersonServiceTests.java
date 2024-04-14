@@ -30,6 +30,7 @@ import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class PersonServiceTests {
+    private final String id = "123123";
     private final String email = "test@example.com";
     private final String firstName = "John";
     private final String lastName = "Doe";
@@ -95,7 +96,7 @@ class PersonServiceTests {
     @Test
     void testCreate() throws Exception {
 
-        PersonCreateDto createDto = new PersonCreateDto(email, firstName, lastName, role, username, dateOfBirth, address, cv);
+        PersonCreateDto createDto = new PersonCreateDto(id, email, firstName, lastName, role, username, dateOfBirth, address, cv);
 
         PersonPublicDto result = personService.create(createDto);
 
@@ -119,7 +120,7 @@ class PersonServiceTests {
         person.setSK(id);
         Key key = Key.builder().partitionValue(PERSON).sortValue(id).build();
 
-        PersonCreateDto updateDto = new PersonCreateDto(email, firstName, lastName, role, username, dateOfBirth, address, cv);
+        PersonCreateDto updateDto = new PersonCreateDto(id, email, firstName, lastName, role, username, dateOfBirth, address, cv);
 
 
         when(personTable.getItem(key)).thenReturn(person);
