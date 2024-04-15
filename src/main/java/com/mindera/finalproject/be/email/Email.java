@@ -69,13 +69,14 @@ public class Email {
     private String getTemplate(String template) throws EmailGetTemplateException {
         StringBuilder contentBuilder = new StringBuilder();
         try {
-            BufferedReader in = new BufferedReader(new FileReader("src/main/java/com/mindera/finalproject/be/html/" + template));
+            BufferedReader in = new BufferedReader(new FileReader("com/mindera/finalproject/be/html" + template));
             String str;
             while ((str = in.readLine()) != null) {
                 contentBuilder.append(str);
             }
             in.close();
         } catch (IOException e) {
+            System.out.println(e.getMessage());
             System.out.println("deu merda");
             throw new EmailGetTemplateException("Error reading HTML template file");
         }
