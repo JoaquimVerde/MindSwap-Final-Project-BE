@@ -29,7 +29,6 @@ public class Pdf {
                 "    <title>Course Enrollment Invoice</title>\n" +
                 "    <style>\n" +
                 "        body {\n" +
-                "            font-family: Arial, sans-serif;\n" +
                 "            background-color: #f2f2f2;\n" +
                 "            color: #333;\n" +
                 "            margin: 0;\n" +
@@ -127,7 +126,6 @@ public class Pdf {
                 "            size: landscape;\n" +
                 "        }\n" +
                 "        body {\n" +
-                "            font-family: Arial, sans-serif;\n" +
                 "            background-color: #fff;\n" +
                 "            color: #000;\n" +
                 "            margin: 0;\n" +
