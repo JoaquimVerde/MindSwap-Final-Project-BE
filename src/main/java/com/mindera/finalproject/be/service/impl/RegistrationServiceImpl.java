@@ -107,7 +107,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if(student.address().toLowerCase().contains(course.location().toLowerCase()) && registrationCreateDto.prevExperience() && registrationCreateDto.prevKnowledge()){
             registration.setStatus("AUTOMATICALLY_ACCEPTED");
             email.sendCourseCandidatureStatusEmail(personService.findById(registration.getPersonId()), courseService.findById(registration.getCourseId()), registration);
-            email.sendCourseInvoice(personService.findById(registration.getPersonId()), courseService.findById(registration.getCourseId()));
+            //email.sendCourseInvoice(personService.findById(registration.getPersonId()), courseService.findById(registration.getCourseId()));
         }
         registrationTable.putItem(registration);
         return RegistrationConverter.fromEntityToPublicDto(registration, student, course);
@@ -201,7 +201,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         PersonPublicDto student = personService.getById(registration.getPersonId());
         CoursePublicDto course = courseService.getById(registration.getCourseId());
         if (registration.getStatus().equals("ACCEPTED")) {
-            email.sendCourseInvoice(personService.findById(registration.getPersonId()), courseService.findById(registration.getCourseId()));
+            //email.sendCourseInvoice(personService.findById(registration.getPersonId()), courseService.findById(registration.getCourseId()));
         }
         email.sendCourseCandidatureStatusEmail(personService.findById(registration.getPersonId()), courseService.findById(registration.getCourseId()), registration);
         return RegistrationConverter.fromEntityToPublicDto(registration, student, course);
