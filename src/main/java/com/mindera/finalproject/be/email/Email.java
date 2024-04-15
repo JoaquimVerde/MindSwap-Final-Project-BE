@@ -76,6 +76,7 @@ public class Email {
             }
             in.close();
         } catch (IOException e) {
+            System.out.println("deu merda");
             throw new EmailGetTemplateException("Error reading HTML template file");
         }
         return contentBuilder.toString();
