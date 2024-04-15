@@ -33,6 +33,6 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Build with Maven
-        run: mvn package -Pnative -Dquarkus.native.container-build=true -DskipTests -Dquarkus.dynamodb.aws.credentials.static-provider.access-key-id=${{ secrets.AWS_ACCESS_KEY_ID }} -Dquarkus.dynamodb.aws.credentials.static-provider.secret-access-key=${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: mvn package -Pnative -Dquarkus.native.container-build=true -DskipTests -Dquarkus.dynamodb.aws.credentials.static-provider.access-key-id=${{ secrets.AWS_ACCESS_KEY_ID }} -Dquarkus.dynamodb.aws.credentials.static-provider.secret-access-key=${{ secrets.AWS_SECRET_ACCESS_KEY }} -Dquarkus.mailer.outlook.password=${{ secrets.OUTLOOK_PASS }} -Dquarkus.mailer.outlook.username=${{ secrets.OUTLOOK_USERNAME }}
       - name: Deploy with sam
         run: sam deploy --stack-name StackTestingV2 --s3-bucket acodemylambdabucket --capabilities CAPABILITY_IAM --force-upload

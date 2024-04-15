@@ -70,9 +70,6 @@ public class S3Service {
         byte[] pdfBytes = pdfGenerator.generateCertificatePdf(person, course);
         String ObjectKey = constructCertificateObjectKey(person.getSK(), course.getSK());
         PutObjectResponse putResponse = s3.putObject(buildPdfPutRequest(ObjectKey), RequestBody.fromBytes(pdfBytes));
-        if (putResponse != null) {
-            System.out.println("Certificate uploaded successfully");
-        }
         return pdfBytes;
     }
 
@@ -80,9 +77,6 @@ public class S3Service {
         byte[] pdfBytes = pdfGenerator.generateInvoicePdf(person, course);
         String ObjectKey = constructInvoiceObjectKey(person.getSK(), course.getSK());
         PutObjectResponse putResponse = s3.putObject(buildPdfPutRequest(ObjectKey), RequestBody.fromBytes(pdfBytes));
-        if (putResponse != null) {
-            System.out.println("Invoice uploaded successfully");
-        }
         return pdfBytes;
     }
 
