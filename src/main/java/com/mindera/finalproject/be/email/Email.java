@@ -37,7 +37,7 @@ public class Email {
     public void sendWelcomeEmail(Person person) throws EmailGetTemplateException {
         String html = getTemplate("WelcomeEmail.html");
         html = html.replace("{{firstName}}", person.getFirstName());
-        html = html.replace("{{loginUrl}}", "http://localhost:8080/login"); // TODO CHANGE URL TO PRODUCTION URL
+        html = html.replace("{{loginUrl}}", "https://fe-deployment.d1c8xxfduy22sd.amplifyapp.com/login"); // TODO CHANGE URL TO PRODUCTION URL
         mailer.send(Mail.withHtml(person.getEmail(), "Welcome to Course Applications", html));
     }
 
