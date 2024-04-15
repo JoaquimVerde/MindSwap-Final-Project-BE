@@ -69,12 +69,16 @@ public class Email {
     private String getTemplate(String template) throws EmailGetTemplateException {
         StringBuilder contentBuilder = new StringBuilder();
         try {
-            BufferedReader in = new BufferedReader(new FileReader("https://github.com/Mindswap-6th-Edition-Final/final-project-be/blob/0faad262b0e4759b1f08928160c3f250fea91ff6/src/main/java/com/mindera/finalproject/be/html/" + template));
+            InputStream in = getClass().getClassLoader().getResourceAsStream("com/mindera/finalproject/be/html/" + template);
+            if(in == null) {
+                throw new EmailGetTemplateException("Error reading HTML template file");
+            }
+            BufferedReader reader = new BufferedReader(new InputStreamReader(in));
             String str;
-            while ((str = in.readLine()) != null) {
+            while ((str = reader.readLine()) != null) {
                 contentBuilder.append(str);
             }
-            in.close();
+            reader.close();
         } catch (IOException e) {
             System.out.println(e.getMessage());
             System.out.println("deu merda");
