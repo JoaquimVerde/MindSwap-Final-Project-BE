@@ -20,7 +20,7 @@ public interface RegistrationService {
     RegistrationPublicDto getById(String id) throws PersonNotFoundException, CourseNotFoundException, RegistrationNotFoundException;
 
     RegistrationPublicDto create(RegistrationCreateDto registrationCreateDto)
-            throws PersonNotFoundException, CourseNotFoundException, RegistrationAlreadyExistsException, EmailGetTemplateException;
+            throws PersonNotFoundException, CourseNotFoundException, RegistrationAlreadyExistsException, EmailGetTemplateException, PdfCreateException;
 
     void delete(String id) throws RegistrationNotFoundException;
 

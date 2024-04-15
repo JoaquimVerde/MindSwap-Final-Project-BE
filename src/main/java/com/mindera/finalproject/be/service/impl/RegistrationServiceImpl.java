@@ -94,7 +94,7 @@ public class RegistrationServiceImpl implements RegistrationService {
     }
 
     @Override
-    public RegistrationPublicDto create(RegistrationCreateDto registrationCreateDto) throws PersonNotFoundException, CourseNotFoundException, RegistrationAlreadyExistsException, EmailGetTemplateException {
+    public RegistrationPublicDto create(RegistrationCreateDto registrationCreateDto) throws PersonNotFoundException, CourseNotFoundException, RegistrationAlreadyExistsException, EmailGetTemplateException, PdfCreateException {
         Registration registration = RegistrationConverter.fromCreateDtoToEntity(registrationCreateDto);
         if (checkIfRegistrationIsDuplicate(registration)) {
             throw new RegistrationAlreadyExistsException(REGISTRATION_ALREADY_EXISTS);
@@ -107,6 +107,7 @@ public class RegistrationServiceImpl implements RegistrationService {
         if(student.address().toLowerCase().contains(course.location().toLowerCase()) && registrationCreateDto.prevExperience() && registrationCreateDto.prevKnowledge()){
             registration.setStatus("AUTOMATICALLY_ACCEPTED");
             email.sendCourseCandidatureStatusEmail(personService.findById(registration.getPersonId()), courseService.findById(registration.getCourseId()), registration);
+            email.sendCourseInvoice(personService.findById(registration.getPersonId()), courseService.findById(registration.getCourseId()));
         }
         registrationTable.putItem(registration);
         return RegistrationConverter.fromEntityToPublicDto(registration, student, course);
