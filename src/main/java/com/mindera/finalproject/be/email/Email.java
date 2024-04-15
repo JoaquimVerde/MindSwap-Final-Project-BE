@@ -69,7 +69,7 @@ public class Email {
     private String getTemplate(String template) throws EmailGetTemplateException {
         StringBuilder contentBuilder = new StringBuilder();
         try {
-            BufferedReader in = new BufferedReader(new FileReader("com/mindera/finalproject/be/html" + template));
+            BufferedReader in = new BufferedReader(new FileReader("https://github.com/Mindswap-6th-Edition-Final/final-project-be/blob/0faad262b0e4759b1f08928160c3f250fea91ff6/src/main/java/com/mindera/finalproject/be/html/" + template));
             String str;
             while ((str = in.readLine()) != null) {
                 contentBuilder.append(str);
