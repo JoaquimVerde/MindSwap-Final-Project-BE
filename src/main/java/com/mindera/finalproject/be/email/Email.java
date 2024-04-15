@@ -101,7 +101,7 @@ public class Email {
                 "</body>\n" +
                 "</html>";
         html = html.replace("{{firstName}}", person.getFirstName());
-        html = html.replace("{{loginUrl}}", "https://fe-deployment.d1c8xxfduy22sd.amplifyapp.com/login"); // TODO CHANGE URL TO PRODUCTION URL
+        html = html.replace("{{loginUrl}}", "https://fe-deployment.d1c8xxfduy22sd.amplifyapp.com/"); // TODO CHANGE URL TO PRODUCTION URL
         mailer.send(Mail.withHtml(person.getEmail(), "Welcome to Course Applications", html));
     }
 
